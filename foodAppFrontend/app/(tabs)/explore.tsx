@@ -1,9 +1,9 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 export default function ExploreScreen() {
   return (
     <>
-      This is explore page
+      <Text> This is explore page</Text>
     </>
   );
 }

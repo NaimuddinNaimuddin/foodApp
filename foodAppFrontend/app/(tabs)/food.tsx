@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 
 export default function FoodScreen() {
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   const [restaurants, setRestaurants] = useState([]);
@@ -26,9 +27,12 @@ export default function FoodScreen() {
 
   const loadRestaurants = async () => {
     try {
+      setRefreshing(true);
       const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants`);
       setRestaurants(data as []);
+      setRefreshing(false);
     } catch (err: any) {
+      setRefreshing(false);
       console.error("Error loading restaurants:", err.message);
     }
   };
@@ -58,6 +62,8 @@ export default function FoodScreen() {
       />
 
       <FlatList
+        onRefresh={() => loadRestaurants()}
+        refreshing={refreshing}
         data={filtered}
         keyExtractor={(item: { _id: string, name: string, image_url: string, ratings: string, status: string, category: string }) => item._id}
         renderItem={({ item }) => (
