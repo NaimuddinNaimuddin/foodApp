@@ -9,6 +9,7 @@ export default function AddFoodItem() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/restaurants`).then((res) => setRestaurants(res.data));
@@ -23,6 +24,7 @@ export default function AddFoodItem() {
         name,
         price,
         image,
+        category,
         restaurantId: selectedRestaurant,
       });
 
@@ -45,7 +47,7 @@ export default function AddFoodItem() {
           value={selectedRestaurant}
           onChange={(e) => setSelectedRestaurant(e.target.value)}
         >
-          <option value="">Select Restaurant</option>
+          <option>Select Restaurant</option>
           {restaurants.map((r) => (
             <option key={r._id} value={r._id}>
               {r.name}
@@ -59,6 +61,14 @@ export default function AddFoodItem() {
           placeholder="Food Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          className="form-control mb-2"
+          type="text"
+          placeholder="Food Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
           required
         />
         <input

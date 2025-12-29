@@ -8,11 +8,14 @@ import {
     Alert,
 } from "react-native";
 import axios from "axios";
+import { signupStyles as styles } from "../assets/styles/signupStyles";
+import { useRouter } from "expo-router";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 const SignupScreen = () => {
-    const [phone, setPhone] = useState(null);
+    const router = useRouter();
+    const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
 
     const handleSignup = async () => {
@@ -55,39 +58,14 @@ const SignupScreen = () => {
             <TouchableOpacity style={styles.button} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => router.push("/login")}>
+                <Text style={{ marginTop: 15, color: "#ee0000", textAlign: "center" }}>
+                    Already have an account? Log in
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
 export default SignupScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        padding: 20,
-    },
-    title: {
-        fontSize: 26,
-        fontWeight: "bold",
-        marginBottom: 20,
-        textAlign: "center",
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 15,
-    },
-    button: {
-        backgroundColor: "#4CAF50",
-        padding: 15,
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: "#fff",
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-});

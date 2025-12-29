@@ -1,7 +1,8 @@
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, ActivityIndicator, Button } from "react-native";
+import { FlatList, StyleSheet, Text, View, ActivityIndicator, Button, ToastAndroid } from "react-native";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -40,12 +41,17 @@ export default function RestaurantScreen() {
     fetchFoodItems();
   }, [id]);
 
-  const addToCart = (foodId: string) => {
-    const res = axios.post(`${API_BASE_URL}/restaurants/cart/add`, {
-      userId: "user123",
+  const addToCart = async (foodId: string) => {
+    const res = await axios.post(`${API_BASE_URL}/cart/add`, {
+      userId: "64a3f7c6b9c12345abcde678",
       foodId
     });
-    console.log({ res });
+    // console.log({ res });
+    Toast.show({
+      type: "success",
+      text1: "Added to Cart 🛒",
+      text2: "Item added successfully",
+    });
   };
 
   if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
@@ -79,9 +85,6 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
     elevation: 3,
   },
   foodName: { fontSize: 16, fontWeight: "bold" },

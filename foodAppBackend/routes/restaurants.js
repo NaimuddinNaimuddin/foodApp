@@ -34,18 +34,19 @@ router.get("/", async (req, res) => {
 // Add Food Item to a Restaurant
 router.post("/food-items", async (req, res) => {
   try {
-    const { name, price, image_url, restaurantId } = req.body;
-    console.log({ name, price, image_url, restaurantId });
+    const { name, price, image_url, restaurantId, category } = req.body;
+    console.log({ name, price, image_url, restaurantId, category });
     if (!restaurantId) return res.status(400).json({ error: "Restaurant ID required" });
 
     const foodItem = await FoodItem.create({
       name,
       price,
+      category,
       image_url,
       restaurant: restaurantId,
     });
 
-    res.json(foodItem);
+    res.status(201).json(foodItem);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
@@ -56,34 +57,6 @@ router.post("/food-items", async (req, res) => {
 router.get("/:id/food-items", async (req, res) => {
   const items = await FoodItem.find({ restaurant: req.params.id });
   res.json(items);
-});
-
-// Add to cart
-router.post("/cart/add", async (req, res) => {
-  const { userId, foodId } = req.body;
-
-  let cart = await Cart.findOne({ userId });
-
-  if (!cart) {
-    cart = new Cart({ userId, items: [] });
-  }
-
-  const item = cart.items.find(i => i.foodId.equals(foodId));
-
-  if (item) {
-    item.quantity += 1;
-  } else {
-    cart.items.push({ foodId, quantity: 1 });
-  }
-
-  await cart.save();
-  res.json({ message: "Added to cart", cart });
-});
-
-// get cart 
-router.get("/cart/:userId", async (req, res) => {
-  const cart = await Cart.findOne({ userId: req.params.userId }).populate("items.foodId");
-  res.json(cart);
 });
 
 module.exports = router;

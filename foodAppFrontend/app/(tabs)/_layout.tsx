@@ -9,7 +9,7 @@ export default function TabsLayout() {
           let iconName: keyof typeof Ionicons.glyphMap;
 
           if (route.name === "index") iconName = "home";
-          else if (route.name === "explore") iconName = "compass";
+          else if (route.name === "orders") iconName = "receipt-outline";
           else if (route.name === "cart") iconName = "cart";
           else iconName = "restaurant";
 
@@ -18,9 +18,9 @@ export default function TabsLayout() {
       })}
     >
       <Tabs.Screen name="index" options={{ title: "Home" }} />
-      <Tabs.Screen name="explore" options={{ title: "Explore" }} />
       <Tabs.Screen name="food" options={{ title: "Food" }} />
       <Tabs.Screen name="cart" options={{ title: "Cart" }} />
+      <Tabs.Screen name="orders" options={{ title: "My Orders" }} />
     </Tabs>
   );
 }
