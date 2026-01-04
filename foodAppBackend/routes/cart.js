@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Restaurant = require("../models/Restaurant");
-const FoodItem = require("../models/FoodItem");
+const Food = require("../models/Food");
 const Cart = require("../models/Cart");
 
 // Add to cart

@@ -53,14 +53,14 @@ export default function OrdersScreen() {
         {order.items.map((item: any) => (
           <View key={item._id} style={styles.itemRow}>
             <View>
-              <Text style={styles.foodName}>{item.foodId.name}</Text>
+              <Text style={styles.foodName}>{item && item.foodId && item.foodId.name}</Text>
               <Text style={styles.restaurant}>
-                {item.foodId.restaurant.name}
+                {item && item.foodId && item.foodId.restaurant && item.foodId.restaurant.name}
               </Text>
             </View>
 
             <Text style={styles.price}>
-              ₹{item.foodId.price} × {item.quantity}
+              ₹{item.foodId ? item.foodId.price : 0} × {item.quantity}
             </Text>
           </View>
         ))}
@@ -71,7 +71,6 @@ export default function OrdersScreen() {
       </View>
     );
   };
-
 
   if (loading) {
     return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
@@ -136,4 +135,3 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 });
-

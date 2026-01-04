@@ -14,7 +14,7 @@ export interface Restaurant {
   createdAt: string;
 }
 
-export interface FoodItem {
+export interface Food {
   _id: string;
   name: string;
   price: number;
@@ -25,7 +25,7 @@ export interface FoodItem {
 export interface OrderItem {
   _id: string;
   quantity: number;
-  foodId: FoodItem;
+  foodId: Food;
 }
 
 export interface Order {

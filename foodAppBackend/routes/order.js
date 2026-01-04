@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
+const Food = require("../models/Food");
 
 router.post("/place", async (req, res) => {
     const { userId, items, deliveryAddress, paymentMethod = 'COD' } = req.body;
@@ -12,12 +13,26 @@ router.post("/place", async (req, res) => {
     console.log(req.body);
 
     try {
-        const totalAmount = items.reduce((sum, item) => sum + item.foodId.price * item.quantity, 0);
+        let total = 0;
+        const _items = await Promise.all(
+            items.filter(async (item) => !!item.foodId).map(async (item) => {
+                const food = await Food.findById(item.foodId);
+                total += (!!(food && food._id) ? food.price : 0) * item.quantity;
+
+                return {
+                    foodId: (!!food && food._id) ? food._id : '',
+                    name: (!!food && food.name) ? food.name : '',
+                    image_url: (!!food && food.image_url) ? food.image_url : '',
+                    price: (!!food && food.price) ? food.price : 0,
+                    quantity: item.quantity ? item.quantity : 1,
+                };
+            })
+        );
 
         const order = new Order({
             userId,
-            items,
-            totalAmount,
+            items: _items,
+            totalAmount: total,
             deliveryAddress,
             paymentMethod,
         });

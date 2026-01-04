@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const FoodItemSchema = new mongoose.Schema({
+const FoodSchema = new mongoose.Schema({
   restaurant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Restaurant",
@@ -12,11 +12,14 @@ const FoodItemSchema = new mongoose.Schema({
   },
   price: Number,
   category: String,
-  image_url: String,
+  image_url: {
+    type: String,
+    default: 'https://res.cloudinary.com/naimucloudinary/image/upload/v1767041768/food_kyeqm9.png',
+  },
   isAvailable: {
     type: Boolean,
     default: true,
   },
 });
 
-module.exports = mongoose.model("FoodItem", FoodItemSchema);
+module.exports = mongoose.model("Food", FoodSchema);

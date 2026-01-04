@@ -1,10 +1,11 @@
-import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity, Image } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
+import { cartStyles as styles } from "../../assets/styles/cartStyles";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -95,173 +96,78 @@ export default function CartScreen() {
             <FlatList
                 data={cart.items}
                 keyExtractor={(item) => item._id}
-                // renderItem={({ item }) => (
-                //     <View style={styles.item}>
-                //         <Text style={styles.name}>{item.foodId.name}</Text>
-                //         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                //             <TouchableOpacity onPress={() => decreaseQty(userId, item.foodId._id)} >
-                //                 <Ionicons
-                //                     name="remove-circle-outline"
-                //                     size={26}
-                //                     color="#FF9800"
-                //                 />
-                //             </TouchableOpacity>
-
-                //             <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                //                 Qty: {item.quantity}
-                //             </Text>
-
-                //             <TouchableOpacity
-                //                 onPress={() => increaseQty(userId, item.foodId._id)}
-                //             >
-                //                 <Ionicons
-                //                     name="add-circle-outline"
-                //                     size={26}
-                //                     color="#4CAF50"
-                //                 />
-                //             </TouchableOpacity>
-
-                //             <TouchableOpacity
-                //                 onPress={() => removeItem(userId, item.foodId._id)}
-                //                 style={{ marginLeft: 10 }}
-                //             >
-                //                 <Ionicons
-                //                     name="trash-outline"
-                //                     size={24}
-                //                     color="#F44336"
-                //                 />
-                //             </TouchableOpacity>
-                //         </View>
-                //         <Text>₹{item.foodId.price * item.quantity}</Text>
-                //     </View>
-                // )}
                 renderItem={({ item }) => (
                     <View style={styles.cartItem}>
-                        <View style={styles.topRow}>
-                            <Text style={styles.foodName} numberOfLines={1}>
-                                {item.foodId.name}
-                            </Text>
+                        <Image
+                            source={{
+                                uri: item.foodId?.image_url || "https://via.placeholder.com/100",
+                            }}
+                            style={styles.foodImage}
+                        />
 
-                            <Text style={styles.price}>
-                                ₹{item.foodId.price * item.quantity}
-                            </Text>
-                        </View>
+                        <View style={styles.itemContent}>
+                            <View style={styles.topRow}>
+                                <Text style={styles.foodName} numberOfLines={1}>
+                                    {item.foodId?.name}
+                                </Text>
 
-                        <View style={styles.bottomRow}>
-                            <View style={styles.stepper}>
-                                <TouchableOpacity
-                                    onPress={() => decreaseQty(userId, item.foodId._id)}
-                                >
-                                    <Ionicons name="remove-circle-outline" size={20} color="#FF9800" />
-                                </TouchableOpacity>
-
-                                <Text style={styles.qtyText}>{item.quantity}</Text>
-
-                                <TouchableOpacity
-                                    onPress={() => increaseQty(userId, item.foodId._id)}
-                                >
-                                    <Ionicons name="add-circle-outline" size={20} color="#4CAF50" />
-                                </TouchableOpacity>
+                                <Text style={styles.price}>
+                                    ₹{(item.foodId?.price || 0) * item.quantity}
+                                </Text>
                             </View>
 
-                            <TouchableOpacity
-                                onPress={() => removeItem(userId, item.foodId._id)}
-                            >
-                                <Text style={styles.removeText}>
-                                    <Ionicons
-                                        name="trash-outline"
-                                        size={24}
-                                        color="#F44336"
-                                    />
-                                </Text>
-                            </TouchableOpacity>
+                            <View style={styles.bottomRow}>
+                                <View style={styles.stepper}>
+                                    <TouchableOpacity
+                                        onPress={() => decreaseQty(userId, item.foodId._id)}
+                                    >
+                                        <Ionicons
+                                            name="remove-circle-outline"
+                                            size={20}
+                                            color="#FF9800"
+                                        />
+                                    </TouchableOpacity>
+
+                                    <Text style={styles.qtyText}>{item.quantity}</Text>
+
+                                    <TouchableOpacity
+                                        onPress={() => increaseQty(userId, item.foodId._id)}
+                                    >
+                                        <Ionicons
+                                            name="add-circle-outline"
+                                            size={20}
+                                            color="#4CAF50"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+
+                                <TouchableOpacity
+                                    onPress={() => removeItem(userId, item.foodId._id)}
+                                >
+                                    <Ionicons name="trash-outline" size={22} color="#F44336" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 )}
-
             />
 
-            {cart && cart.items &&
-                <Text style={styles.total}>
-                    Total: ₹
-                    {cart.items.reduce(
-                        (sum: number, item: any) => sum + item.foodId.price * item.quantity,
-                        0
-                    )}
-                </Text>
-            }
+            {cart && cart.items && (
+                <View style={styles.checkoutBar}>
+                    <View style={styles.totalRow}>
+                        <Text style={styles.totalLabel}>Total</Text>
+                        <Text style={styles.totalAmount}>
+                            ₹{cart.items.reduce(
+                                (sum: number, item: any) => sum + (item.foodId ? item.foodId.price : 0) * item.quantity, 0
+                            )}
+                        </Text>
+                    </View>
 
-            <Button title="Place Order" onPress={() => placeOrder(userId)} />
+                    <View style={styles.orderButton}>
+                        <Button title="Place Order" onPress={() => placeOrder(userId)} />
+                    </View>
+                </View>
+            )}
         </View>
-    );
+    )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 16
-    },
-    item: {
-        padding: 12,
-        borderBottomWidth: 1,
-        borderColor: "#ddd"
-    },
-    name: {
-        fontSize: 16,
-        fontWeight: "bold"
-    },
-    total: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginTop: 20
-    },
-    center: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    cartItem: {
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderColor: "#eee",
-    },
-    topRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    foodName: {
-        fontSize: 15,
-        fontWeight: "500",
-        flex: 1,
-        marginRight: 10,
-    },
-    price: {
-        fontSize: 15,
-        fontWeight: "600",
-    },
-    bottomRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: 8,
-    },
-    stepper: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 6,
-        paddingHorizontal: 8,
-        height: 32,
-    },
-    qtyText: {
-        marginHorizontal: 10,
-        fontWeight: "600",
-    },
-    removeText: {
-        color: "#E23744",
-        fontSize: 12,
-        fontWeight: "600",
-    },
-});
-

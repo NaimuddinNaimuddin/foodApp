@@ -20,10 +20,17 @@ export default function AddFoodItem() {
     if (!selectedRestaurant) return alert("Select a restaurant");
 
     try {
-      await axios.post(`${API_BASE_URL}/restaurants/food-items`, {
+      // console.log({
+      //   name,
+      //   price,
+      //   image,
+      //   category,
+      //   restaurantId: selectedRestaurant,
+      // });
+      await axios.post(`${API_BASE_URL}/food/food-items`, {
         name,
         price,
-        image,
+        image_url: image,
         category,
         restaurantId: selectedRestaurant,
       });

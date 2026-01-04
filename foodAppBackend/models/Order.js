@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 
 const orderItemSchema = new mongoose.Schema({
-    foodId: { type: mongoose.Schema.Types.ObjectId, ref: "FoodItem", required: true },
+    foodId: { type: mongoose.Schema.Types.ObjectId, ref: "Food", required: true },
     quantity: { type: Number, required: true, default: 1 },
-    // price: { type: Number, required: true }, // store price at order time
+    price: { type: Number, required: true }, // store price at order time
+    name: { type: String },
+    image_url: { type: String, default: 'https://res.cloudinary.com/naimucloudinary/image/upload/v1767041768/food_kyeqm9.png' },
 });
 
 const orderSchema = new mongoose.Schema({

@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
+// import { HelloWave } from "@/components/hello-wave";
 
 export default function FoodScreen() {
   const [refreshing, setRefreshing] = useState(false);

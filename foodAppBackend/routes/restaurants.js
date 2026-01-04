@@ -1,8 +1,8 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const Restaurant = require("../models/Restaurant");
-const FoodItem = require("../models/FoodItem");
-const Cart = require("../models/Cart");
+const Food = require("../models/Food");
 
 // Add a restaurant
 router.post("/", async (req, res) => {
@@ -38,7 +38,7 @@ router.post("/food-items", async (req, res) => {
     console.log({ name, price, image_url, restaurantId, category });
     if (!restaurantId) return res.status(400).json({ error: "Restaurant ID required" });
 
-    const foodItem = await FoodItem.create({
+    const foodItem = await Food.create({
       name,
       price,
       category,
@@ -54,9 +54,35 @@ router.post("/food-items", async (req, res) => {
 });
 
 // Get Restaurant with Its Food Items
+// router.get("/:id/food-items", async (req, res) => {
+//   const items = await Food.find({ restaurant: req.params.id });
+//   res.json(items);
+// });
+
 router.get("/:id/food-items", async (req, res) => {
-  const items = await FoodItem.find({ restaurant: req.params.id });
-  res.json(items);
+  try {
+    const groupedItems = await Food.aggregate([
+      {
+        $match: {
+          restaurant: new mongoose.Types.ObjectId(req.params.id),
+          isAvailable: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          items: { $push: "$$ROOT" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    res.status(200).json(groupedItems);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;
