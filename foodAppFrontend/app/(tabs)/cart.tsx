@@ -140,12 +140,6 @@ export default function CartScreen() {
                                         />
                                     </TouchableOpacity>
                                 </View>
-
-                                <TouchableOpacity
-                                    onPress={() => removeItem(userId, item.foodId._id)}
-                                >
-                                    <Ionicons name="trash-outline" size={22} color="#F44336" />
-                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>
