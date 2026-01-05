@@ -1,0 +1,82 @@
+.container {
+  padding: 20px;
+}
+
+.pickerContainer select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.searchBar {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.refreshBtn {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.details {
+  flex: 1;
+}
+
+.name {
+  margin: 0;
+  font-size: 18px;
+}
+
+.category {
+  color: #666;
+  margin: 4px 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.rating {
+  font-weight: 600;
+}
+
+.status {
+  color: green;
+}
+
+.emptyText {
+  text-align: center;
+  margin-top: 20px;
+  color: #888;
+}

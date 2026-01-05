@@ -1,0 +1,35 @@
+.side-nav {
+    width: 240px;
+    height: 100vh;
+    padding: 20px;
+    background-color: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-title {
+    margin-bottom: 24px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.nav-link {
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: #e5e7eb;
+}
+
+.nav-link.active {
+    background-color: #2563eb;
+    color: #ffffff;
+}

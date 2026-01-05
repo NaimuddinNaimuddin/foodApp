@@ -9,10 +9,10 @@ const YOUR_UPLOAD_PRESET = import.meta.env.VITE_YOUR_UPLOAD_PRESET;
 export default function CreateRestaurant() {
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
-    const [image, setImage] = useState(null);
-    const [address, setAddress] = useState(null);
-    const [status, setStatus] = useState(null);
-    const [location, setLocation] = useState(null);
+    const [image, setImage] = useState("");
+    const [address, setAddress] = useState("");
+    const [status, setStatus] = useState("");
+    const [location, setLocation] = useState("");
     const [loading, setLoading] = useState(false);
 
     const uploadImageToCloudinary = async () => {
@@ -59,7 +59,7 @@ export default function CreateRestaurant() {
     };
 
     return (
-        <div style={{ maxWidth: "60%", margin: "auto" }}>
+        <div style={{ margin: "20px 100px" }}>
             <h2>Create Restaurant</h2>
 
             <form onSubmit={handleSubmit}>

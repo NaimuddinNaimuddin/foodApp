@@ -46,7 +46,7 @@ export default function AddFoodItem() {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "auto" }}>
+    <div style={{ margin: "20px 100px" }}>
       <h2>Add Food Item</h2>
       <form onSubmit={handleSubmit}>
         <select

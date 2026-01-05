@@ -1,0 +1,102 @@
+.container {
+    padding: 16px;
+}
+
+.loading {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.errorText {
+    text-align: center;
+    margin-top: 20px;
+    color: red;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tab.active {
+    background-color: #e23744;
+    border-color: #e23744;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Food Cards */
+.foodList {
+    display: flex;
+    flex-direction: column;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    padding: 12px 12px;
+    margin: 6px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.image {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: #f2f2f2;
+}
+
+.info {
+    /* flex: 1; */
+    margin-left: 12px;
+}
+
+.foodName {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.price {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.addBtn {
+    margin-top: 6px;
+    border: 1px solid #e23744;
+    background: transparent;
+    color: #e23744;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.addBtn:hover {
+    background-color: #e23744;
+    color: #fff;
+}
+
+.emptyText {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+}
