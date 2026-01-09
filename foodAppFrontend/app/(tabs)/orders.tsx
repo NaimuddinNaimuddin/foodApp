@@ -42,7 +42,16 @@ export default function OrdersScreen() {
     return (
       <View style={styles.orderCard}>
         <Text style={styles.orderId}>
-          Order • {new Date(order.createdAt).toDateString()}
+          Order •{" "}
+          {new Date(order.createdAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+
         </Text>
 
         <Text style={styles.status}>Status: {order.status}</Text>
@@ -53,14 +62,14 @@ export default function OrdersScreen() {
         {order.items.map((item: any) => (
           <View key={item._id} style={styles.itemRow}>
             <View>
-              <Text style={styles.foodName}>{item && item.foodId && item.foodId.name}</Text>
+              <Text style={styles.foodName}>{item && item.name}</Text>
               <Text style={styles.restaurant}>
-                {item && item.foodId && item.foodId.restaurant && item.foodId.restaurant.name}
+                {item && item.foodId && item.foodId.restaurant_id && item.foodId.restaurant_id.name}
               </Text>
             </View>
 
             <Text style={styles.price}>
-              ₹{item.foodId ? item.foodId.price : 0} × {item.quantity}
+              ₹{item && item.price} × {item.quantity}
             </Text>
           </View>
         ))}

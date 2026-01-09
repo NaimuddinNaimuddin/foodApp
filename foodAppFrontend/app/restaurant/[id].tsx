@@ -10,6 +10,9 @@ interface Food {
   _id: string;
   name: string;
   price: number;
+  mrp: number;
+  quantity_info: string;
+  short_desc?: string;
   image_url?: string;
 }
 
@@ -21,8 +24,6 @@ interface CategoryGroup {
 
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  // const [foodItems, setFoodItems] = useState<Food[]>([]);
-  // const [foodItems, setFoodItems] = useState<CategoryGroup[]>([]);
   const [foodItems, setFoodItems] = useState<CategoryGroup[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const selectedItems =
@@ -102,17 +103,25 @@ export default function RestaurantScreen() {
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image
-              source={{ uri: item.image_url }}
-              style={styles.image}
-            />
+            <Image source={{ uri: item.image_url }} style={styles.image} />
 
             <View style={styles.info}>
-              <Text style={styles.foodName} numberOfLines={2}>
+              <Text style={styles.foodName} numberOfLines={1}>
                 {item.name}
               </Text>
 
-              <Text style={styles.price}>₹{item.price.toFixed(2)}</Text>
+              <Text style={styles.qty}>{item.quantity_info}</Text>
+
+              {item.short_desc ? (
+                <Text style={styles.desc} numberOfLines={1}>
+                  {item.short_desc}
+                </Text>
+              ) : null}
+
+              <View style={styles.priceRow}>
+                <Text style={styles.price}>₹{item.price}</Text>
+                <Text style={styles.mrp}>₹{item.mrp}</Text>
+              </View>
 
               <TouchableOpacity
                 style={styles.addBtn}
@@ -183,8 +192,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 90,
-    height: 90,
+    width: 110,
+    height: 110,
     borderRadius: 8,
     backgroundColor: "#f2f2f2",
   },
@@ -200,10 +209,35 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
-  price: {
-    fontSize: 14,
-    fontWeight: "600",
+  qty: {
+    fontSize: 10,
+    color: "#666",
+    marginTop: 1,
+  },
+
+  desc: {
+    fontSize: 12,
+    color: "#777",
+    marginTop: 3,
+  },
+
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 4,
+  },
+
+  price: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#000",
+    marginRight: 8,
+  },
+
+  mrp: {
+    fontSize: 13,
+    color: "#999",
+    textDecorationLine: "line-through",
   },
 
   addBtn: {
@@ -212,7 +246,7 @@ const styles = StyleSheet.create({
     borderColor: "#E23744",
     borderRadius: 6,
     paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingVertical: 5,
     marginTop: 6,
   },
 

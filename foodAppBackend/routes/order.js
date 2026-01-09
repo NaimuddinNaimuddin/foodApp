@@ -55,7 +55,7 @@ router.get("/:userId", async (req, res) => {
         const orders = await Order.find({ userId })
             .populate({
                 path: "items.foodId",        // populate foodId first
-                populate: { path: "restaurant" } // nested populate inside food
+                populate: { path: "restaurant_id" } // nested populate inside food
             });
 
         if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });

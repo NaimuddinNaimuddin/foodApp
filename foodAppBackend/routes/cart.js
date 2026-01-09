@@ -9,11 +9,9 @@ router.post("/add", async (req, res) => {
     const { userId, foodId } = req.body;
 
     let cart = await Cart.findOne({ userId });
-
     if (!cart) {
         cart = new Cart({ userId, items: [] });
     }
-
     const item = cart.items.find(i => i.foodId.equals(foodId));
 
     if (item) {
@@ -28,8 +26,15 @@ router.post("/add", async (req, res) => {
 
 // get cart 
 router.get("/:userId", async (req, res) => {
-    const cart = await Cart.findOne({ userId: req.params.userId }).populate("items.foodId");
-    res.json(cart);
+    try {
+        const cart = await Cart.findOne({ userId: req.params.userId }).populate("items.foodId");
+        if (!cart) return res.json(null);
+        // ✅ remove items where foodId is null
+        cart.items = cart.items.filter(item => item.foodId !== null);
+        res.json(cart);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 // remove from cart
@@ -81,20 +86,20 @@ router.put("/decrease/:userId/:productId", async (req, res) => {
 });
 
 router.put("/increase/:userId/:productId", async (req, res) => {
-  const { userId, productId } = req.params;
+    const { userId, productId } = req.params;
 
-  try {
-    await Cart.updateOne(
-      { userId, "items.foodId": productId },
-      { $inc: { "items.$.quantity": 1 } }
-    );
+    try {
+        await Cart.updateOne(
+            { userId, "items.foodId": productId },
+            { $inc: { "items.$.quantity": 1 } }
+        );
 
-    const cart = await Cart.findOne({ userId }).populate("items.foodId");
-    res.json(cart);
+        const cart = await Cart.findOne({ userId }).populate("items.foodId");
+        res.json(cart);
 
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 });
 
 
