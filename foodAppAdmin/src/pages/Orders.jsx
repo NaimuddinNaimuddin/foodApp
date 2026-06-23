@@ -20,7 +20,9 @@ export default function Orders() {
             })
             .catch(() => alert("Order fetch Error."))
             .finally(() => setLoading(false));
+    }, []);
 
+    useEffect(() => {
         const eventSource = new EventSource(`${API_BASE_URL}/orders/stream`);
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -29,7 +31,7 @@ export default function Orders() {
                 setOrders((prev) => [data.order, ...prev]);
             }
         };
-    }, []);
+    }, [])
 
     return (
         <div>
