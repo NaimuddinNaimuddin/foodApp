@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import GetCurrentLocation from "../components/GetCurrentLocation";
+// import GetCurrentLocation from "../components/GetCurrentLocation";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME;
@@ -12,7 +12,7 @@ export default function CreateRestaurant() {
     const [image, setImage] = useState("");
     const [address, setAddress] = useState("");
     const [status, setStatus] = useState("");
-    const [location, setLocation] = useState("");
+    // const [location, setLocation] = useState("");
     const [loading, setLoading] = useState(false);
 
     const uploadImageToCloudinary = async () => {
@@ -32,7 +32,7 @@ export default function CreateRestaurant() {
         e.preventDefault();
 
         if (!image) return alert("Please select an image");
-        if (!location) return alert("Please select location");
+        // if (!location) return alert("Please select location");
         try {
             setLoading(true);
 
@@ -43,8 +43,8 @@ export default function CreateRestaurant() {
             await axios.post(`${API_BASE_URL}/restaurants`, {
                 name,
                 image_url: imageUrl,
-                latitude: location.lat,
-                longitude: location.lng,
+                // latitude: location.lat,
+                // longitude: location.lng,
             });
 
             alert("Restaurant created!");
@@ -102,8 +102,8 @@ export default function CreateRestaurant() {
                     onChange={(e) => setImage(e.target.files[0])}
                 />
 
-                <h4>Select Location</h4>
-                <GetCurrentLocation onLocationSelect={setLocation} />
+                {/* <h4>Select Location</h4> */}
+                {/* <GetCurrentLocation onLocationSelect={setLocation} /> */}
 
                 <button className="btn btn-info mb-2" type="submit" disabled={loading}>
                     {loading ? "Uploading..." : "Create"}

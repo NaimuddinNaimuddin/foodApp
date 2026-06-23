@@ -20,6 +20,12 @@ app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/food", foodRoutes);
 
+app.get("/orders/stream", (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream");
+
+  clients.push(res);
+});
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))

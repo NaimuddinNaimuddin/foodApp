@@ -14,12 +14,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
-// import { HelloWave } from "@/components/hello-wave";
 
 export default function FoodScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
-  const [location, setLocation] = useState("");
+  // const [location, setLocation] = useState("");
   const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
@@ -46,25 +45,29 @@ export default function FoodScreen() {
   return (
     <SafeAreaView style={styles.container}>
 
-      <View style={styles.pickerContainer}>
+      {/* <View style={styles.pickerContainer}>
         <Picker selectedValue={location} onValueChange={setLocation}>
           <Picker.Item label="📍 Select Location" value="" />
           <Picker.Item label="New York" value="newyork" />
           <Picker.Item label="London" value="london" />
           <Picker.Item label="Tokyo" value="tokyo" />
         </Picker>
-      </View>
+      </View> */}
 
       <TextInput
         style={styles.searchBar}
-        placeholder="Search restaurants..."
+        placeholder="Search Grocery Items..."
         value={search}
         onChangeText={setSearch}
       />
-
       <FlatList
         onRefresh={() => loadRestaurants()}
         refreshing={refreshing}
+        numColumns={3}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          paddingHorizontal: 8,
+        }}
         data={filtered}
         keyExtractor={(item: { _id: string, name: string, image_url: string, ratings: string, status: string, category: string }) => item._id}
         renderItem={({ item }) => (
@@ -77,21 +80,15 @@ export default function FoodScreen() {
               })
             }
           >
-            <View style={styles.card}>
-              <Image
-                source={{ uri: item.image_url }}
-                style={styles.image}
-              />
+            <Image
+              source={{ uri: item.image_url }}
+              style={styles.image}
+            />
 
-              <View style={styles.details}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.category}>{item.category}</Text>
-
-                <View style={styles.row}>
-                  <Text style={styles.rating}>⭐ {item.ratings}</Text>
-                  <Text style={styles.status}>{item.status}</Text>
-                </View>
-              </View>
+            <View style={styles.details}>
+              <Text style={styles.category} numberOfLines={1}>
+                {item.name}
+              </Text>
             </View>
 
           </Pressable>
@@ -102,6 +99,28 @@ export default function FoodScreen() {
 }
 
 const styles = StyleSheet.create({
+  card: {
+    width: "32%", // 3 cards per row
+    marginBottom: 12,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+
+  image: {
+    width: "100%",
+    height: 100,
+    resizeMode: "cover",
+  },
+
+  details: {
+    padding: 6,
+  },
+
+  category: {
+    fontSize: 12,
+    textAlign: "center",
+  },
   container: {
     flex: 1,
     padding: 15,
@@ -146,32 +165,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#999",
   },
-  card: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    marginVertical: 4,
-    marginHorizontal: 2,
-    borderRadius: 7,
-    padding: 2
-  },
-  image: {
-    width: 90,
-    height: 90,
-    borderRadius: 7,
-  },
-  details: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: "space-between",
-  },
   name: {
     fontSize: 16,
     fontWeight: "600",
-  },
-  category: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#999"
   },
   row: {
     flexDirection: "row",

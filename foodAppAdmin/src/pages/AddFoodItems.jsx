@@ -7,6 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function AddFoodItem() {
   const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [selectedRestaurant, setSelectedRestaurant] = useState("");
   const [name, setName] = useState("");
@@ -24,9 +25,10 @@ export default function AddFoodItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (price > mrp) return alert("Price should less than MRP.");
     if (!selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) return alert("Required Fields Missing.");
-
     try {
+      setLoading(true);
       const { secure_url, public_id } = await uploadImageToCloudinary(image);
       console.log({
         restaurant_id: selectedRestaurant,
@@ -52,9 +54,10 @@ export default function AddFoodItem() {
         image_url: secure_url,
         image_id: public_id
       });
-
+      setLoading(false);
       toast.success("Food Item Added!")
     } catch (err) {
+      setLoading(false);
       console.error(err);
       toast.error("Error Adding Food Item.");
     }

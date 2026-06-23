@@ -40,11 +40,12 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
-.image {
-  width: 100px;
-  height: 100px;
+.image-restaurant {
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 8px;
+  background: #eee;
 }
 
 .details {

@@ -1,21 +1,21 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const router = express.Router();
 const Restaurant = require("../models/Restaurant");
 const Food = require("../models/Food");
+const cloudinary = require("../config/cloudinary");
 
 // Add a restaurant
 router.post("/", async (req, res) => {
   try {
-    const { name, latitude, longitude, image_url } = req.body;
-    console.log({ name, latitude, longitude, image_url });
+    const { name, image_url } = req.body;
+    console.log({ name, image_url });
     const restaurant = new Restaurant({
       name,
       image_url,
-      location: {
-        type: "Point",
-        coordinates: [longitude, latitude]
-      }
+      // location: {
+      //   type: "Point",
+      //   coordinates: [longitude, latitude]
+      // }
     });
 
     await restaurant.save();
@@ -53,35 +53,62 @@ router.post("/food-items", async (req, res) => {
   }
 });
 
-// Get Restaurant with Its Food Items
-// router.get("/:id/food-items", async (req, res) => {
-//   const items = await Food.find({ restaurant: req.params.id });
-//   res.json(items);
-// });
+// Get Restaurant by id
+router.get("/:id", async (req, res) => {
+  const items = await Restaurant.findById(req.params.id);
+  res.json(items);
+});
 
-router.get("/:id/food-items", async (req, res) => {
+// PUT /restaurants/edit/:id
+router.put("/edit/:id", async (req, res) => {
   try {
-    const groupedItems = await Food.aggregate([
-      {
-        $match: {
-          restaurant: new mongoose.Types.ObjectId(req.params.id),
-          isAvailable: true,
-        },
-      },
-      {
-        $group: {
-          _id: "$category",
-          items: { $push: "$$ROOT" },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-    ]);
+    const { id } = req.params;
+    const {
+      name,
+      category,
+      address,
+      status,
+      image_url,
+      image_id,
+      // latitude,
+      // longitude
+    } = req.body;
 
-    res.status(200).json(groupedItems);
+    // Validation
+    if (!name || !category || !address || !status) {
+      return res.status(400).json({ error: "Required fields missing" });
+    }
+
+    // Find restaurant
+    const restaurant = await Restaurant.findById(id);
+    if (!restaurant) {
+      return res.status(404).json({ error: "Restaurant not found" });
+    }
+
+    // Delete old image if replaced
+    if (image_url && image_url !== restaurant.image_url) {
+      if (restaurant.image_id) {
+        await cloudinary.uploader.destroy(restaurant.image_id);
+      }
+    }
+
+    // Update fields
+    restaurant.name = name;
+    restaurant.category = category;
+    restaurant.address = address;
+    restaurant.status = status;
+    restaurant.image_url = image_url || restaurant.image_url;
+    restaurant.image_id = image_id || restaurant.image_id;
+    // restaurant.latitude = latitude || restaurant.latitude;
+    // restaurant.longitude = longitude || restaurant.longitude;
+
+    await restaurant.save();
+
+    res.status(200).json({ message: "Restaurant updated successfully" });
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

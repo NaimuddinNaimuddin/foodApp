@@ -9,22 +9,25 @@ export default function SideNav() {
 
     return (
         <nav className="side-nav">
-            <h3 className="nav-title">Fasto</h3>
+            <h3 className="nav-title">Food App</h3>
             <h3 className="nav-title">🍽 Admin Panel</h3>
             <hr />
             <Link to="/" className={isActive("/")}>
                 Home
             </Link>
+            <Link to="/orders" className={isActive("/orders")}>
+                Orders
+            </Link>
 
-            <Link to="/foods" className={isActive("/foods")}>
+            <Link to="/restaurants" className={isActive("/restaurants")}>
                 Restaurant
             </Link>
 
-            <Link to="/create" className={isActive("/create")}>
+            <Link to="/restaurant/add" className={isActive("/restaurant/add")}>
                 Create Restaurant
             </Link>
 
-            <Link to="/add-food" className={isActive("/add-food")}>
+            <Link to="/food/add" className={isActive("/add-food")}>
                 Add Food
             </Link>
         </nav>

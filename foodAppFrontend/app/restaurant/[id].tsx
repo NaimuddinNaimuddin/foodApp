@@ -3,24 +3,10 @@ import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import { CategoryGroup } from "../../types/orders";
+import { restaurantStyles as styles } from "../../assets/styles/restaurantStyles";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-
-interface Food {
-  _id: string;
-  name: string;
-  price: number;
-  mrp: number;
-  quantity_info: string;
-  short_desc?: string;
-  image_url?: string;
-}
-
-interface CategoryGroup {
-  category: string;
-  items: Food[];
-}
-
 
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -67,7 +53,6 @@ export default function RestaurantScreen() {
     Toast.show({
       type: "success",
       text1: "Added to Cart 🛒",
-      text2: "Item added successfully",
     });
   };
 
@@ -140,131 +125,3 @@ export default function RestaurantScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  tabContainer: {
-    paddingVertical: 10,
-  },
-
-  tab: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    marginRight: 10,
-  },
-
-  activeTab: {
-    backgroundColor: "#E23744",
-    borderColor: "#E23744",
-  },
-
-  tabText: {
-    fontSize: 14,
-    color: "#555",
-    fontWeight: "500",
-  },
-
-  activeTabText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-
-  container: { padding: 16 },
-
-  categorySection: {
-    marginBottom: 20,
-  },
-
-  categoryTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 10,
-    color: "#333",
-  },
-
-  card: {
-    flexDirection: "row",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
-  },
-
-  image: {
-    width: 110,
-    height: 110,
-    borderRadius: 8,
-    backgroundColor: "#f2f2f2",
-  },
-
-  info: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: "space-between",
-  },
-
-  foodName: {
-    fontSize: 15,
-    fontWeight: "500",
-  },
-
-  qty: {
-    fontSize: 10,
-    color: "#666",
-    marginTop: 1,
-  },
-
-  desc: {
-    fontSize: 12,
-    color: "#777",
-    marginTop: 3,
-  },
-
-  priceRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-  },
-
-  price: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#000",
-    marginRight: 8,
-  },
-
-  mrp: {
-    fontSize: 13,
-    color: "#999",
-    textDecorationLine: "line-through",
-  },
-
-  addBtn: {
-    alignSelf: "flex-start",
-    borderWidth: 1,
-    borderColor: "#E23744",
-    borderRadius: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 5,
-    marginTop: 6,
-  },
-
-  addText: {
-    color: "#E23744",
-    fontWeight: "700",
-    fontSize: 13,
-  },
-
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "#888",
-  },
-
-  errorText: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "red",
-  },
-});

@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const RestaurantSchema = new mongoose.Schema({
   image_url: {
     type: String,
-    required: true
+  },
+  image_id: {
+    type: String,
   },
   name: {
     type: String,
@@ -25,17 +27,17 @@ const RestaurantSchema = new mongoose.Schema({
     type: String,
     default: 'open',
   },
-  location: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: true
-    },
-    coordinates: {
-      type: [Number], // [longitude, latitude]
-      required: true
-    }
-  },
+  // location: {
+  //   type: {
+  //     type: String,
+  //     enum: ["Point"],
+  //     required: true
+  //   },
+  //   coordinates: {
+  //     type: [Number], // [longitude, latitude]
+  //     required: true
+  //   }
+  // },
   createdAt: {
     type: Date,
     default: Date.now
@@ -43,6 +45,6 @@ const RestaurantSchema = new mongoose.Schema({
 });
 
 // Required for geospatial queries
-RestaurantSchema.index({ location: "2dsphere" });
+// RestaurantSchema.index({ location: "2dsphere" });
 
 module.exports = mongoose.model("Restaurant", RestaurantSchema);

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "../styles/Food.css";
+import { calculateDP } from "../services/helper";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function RestaurantScreen() {
     const { id } = useParams();
-
+    const navigate = useNavigate();
     const [foodItems, setFoodItems] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -43,17 +44,8 @@ export default function RestaurantScreen() {
         fetchFoodItems();
     }, [id]);
 
-    const addToCart = async (foodId) => {
-        try {
-            await axios.post(`${API_BASE_URL}/cart/add`, {
-                userId: "64a3f7c6b9c12345abcde678",
-                foodId,
-            });
-
-            toast.success("Added to Cart 🛒");
-        } catch {
-            toast.error("Failed to add item");
-        }
+    const gotoEdit = (foodId) => {
+        navigate(`/food/edit/${foodId}`);
     };
 
     if (loading) return <p className="loading">Loading...</p>;
@@ -86,22 +78,27 @@ export default function RestaurantScreen() {
 
                 {selectedItems.map((item) => (
                     <div className="card" key={item._id}>
-                        <div>
+                        <div className="image-wrapper">
                             <img
                                 src={item.image_url}
-                                alt={item.name}
-                                className="image"
+                                alt=""
+                                className="imageCustom"
                             />
+
+                            <div className="discount-percent">
+                                {calculateDP(item.mrp, item.price)}
+                            </div>
                         </div>
+
                         <div className="info">
                             <p className="foodName">{item.name}</p>
                             <p className="price">₹{item.price.toFixed(2)}</p>
 
                             <button
                                 className="addBtn"
-                                onClick={() => addToCart(item._id)}
+                                onClick={() => gotoEdit(item._id)}
                             >
-                                ADD
+                                EDIT
                             </button>
                         </div>
                     </div>

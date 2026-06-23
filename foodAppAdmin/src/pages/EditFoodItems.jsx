@@ -9,6 +9,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function EditFoodItem() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const [restaurants, setRestaurants] = useState([]);
     const [selectedRestaurant, setSelectedRestaurant] = useState("");
@@ -20,11 +21,13 @@ export default function EditFoodItem() {
     const [shortDesc, setShortDesc] = useState("");
     const [longDesc, setLongDesc] = useState("");
     const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState("");
 
     const [existingImageUrl, setExistingImageUrl] = useState("");
     const [existingImageId, setExistingImageId] = useState("");
 
     useEffect(() => {
+        setLoading(true);
         // Fetch restaurants
         axios.get(`${API_BASE_URL}/restaurants`)
             .then(res => setRestaurants(res.data));
@@ -44,7 +47,8 @@ export default function EditFoodItem() {
                 setExistingImageUrl(item.image_url);
                 setExistingImageId(item.image_id);
             })
-            .catch(() => toast.error("Failed to load food item"));
+            .catch(() => toast.error("Failed to load food item"))
+            .finally(() => setLoading(false));
     }, [id]);
 
     const handleSubmit = async (e) => {
@@ -55,6 +59,7 @@ export default function EditFoodItem() {
         }
 
         try {
+            setLoading(true);
             let image_url = existingImageUrl;
             let image_id = existingImageId;
 
@@ -77,13 +82,21 @@ export default function EditFoodItem() {
                 image_url,
                 image_id
             });
-
+            setLoading(false);
             toast.success("Food Item Updated!");
-            navigate("/food-items");
         } catch (err) {
+            setLoading(false);
             console.error(err);
             toast.error("Error Updating Food Item.");
         }
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setImage(file);
+        setImagePreview(URL.createObjectURL(file));
     };
 
     return (
@@ -124,23 +137,43 @@ export default function EditFoodItem() {
                 <input className="form-control mb-2" value={longDesc}
                     onChange={(e) => setLongDesc(e.target.value)} placeholder="Long Description" />
 
-                {existingImageUrl && (
-                    <div className="mb-2">
-                        <img src={existingImageUrl} alt="Food"
-                            style={{ width: "120px", borderRadius: "8px" }} />
-                    </div>
-                )}
+                <div className="d-flex">
+                    {existingImageUrl && (
+                        <div className="mb-2">
+                            <img src={existingImageUrl} alt="Food"
+                                style={{ width: "120px", borderRadius: "8px" }} />
+                        </div>
+                    )}
 
+                    {imagePreview && (
+                        <div className="mb-3">
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                style={{
+                                    width: "120px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                    border: "1px solid #ddd",
+                                }}
+                            />
+                        </div>
+                    )}
+                </div>
                 <input
-                    className="form-control mb-3"
                     type="file"
+                    className="form-control mb-2"
                     accept="image/*"
-                    onChange={(e) => setImage(e.target.files[0])}
+                    onChange={handleImageChange}
                 />
 
-                <button className="btn btn-warning" type="submit">
-                    Update Food Item
+                <button disabled={loading} className="btn btn-warning" type="submit">
+                    {loading ? (<>
+                        <span className="spinner-border spinner-border-sm me-2" />
+                        Updating...
+                    </>) : ("Update Food Item")}
                 </button>
+
             </form>
         </div>
     );

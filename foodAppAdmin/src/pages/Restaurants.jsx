@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "../styles/FoodScreen.css";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export default function FoodScreen() {
+export default function Restaurants() {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+
     const [search, setSearch] = useState("");
     const [location, setLocation] = useState("");
     const [restaurants, setRestaurants] = useState([]);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         loadRestaurants();
@@ -54,11 +54,6 @@ export default function FoodScreen() {
                 onChange={(e) => setSearch(e.target.value)}
             />
 
-            {/* Refresh */}
-            <button className="refreshBtn" onClick={loadRestaurants}>
-                {loading ? "Loading..." : "Refresh"}
-            </button>
-
             {/* Restaurant List */}
             <div className="list">
                 {filtered.map((item) => (
@@ -67,7 +62,7 @@ export default function FoodScreen() {
                         className="card"
                         onClick={() => navigate(`/restaurant/${item._id}`)}
                     >
-                        <img src={item.image_url} alt={item.name} className="image" />
+                        <img src={item.image_url} alt={item.name} className="image-restaurant" />
 
                         <div className="details">
                             <h3 className="name">{item.name}</h3>
@@ -77,7 +72,14 @@ export default function FoodScreen() {
                                 <span className="rating">⭐ {item.ratings}</span>
                                 <span className="status">{item.status}</span>
                             </div>
+                            <button
+                                className="addBtn"
+                                onClick={(e) => (e.stopPropagation(), navigate(`/restaurant/edit/${item._id}`))}
+                            >
+                                EDIT
+                            </button>
                         </div>
+
                     </div>
                 ))}
 

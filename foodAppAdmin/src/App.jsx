@@ -2,9 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Home from "./pages/Home";
 import CreateRestaurant from "./pages/CreateRestaurant";
+import EditRestaurant from "./pages/EditRestaurants";
 import AddFoodItems from "./pages/AddFoodItems";
 import EditFoodItems from "./pages/EditFoodItems";
-import FoodScreen from "./pages/FoodScreen";
+import Restaurants from "./pages/Restaurants";
 import SideNav from "./components/SideNav";
 import Food from "./components/Food";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,10 +21,14 @@ export default function App() {
         <div style={{ width: '80%' }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/foods" element={<FoodScreen />} />
+            <Route path="/orders" element={<Home />} />
+
+            <Route path="/restaurants" element={<Restaurants />} />
+            <Route path="/restaurant/add" element={<CreateRestaurant />} />
+            <Route path="/restaurant/edit/:id" element={<EditRestaurant />} />
+
             <Route path="/restaurant/:id" element={<Food />} />
-            <Route path="/create" element={<CreateRestaurant />} />
-            <Route path="/add-food" element={<AddFoodItems />} />
+            <Route path="/food/add" element={<AddFoodItems />} />
             <Route path="/food/edit/:id" element={<EditFoodItems />} />
           </Routes>
         </div>

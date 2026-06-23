@@ -14,14 +14,6 @@ export interface Restaurant {
   createdAt: string;
 }
 
-export interface Food {
-  _id: string;
-  name: string;
-  price: number;
-  isAvailable: boolean;
-  restaurant: Restaurant;
-}
-
 export interface OrderItem {
   _id: string;
   quantity: number;
@@ -38,4 +30,19 @@ export interface Order {
   status: "Pending" | "Confirmed" | "Delivered" | "Cancelled";
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Food {
+  _id: string;
+  name: string;
+  price: number;
+  mrp: number;
+  quantity_info: string;
+  short_desc?: string;
+  image_url?: string;
+}
+
+export interface CategoryGroup {
+  category: string;
+  items: Food[];
 }
