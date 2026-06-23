@@ -3,6 +3,7 @@ const router = express.Router();
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Food = require("../models/Food");
+const { notifyNewOrder } = require("../sse");
 
 router.post("/place", async (req, res) => {
     const { userId, items, deliveryAddress, paymentMethod = 'COD' } = req.body;
@@ -38,13 +39,30 @@ router.post("/place", async (req, res) => {
         });
 
         await order.save();
-
+        // Notify all admin dashboards
+        notifyNewOrder(order);
         await Cart.deleteOne({ userId });
-
         res.status(201).json({ message: "Order placed successfully", order });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error", error: err.message });
+    }
+});
+
+router.get("/all", async (req, res) => {
+    try {
+
+        const orders = await Order.find({})
+            .populate({
+                path: "items.foodId",        // populate foodId first
+                populate: { path: "restaurant_id" } // nested populate inside food
+            });
+
+        if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
+
+        res.status(200).json(orders);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
 
