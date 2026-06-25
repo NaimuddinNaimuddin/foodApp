@@ -9,11 +9,30 @@ export default function Restaurants() {
     const [loading, setLoading] = useState(false);
 
     const [search, setSearch] = useState("");
-    const [location, setLocation] = useState("");
+    const [area_code, setAreaCode] = useState("");
     const [restaurants, setRestaurants] = useState([]);
 
     useEffect(() => {
         loadRestaurants();
+    }, []);
+
+    const [areas, setAreas] = useState([]);
+    const [areaLoading, setAreaLoading] = useState(false);
+
+    useEffect(() => {
+        setAreaLoading(true);
+        axios.get(`${API_BASE_URL}/area/all`)
+            .then((res) => {
+                if (res.status == 200) {
+                    setAreas(res.data);
+                    console.log(res.data);
+                }
+                if (res.status == 404) {
+                    alert('No Areas Found.')
+                }
+            })
+            .catch(() => alert("Areas fetch Error."))
+            .finally(() => setAreaLoading(false));
     }, []);
 
     const loadRestaurants = async () => {
@@ -30,19 +49,20 @@ export default function Restaurants() {
         }
     };
 
-    const filtered = restaurants.filter((r) =>
-        r.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = restaurants.filter((r) => {
+        return (!area_code ? !r.area_code : r.area_code === area_code || !r.area_code) && (r.name.toLowerCase().includes(search.toLowerCase()));
+    });
 
     return (
         <div className="container">
-            {/* Location Dropdown */}
             <div className="pickerContainer">
-                <select value={location} onChange={(e) => setLocation(e.target.value)}>
+                <select value={area_code} onChange={(e) => setAreaCode(e.target.value)}>
                     <option value="">📍 Select Location</option>
-                    <option value="newyork">New York</option>
-                    <option value="london">London</option>
-                    <option value="tokyo">Tokyo</option>
+                    {areas.map((area) => {
+                        return (
+                            <option key={area.code} value={area.code}>{area.code} - {area.name}</option>
+                        )
+                    })}
                 </select>
             </div>
 

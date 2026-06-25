@@ -11,6 +11,7 @@ export default function CreateRestaurant() {
     const [category, setCategory] = useState("");
     const [image, setImage] = useState("");
     const [address, setAddress] = useState("");
+    const [areaCode, setAreaCode] = useState("");
     const [status, setStatus] = useState("");
     // const [location, setLocation] = useState("");
     const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ export default function CreateRestaurant() {
             await axios.post(`${API_BASE_URL}/restaurants`, {
                 name,
                 image_url: imageUrl,
+                area_code: Number(areaCode),
                 // latitude: location.lat,
                 // longitude: location.lng,
             });
@@ -87,6 +89,15 @@ export default function CreateRestaurant() {
                     onChange={(e) => setAddress(e.target.value)}
                     required
                 />
+                <select
+                    className="form-control mb-2"
+                    value={areaCode}
+                    onChange={(e) => setAreaCode(e.target.value)}
+                >
+                    <option value="">Select Location</option>
+                    <option value="245412">245412</option>
+                    <option value="201003">201003</option>
+                </select>
                 <input
                     className="form-control mb-2"
                     type="text"

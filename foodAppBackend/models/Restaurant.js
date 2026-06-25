@@ -23,6 +23,9 @@ const RestaurantSchema = new mongoose.Schema({
   address: {
     type: String,
   },
+  area_code: {
+    type: String,
+  },
   status: {
     type: String,
     default: 'open',

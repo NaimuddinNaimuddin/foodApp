@@ -7,11 +7,12 @@ const cloudinary = require("../config/cloudinary");
 // Add a restaurant
 router.post("/", async (req, res) => {
   try {
-    const { name, image_url } = req.body;
+    const { name, image_url, area_code } = req.body;
     console.log({ name, image_url });
     const restaurant = new Restaurant({
       name,
       image_url,
+      area_code,
       // location: {
       //   type: "Point",
       //   coordinates: [longitude, latitude]
@@ -34,8 +35,8 @@ router.get("/", async (req, res) => {
 // Add Food Item to a Restaurant
 router.post("/food-items", async (req, res) => {
   try {
-    const { name, price, image_url, restaurantId, category } = req.body;
-    console.log({ name, price, image_url, restaurantId, category });
+    const { name, price, image_url, restaurantId, category, area_code } = req.body;
+    console.log({ name, price, image_url, restaurantId, category, area_code });
     if (!restaurantId) return res.status(400).json({ error: "Restaurant ID required" });
 
     const foodItem = await Food.create({
@@ -43,6 +44,7 @@ router.post("/food-items", async (req, res) => {
       price,
       category,
       image_url,
+      area_code,
       restaurant: restaurantId,
     });
 
@@ -70,6 +72,7 @@ router.put("/edit/:id", async (req, res) => {
       status,
       image_url,
       image_id,
+      area_code,
       // latitude,
       // longitude
     } = req.body;
@@ -97,6 +100,7 @@ router.put("/edit/:id", async (req, res) => {
     restaurant.category = category;
     restaurant.address = address;
     restaurant.status = status;
+    restaurant.area_code = area_code;
     restaurant.image_url = image_url || restaurant.image_url;
     restaurant.image_id = image_id || restaurant.image_id;
     // restaurant.latitude = latitude || restaurant.latitude;
