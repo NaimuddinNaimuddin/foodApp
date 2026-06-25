@@ -8,6 +8,8 @@ const userRoutes = require("./routes/users");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/order");
 const foodRoutes = require("./routes/food");
+const areaRoutes = require("./routes/area");
+
 const { addClient, removeClient } = require("./sse");
 
 const app = express();
@@ -40,6 +42,7 @@ app.use("/users", userRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/food", foodRoutes);
+app.use("/area", areaRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
