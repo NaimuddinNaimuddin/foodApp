@@ -21,6 +21,12 @@ export default function TabsLayout() {
       <Tabs.Screen name="cart" options={{ title: "Cart" }} />
       <Tabs.Screen name="orders" options={{ title: "My Orders" }} />
       <Tabs.Screen name="index" options={{ title: "My Profile" }} />
+      <Tabs.Screen name="restaurant/[id]" options={{
+        href: null,
+        title: "Add To Cart",
+        headerShown: true,
+      }}
+      />
     </Tabs>
   );
 }

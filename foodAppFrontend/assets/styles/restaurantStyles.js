@@ -2,60 +2,60 @@ import { StyleSheet } from "react-native";
 
 
 export const restaurantStyles = StyleSheet.create({
-    tabContainer: {
-        paddingVertical: 10,
+    container: {
+        flex: 1,
+        flexDirection: "row",
+        backgroundColor: "#fff",
+    },
+
+    sidebar: {
+        width: 110,
+        backgroundColor: "#f5f5f5",
+        borderRightWidth: 1,
+        borderRightColor: "#e5e5e5",
+    },
+
+    content: {
+        flex: 1,
+        paddingHorizontal: 10,
     },
 
     tab: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: "#ddd",
-        marginRight: 10,
+        paddingVertical: 18,
+        paddingHorizontal: 10,
+        borderLeftWidth: 4,
+        borderLeftColor: "transparent",
+        backgroundColor: "#f5f5f5",
     },
 
     activeTab: {
-        backgroundColor: "#E23744",
-        borderColor: "#E23744",
+        backgroundColor: "#fff",
+        borderLeftColor: "#ff5722",
     },
 
     tabText: {
         fontSize: 14,
-        color: "#555",
+        color: "#666",
         fontWeight: "500",
     },
 
     activeTabText: {
-        color: "#fff",
+        color: "#ff5722",
         fontWeight: "700",
-    },
-
-    container: { padding: 16 },
-
-    categorySection: {
-        marginBottom: 20,
-    },
-
-    categoryTitle: {
-        fontSize: 18,
-        fontWeight: "700",
-        marginBottom: 10,
-        color: "#333",
     },
 
     card: {
         flexDirection: "row",
+        backgroundColor: "#fff",
         paddingVertical: 12,
         borderBottomWidth: 1,
-        borderColor: "#eee",
+        borderBottomColor: "#eee",
     },
 
     image: {
-        width: 110,
-        height: 110,
-        borderRadius: 8,
-        backgroundColor: "#f2f2f2",
+        width: 90,
+        height: 90,
+        borderRadius: 10,
     },
 
     info: {
@@ -65,66 +65,132 @@ export const restaurantStyles = StyleSheet.create({
     },
 
     foodName: {
-        fontSize: 15,
-        fontWeight: "500",
+        fontSize: 16,
+        fontWeight: "700",
     },
 
     qty: {
-        fontSize: 10,
         color: "#666",
-        marginTop: 1,
+        fontSize: 13,
     },
 
     desc: {
+        color: "#888",
         fontSize: 12,
-        color: "#777",
-        marginTop: 3,
+        marginVertical: 4,
     },
 
     priceRow: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 4,
+        gap: 8,
     },
 
     price: {
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: "700",
         color: "#000",
-        marginRight: 8,
     },
 
     mrp: {
+        textDecorationLine: "line-through",
+        color: "#999",
+    },
+
+    addBtn: {
+        marginTop: 8,
+        alignSelf: "flex-start",
+        paddingHorizontal: 18,
+        paddingVertical: 7,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: "#ff5722",
+    },
+
+    addText: {
+        color: "#ff5722",
+        fontWeight: "700",
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 10,
+    },
+
+    listContent: {
+        paddingVertical: 10,
+    },
+
+    row: {
+        justifyContent: "space-between",
+    },
+
+    card: {
+        width: "48%",
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        marginBottom: 12,
+        overflow: "hidden",
+        borderWidth: 1,
+        borderColor: "#eee",
+        elevation: 2,
+    },
+
+    image: {
+        width: "100%",
+        height: 120,
+    },
+
+    info: {
+        padding: 10,
+    },
+
+    foodName: {
+        fontSize: 15,
+        fontWeight: "700",
+    },
+
+    qty: {
+        fontSize: 12,
+        color: "#666",
+        marginTop: 3,
+    },
+
+    desc: {
+        fontSize: 12,
+        color: "#888",
+        marginTop: 4,
+        minHeight: 32,
+    },
+
+    priceRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 8,
+    },
+
+    price: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: "#000",
+    },
+
+    mrp: {
+        marginLeft: 8,
         fontSize: 13,
         color: "#999",
         textDecorationLine: "line-through",
     },
 
     addBtn: {
-        alignSelf: "flex-start",
-        borderWidth: 1,
-        borderColor: "#E23744",
-        borderRadius: 6,
-        paddingHorizontal: 16,
-        paddingVertical: 5,
-        marginTop: 6,
+        marginTop: 10,
+        backgroundColor: "#ff5722",
+        borderRadius: 8,
+        paddingVertical: 8,
+        alignItems: "center",
     },
 
     addText: {
-        color: "#E23744",
+        color: "#fff",
         fontWeight: "700",
-        fontSize: 13,
-    },
-
-    emptyText: {
-        textAlign: "center",
-        marginTop: 20,
-        color: "#888",
-    },
-
-    errorText: {
-        textAlign: "center",
-        marginTop: 20,
-        color: "red",
     },
 });

@@ -10,3 +10,4 @@
 9. delete orders 
 10. work on products location 
 11. work on saving delivery address for user.
+12. delivery charges & other charges, conditions apply privacy policy.

@@ -4,8 +4,8 @@ import { FlatList, StyleSheet, Text, View, ActivityIndicator, Image, TouchableOp
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
-import { CategoryGroup } from "../../types/orders";
-import { restaurantStyles as styles } from "../../assets/styles/restaurantStyles";
+import { CategoryGroup } from "@/types/orders";
+import { restaurantStyles as styles } from "@/assets/styles/restaurantStyles";
 import { storage } from "@/lib/storage";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -89,71 +89,74 @@ export default function RestaurantScreen() {
   };
 
   if (isLoading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
-  if (isError) return <Text style={styles.errorText}>{error.message}</Text>;
+  if (isError) return <Text>{error.message}</Text>;
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={foodItems}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.category}
-        contentContainerStyle={styles.tabContainer}
-        renderItem={({ item }) => {
-          const active = item.category === selectedCategory;
+      {/* Left Sidebar */}
+      <View style={styles.sidebar}>
+        <FlatList
+          data={foodItems}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item) => item.category}
+          renderItem={({ item }) => {
+            const active = item.category === selectedCategory;
 
-          return (
-            <TouchableOpacity
-              style={[styles.tab, active && styles.activeTab]}
-              onPress={() => setSelectedCategory(item.category)}
-            >
-              <Text style={[styles.tabText, active && styles.activeTabText]}>
-                {item.category}
-              </Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
-
-      <FlatList
-        data={selectedItems}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Image source={{ uri: item.image_url }} style={styles.image} />
-
-            <View style={styles.info}>
-              <Text style={styles.foodName} numberOfLines={1}>
-                {item.name}
-              </Text>
-
-              <Text style={styles.qty}>{item.quantity_info}</Text>
-
-              {item.short_desc ? (
-                <Text style={styles.desc} numberOfLines={1}>
-                  {item.short_desc}
-                </Text>
-              ) : null}
-
-              <View style={styles.priceRow}>
-                <Text style={styles.price}>₹{item.price}</Text>
-                <Text style={styles.mrp}>₹{item.mrp}</Text>
-              </View>
-
+            return (
               <TouchableOpacity
-                style={styles.addBtn}
-                onPress={() => addToCart(item._id)}
+                style={[styles.tab, active && styles.activeTab]}
+                onPress={() => setSelectedCategory(item.category)}
               >
-                <Text style={styles.addText}>ADD</Text>
+                <Text style={[styles.tabText, active && styles.activeTabText]}>
+                  {item.category}
+                </Text>
               </TouchableOpacity>
-            </View>
-          </View>
-        )}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No items available</Text>
-        }
-      />
+            );
+          }}
+        />
+      </View>
 
+      {/* Right Content */}
+      <View style={styles.content}>
+        <FlatList
+          data={selectedItems}
+          keyExtractor={(item) => item._id}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Image source={{ uri: item.image_url }} style={styles.image} />
+
+              <View style={styles.info}>
+                <Text style={styles.foodName} numberOfLines={1}>
+                  {item.name}
+                </Text>
+
+                <Text style={styles.qty}>{item.quantity_info}</Text>
+
+                {item.short_desc ? (
+                  <Text style={styles.desc} numberOfLines={2}>
+                    {item.short_desc}
+                  </Text>
+                ) : null}
+
+                <View style={styles.priceRow}>
+                  <Text style={styles.price}>₹{item.price}</Text>
+                  <Text style={styles.mrp}>₹{item.mrp}</Text>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.addBtn}
+                  onPress={() => addToCart(item._id)}
+                >
+                  <Text style={styles.addText}>ADD</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 }

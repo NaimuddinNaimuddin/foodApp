@@ -38,7 +38,7 @@ const SignupScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Sign Up</Text>
+            <Text style={styles.title}>Signup</Text>
 
             <TextInput
                 style={styles.input}
