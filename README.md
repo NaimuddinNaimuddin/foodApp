@@ -8,3 +8,4 @@
 7. api err handling 
 8. out of stock 
 9. delete orders 
+10. work on products location 

@@ -8,7 +8,8 @@ import {
     Alert,
 } from "react-native";
 import axios from "axios";
-
+import { router } from "expo-router";
+import { storage } from "@/lib/storage";
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 const LoginScreen = () => {
@@ -35,8 +36,12 @@ const LoginScreen = () => {
                 }
             );
 
-            Alert.alert("Success", response.data.message);
-            // Navigate to Home screen here
+            if (response.status === 200) {
+                Alert.alert("Success", response.data.message);
+                await storage.setItem('user', response.data.user);
+                await storage.setItem('token', response.data.token);
+                router.replace('/(tabs)');
+            }
 
         } catch (error) {
             if (error.response) {

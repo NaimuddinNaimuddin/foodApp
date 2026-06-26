@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require("../models/User");
+const generateToken = require("../config/jwt");
 
 // Signup API
 router.post("/signup", async (req, res) => {
@@ -51,10 +52,12 @@ router.post("/login", async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid phone or password" });
         }
-
+        const token = generateToken(user);
+        console.log(token)
         // Login successful
         res.status(200).json({
             message: "Login successful",
+            token,
             user: {
                 id: user._id,
                 phone: user.phone,

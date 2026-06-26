@@ -2,6 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { CategoryGroup } from "../../types/orders";
 import { restaurantStyles as styles } from "../../assets/styles/restaurantStyles";
@@ -10,54 +11,82 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [foodItems, setFoodItems] = useState<CategoryGroup[]>([]);
+  // const [foodItems, setFoodItems] = useState<CategoryGroup[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const selectedItems =
-    foodItems.find((c) => c.category === selectedCategory)?.items || [];
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   const fetchFoodItems = async () => {
+  //     if (!id) return;
+
+  //     setLoading(true);
+  //     setError(null);
+
+  //     try {
+  //       const res = await axios.get(`${API_BASE_URL}/food/${id}/food-items`);
+  //       console.log({ res })
+  //       setFoodItems(res.data);
+  //       // auto-select first category
+  //       if (res.data.length > 0) {
+  //         setSelectedCategory(res.data[0].category);
+  //       }
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError("Failed to load food items");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchFoodItems();
+  // }, [id]);
+
+  const fetchFoodItems = async (id: string) => {
+    const res = await axios.get(
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/food/${id}/food-items`
+    );
+    return res.data;
+  };
+
+  const {
+    data: foodItems = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["food-items", id],
+    queryFn: () => fetchFoodItems(id),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!id, // important (wait until id exists)
+  });
 
   useEffect(() => {
-    const fetchFoodItems = async () => {
-      if (!id) return;
+    if (foodItems.length > 0) {
+      setSelectedCategory(foodItems[0].category);
+    }
+  }, [foodItems]);
 
-      setLoading(true);
-      setError(null);
-
-      try {
-        const res = await axios.get(`${API_BASE_URL}/food/${id}/food-items`);
-        console.log({ res })
-        setFoodItems(res.data);
-        // auto-select first category
-        if (res.data.length > 0) {
-          setSelectedCategory(res.data[0].category);
-        }
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load food items");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFoodItems();
-  }, [id]);
+  const selectedItems =
+    foodItems.find((c: any) => c.category === selectedCategory)?.items || [];
 
   const addToCart = async (foodId: string) => {
     const res = await axios.post(`${API_BASE_URL}/cart/add`, {
       userId: "64a3f7c6b9c12345abcde678",
       foodId
     });
-    // console.log({ res });
-    Toast.show({
-      type: "success",
-      text1: "Added to Cart 🛒",
-    });
+    if (res.status == 200) {
+      Toast.show({
+        type: "success",
+        text1: "Added to Cart 🛒",
+      });
+    }
   };
 
-  if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
-  if (error) return <Text style={styles.errorText}>{error}</Text>;
+  if (isLoading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  if (isError) return <Text style={styles.errorText}>{error.message}</Text>;
 
   return (
     <View style={styles.container}>

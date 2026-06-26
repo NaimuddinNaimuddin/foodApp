@@ -10,6 +10,9 @@ const FoodSchema = new mongoose.Schema({
   price: {
     type: Number, required: true
   },
+  area_id: {
+    type: mongoose.Schema.Types.ObjectId, ref: "Area", required: true,
+  },
   mrp: {
     type: Number, required: true
   },

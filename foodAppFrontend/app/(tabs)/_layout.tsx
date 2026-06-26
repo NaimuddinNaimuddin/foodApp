@@ -17,7 +17,7 @@ export default function TabsLayout() {
         },
       })}
     >
-      <Tabs.Screen name="food" options={{ title: "Food" }} />
+      <Tabs.Screen name="food" options={{ headerShown: false }} />
       <Tabs.Screen name="cart" options={{ title: "Cart" }} />
       <Tabs.Screen name="orders" options={{ title: "My Orders" }} />
       <Tabs.Screen name="index" options={{ title: "Home" }} />
