@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity, Image } from "react-native";
+import { View, Text, FlatList, Button, TouchableOpacity, Image } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
@@ -6,17 +6,19 @@ import React from "react";
 import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
 import { cartStyles as styles } from "../../assets/styles/cartStyles";
+import { storage } from "@/lib/storage";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function CartScreen() {
     const [cart, setCart] = useState([] as any);
     console.log({ cart })
-    const userId = "64a3f7c6b9c12345abcde678";
     const deliveryAddress = "'13 Street , Siyana'";
 
     const loadCarts = async () => {
         try {
+            const userId = await storage.getItem('userId');
+            if (!userId) return;
             const { data } = await axios.get(`${API_URL}/cart/${userId}`);
             setCart(data);
         } catch (err: any) {
@@ -24,8 +26,10 @@ export default function CartScreen() {
         }
     }
 
-    const decreaseQty = async (userId: string, productId: string) => {
+    const decreaseQty = async (productId: string) => {
         try {
+            const userId = await storage.getItem('userId');
+            if (!userId) return;
             const { data } = await axios.put(`${API_URL}/cart/decrease/${userId}/${productId}`);
             setCart(data);
         } catch (err) {
@@ -33,8 +37,10 @@ export default function CartScreen() {
             throw err;
         }
     };
-    const increaseQty = async (userId: string, productId: string) => {
+    const increaseQty = async (productId: string) => {
         try {
+            const userId = await storage.getItem('userId');
+            if (!userId) return;
             const { data } = await axios.put(`${API_URL}/cart/increase/${userId}/${productId}`);
             setCart(data);
         } catch (err) {
@@ -43,8 +49,10 @@ export default function CartScreen() {
         }
     };
 
-    const removeItem = async (userId: string, productId: string) => {
+    const removeItem = async (productId: string) => {
         try {
+            const userId = await storage.getItem('userId');
+            if (!userId) return;
             const { data } = await axios.delete(`${API_URL}/cart/remove/${userId}/${productId}`);
             setCart(data);
         } catch (err) {
@@ -53,8 +61,9 @@ export default function CartScreen() {
         }
     };
 
-    const placeOrder = async (userId: string) => {
+    const placeOrder = async () => {
         try {
+
             const { data } = await axios.post(`${API_URL}/orders/place`, {
                 ...cart, deliveryAddress
             });
@@ -119,7 +128,7 @@ export default function CartScreen() {
                             <View style={styles.bottomRow}>
                                 <View style={styles.stepper}>
                                     <TouchableOpacity
-                                        onPress={() => decreaseQty(userId, item.foodId._id)}
+                                        onPress={() => decreaseQty(item.foodId._id)}
                                     >
                                         <Ionicons
                                             name="remove-circle-outline"
@@ -131,7 +140,7 @@ export default function CartScreen() {
                                     <Text style={styles.qtyText}>{item.quantity}</Text>
 
                                     <TouchableOpacity
-                                        onPress={() => increaseQty(userId, item.foodId._id)}
+                                        onPress={() => increaseQty(item.foodId._id)}
                                     >
                                         <Ionicons
                                             name="add-circle-outline"
@@ -158,7 +167,7 @@ export default function CartScreen() {
                     </View>
 
                     <View style={styles.orderButton}>
-                        <Button title="Place Order" onPress={() => placeOrder(userId)} />
+                        <Button title="Place Order - COD" onPress={() => placeOrder()} />
                     </View>
                 </View>
             )}

@@ -9,9 +9,9 @@ import {
 import axios from "axios";
 import { Order } from "@/types/orders";
 import { useFocusEffect } from "@react-navigation/native";
+import { storage } from "@/lib/storage";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-const USER_ID = "64a3f7c6b9c12345abcde678"; // replace with auth userId
 
 export default function OrdersScreen() {
   const [orders, setOrders] = useState([]);
@@ -29,6 +29,8 @@ export default function OrdersScreen() {
 
   const fetchOrders = async () => {
     try {
+      const USER_ID = await storage.getItem('userId');
+      if (!USER_ID) return;
       const res = await axios.get(`${API_BASE_URL}/orders/${USER_ID}`);
       setOrders(res.data);
     } catch (err) {
@@ -84,7 +86,13 @@ export default function OrdersScreen() {
   if (loading) {
     return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
   }
-
+  if (!orders.length) {
+    return (
+      <View style={styles.center}>
+        <Text>No Orders Today.</Text>
+      </View>
+    );
+  }
   return (
     <FlatList
       data={orders}
@@ -98,6 +106,11 @@ export default function OrdersScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 12,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   orderCard: {
     backgroundColor: "#fff",

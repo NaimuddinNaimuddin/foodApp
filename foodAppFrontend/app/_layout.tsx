@@ -18,7 +18,7 @@ export default function RootLayout() {
 
         router.replace("/login");
       } else {
-        router.replace("/(tabs)");
+        router.replace("/(tabs)/food");
       }
     };
     checkAuth();

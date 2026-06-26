@@ -38,9 +38,10 @@ const LoginScreen = () => {
 
             if (response.status === 200) {
                 Alert.alert("Success", response.data.message);
-                await storage.setItem('user', response.data.user);
+                await storage.setItem('userId', response.data.user.id);
+                await storage.setItem('phone', response.data.user.phone);
                 await storage.setItem('token', response.data.token);
-                router.replace('/(tabs)');
+                router.replace('/(tabs)/food');
             }
 
         } catch (error) {

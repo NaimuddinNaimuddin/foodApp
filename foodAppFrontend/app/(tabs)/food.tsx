@@ -15,10 +15,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { storage } from "@/lib/storage";
 
 export default function FoodScreen() {
   const [area_code, setAreaCode] = useState('');
   const [search, setSearch] = useState("");
+  const [phone, setPhone] = useState("");
   // const [restaurants, setRestaurants] = useState([]);
 
 
@@ -87,6 +89,12 @@ export default function FoodScreen() {
     await refetch();
   };
 
+  useEffect(() => {
+    storage.getItem('phone').then((_phone: any) => {
+      setPhone(_phone);
+    })
+  }, []);
+
   if (isLoading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
   if (isError) return <Text>{error.message}</Text>;
 
@@ -119,7 +127,7 @@ export default function FoodScreen() {
 
       <View style={styles.wrapper}>
         <Text style={styles.welcomeText}>
-          Welcome, {"Guest"}
+          Delivery To - {phone}
         </Text>
         <View style={styles.dropdown}>
           <Picker

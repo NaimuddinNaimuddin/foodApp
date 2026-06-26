@@ -69,8 +69,18 @@ router.get("/all", async (req, res) => {
 router.get("/:userId", async (req, res) => {
     try {
         const { userId } = req.params;
-
-        const orders = await Order.find({ userId })
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+  console.log({userId});
+        const orders = await Order.find({
+            userId,
+            // createdAt: {
+            //     $gte: startOfToday,
+            //     $lte: endOfToday,
+            // },
+        })
             .populate({
                 path: "items.foodId",        // populate foodId first
                 populate: { path: "restaurant_id" } // nested populate inside food

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { CategoryGroup } from "../../types/orders";
 import { restaurantStyles as styles } from "../../assets/styles/restaurantStyles";
+import { storage } from "@/lib/storage";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -73,8 +74,10 @@ export default function RestaurantScreen() {
     foodItems.find((c: any) => c.category === selectedCategory)?.items || [];
 
   const addToCart = async (foodId: string) => {
+    const userId = await storage.getItem('userId');
+    if (!userId) return;
     const res = await axios.post(`${API_BASE_URL}/cart/add`, {
-      userId: "64a3f7c6b9c12345abcde678",
+      userId,
       foodId
     });
     if (res.status == 200) {
