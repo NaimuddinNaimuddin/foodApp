@@ -9,6 +9,7 @@ const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/order");
 const foodRoutes = require("./routes/food");
 const areaRoutes = require("./routes/area");
+const policyRoutes = require("./routes/policy");
 
 const { addClient, removeClient } = require("./sse");
 
@@ -43,6 +44,8 @@ app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/food", foodRoutes);
 app.use("/area", areaRoutes);
+app.use("*", policyRoutes);
+
 
 mongoose
   .connect(process.env.MONGO_URI)

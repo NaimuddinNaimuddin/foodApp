@@ -9,8 +9,8 @@ export const restaurantStyles = StyleSheet.create({
     },
 
     sidebar: {
-        width: 110,
-        backgroundColor: "#f5f5f5",
+        width: 90,
+        backgroundColor: "#fff",
         borderRightWidth: 1,
         borderRightColor: "#e5e5e5",
     },
@@ -25,7 +25,7 @@ export const restaurantStyles = StyleSheet.create({
         paddingHorizontal: 10,
         borderLeftWidth: 4,
         borderLeftColor: "transparent",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#fff",
     },
 
     activeTab: {
@@ -41,7 +41,7 @@ export const restaurantStyles = StyleSheet.create({
 
     activeTabText: {
         color: "#ff5722",
-        fontWeight: "700",
+        fontWeight: "800",
     },
 
     card: {
