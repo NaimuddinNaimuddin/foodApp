@@ -54,12 +54,12 @@ router.post("/login", async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "Bcrypt Error.", error: 'Bcrypt err.' });
         }
-        const token = generateToken(user);
-        console.log(token)
+        // const token = generateToken(user);
+        // console.log(token)
         // Login successful
         res.status(200).json({
             message: "Login successful",
-            token,
+            // token,
             user: {
                 id: user._id,
                 phone: user.phone,
