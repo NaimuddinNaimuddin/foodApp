@@ -44,7 +44,7 @@ app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/food", foodRoutes);
 app.use("/area", areaRoutes);
-app.use("*", policyRoutes);
+app.use("/", policyRoutes);
 
 
 mongoose
