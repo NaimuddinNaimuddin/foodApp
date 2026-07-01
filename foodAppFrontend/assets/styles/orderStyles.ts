@@ -53,4 +53,48 @@ export const styles = StyleSheet.create({
         textAlign: "right",
         marginTop: 6,
     },
+    tracker: {
+        flexDirection: "row",
+        alignItems: "flex-start",
+        justifyContent: "space-between",
+        marginTop: 15,
+        marginBottom: 12,
+    },
+    stepContainer: {
+        alignItems: "center",
+        width: 60,
+    },
+    circle: {
+        width: 18,
+        height: 18,
+        borderRadius: 9,
+        backgroundColor: "#ddd",
+    },
+    activeCircle: {
+        backgroundColor: "#2E7D32",
+    },
+    line: {
+        flex: 1,
+        height: 3,
+        backgroundColor: "#ddd",
+        marginTop: 8,
+    },
+    activeLine: {
+        backgroundColor: "#2E7D32",
+    },
+    stepText: {
+        marginTop: 6,
+        fontSize: 11,
+        textAlign: "center",
+        color: "#999",
+    },
+    activeStepText: {
+        color: "#2E7D32",
+        fontWeight: "600",
+    },
+    currentStatus: {
+        color: "#2E7D32",
+        fontWeight: "600",
+        marginBottom: 8,
+    },
 });

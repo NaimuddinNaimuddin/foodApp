@@ -10,6 +10,7 @@ import { Order } from "@/assets/types/orders";
 import { useFocusEffect } from "@react-navigation/native";
 import { storage } from "@/lib/storage";
 import { styles } from "@/assets/styles/orderStyles";
+import OrderTracker from "@/lib/components/OrderTracker";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -56,7 +57,11 @@ export default function OrdersScreen() {
 
         </Text>
 
-        <Text style={styles.status}>Status: {order.status}</Text>
+        <OrderTracker status={order.status} />
+
+        <Text style={styles.currentStatus}>
+          Current Status: {order.status}
+        </Text>
         <Text style={styles.address}>📍 {order.deliveryAddress}</Text>
 
         <View style={styles.divider} />
