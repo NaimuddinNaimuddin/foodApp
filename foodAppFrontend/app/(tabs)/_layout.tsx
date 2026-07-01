@@ -8,25 +8,19 @@ export default function TabsLayout() {
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
 
-          if (route.name === "index") iconName = "person-outline";
+          if (route.name === "profile") iconName = "person-outline";
           else if (route.name === "orders") iconName = "receipt-outline";
           else if (route.name === "cart") iconName = "cart";
-          else iconName = "restaurant";
+          else iconName = "home";
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tabs.Screen name="food" options={{ headerShown: false }} />
+      <Tabs.Screen name="home" options={{ title: "Home", headerShown: false }} />
       <Tabs.Screen name="cart" options={{ title: "Cart" }} />
       <Tabs.Screen name="orders" options={{ title: "My Orders" }} />
-      <Tabs.Screen name="index" options={{ title: "My Profile" }} />
-      <Tabs.Screen name="restaurant/[id]" options={{
-        href: null,
-        title: "Add To Cart",
-        headerShown: true,
-      }}
-      />
+      <Tabs.Screen name="profile" options={{ title: "My Profile" }} />
     </Tabs>
   );
 }

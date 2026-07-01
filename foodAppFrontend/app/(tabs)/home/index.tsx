@@ -173,7 +173,7 @@ export default function FoodScreen() {
             style={styles.card}
             onPress={() =>
               router.push({
-                pathname: "/restaurant/[id]",
+                pathname: "/home/restaurant/[id]",
                 params: { id: item._id },
               })
             }
