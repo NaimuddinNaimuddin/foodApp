@@ -11,3 +11,5 @@
 10. work on products location 
 11. work on saving delivery address for user.
 12. delivery charges & other charges, conditions apply privacy policy.
+13. forget password and fields validatins.
+Make icons better transparent background
