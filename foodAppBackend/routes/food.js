@@ -7,9 +7,9 @@ const cloudinary = require("../config/cloudinary");
 // Add Food Item to a Restaurant
 router.post("/food-items", async (req, res) => {
     try {
-        const { restaurant_id, name, price, mrp, quantity_info, category, short_desc, long_desc, image_url, image_id } = req.body;
-        console.log({ restaurant_id, name, price, mrp, quantity_info, category, short_desc, long_desc, image_url, image_id });
-        if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ error: "Bad Request." });
+        const { restaurant_id, area_id, name, price, mrp, quantity_info, category, short_desc, long_desc, image_url, image_id } = req.body;
+        console.log({ restaurant_id, name, price, mrp, quantity_info, category, short_desc, long_desc, image_url, image_id, area_id });
+        if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category || !area_id) return res.status(400).json({ error: "Bad Request." });
 
         const foodItem = await Food.create({
             restaurant_id,
@@ -22,6 +22,7 @@ router.post("/food-items", async (req, res) => {
             long_desc,
             image_url,
             image_id,
+            area_id,
         });
 
         res.status(201).json(foodItem);

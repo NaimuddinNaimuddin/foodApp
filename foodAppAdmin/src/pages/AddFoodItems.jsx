@@ -9,6 +9,9 @@ export default function AddFoodItem() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [areaCode, setAreaCode] = useState("");
+  const [areas, setAreas] = useState([]);
+  console.log(areas);
   const [selectedRestaurant, setSelectedRestaurant] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -19,8 +22,12 @@ export default function AddFoodItem() {
   const [longDesc, setLongDesc] = useState("");
   const [image, setImage] = useState(null);
 
+
   useEffect(() => {
     axios.get(`${API_BASE_URL}/restaurants`).then((res) => setRestaurants(res.data));
+  }, []);
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/area/all`).then((res) => setAreas(res.data));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -52,7 +59,8 @@ export default function AddFoodItem() {
         short_desc: shortDesc,
         long_desc: longDesc,
         image_url: secure_url,
-        image_id: public_id
+        image_id: public_id,
+        area_id: areaCode,
       });
       setLoading(false);
       toast.success("Food Item Added!")
@@ -120,6 +128,16 @@ export default function AddFoodItem() {
           onChange={(e) => setCategory(e.target.value)}
           required
         />
+        <select
+          className="form-control mb-2"
+          value={areaCode}
+          onChange={(e) => setAreaCode(e.target.value)}
+        >
+          <option value="">Select Location</option>
+          {areas.map((area) => {
+            return <option value={area._id}>{area.name} - {area.code}</option>
+          })}
+        </select>
         <input
           className="form-control mb-2"
           type="text"

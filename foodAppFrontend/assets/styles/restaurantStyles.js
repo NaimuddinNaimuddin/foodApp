@@ -1,196 +1,82 @@
 import { StyleSheet } from "react-native";
 
-
 export const restaurantStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: "row",
-        backgroundColor: "#fff",
+    categorySection: {
+        marginBottom: 10,
     },
 
-    sidebar: {
-        width: 90,
-        backgroundColor: "#fff",
-        borderRightWidth: 1,
-        borderRightColor: "#e5e5e5",
-    },
-
-    content: {
-        flex: 1,
-        paddingHorizontal: 10,
-    },
-
-    tab: {
-        paddingVertical: 18,
-        paddingHorizontal: 10,
-        borderLeftWidth: 4,
-        borderLeftColor: "transparent",
-        backgroundColor: "#fff",
-    },
-
-    activeTab: {
-        backgroundColor: "#fff",
-        borderLeftColor: "#ff5722",
-    },
-
-    tabText: {
-        fontSize: 14,
-        color: "#666",
-        fontWeight: "500",
-    },
-
-    activeTabText: {
-        color: "#ff5722",
-        fontWeight: "800",
+    categoryTitle: {
+        fontSize: 16,
+        fontWeight: "700",
+        marginHorizontal: 12,
+        marginBottom: 2,
     },
 
     card: {
-        flexDirection: "row",
+        width: 108,
         backgroundColor: "#fff",
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
-    },
-
-    image: {
-        width: 90,
-        height: 90,
         borderRadius: 10,
-    },
-
-    info: {
-        flex: 1,
-        marginLeft: 12,
-        justifyContent: "space-between",
-    },
-
-    foodName: {
-        fontSize: 16,
-        fontWeight: "700",
-    },
-
-    qty: {
-        color: "#666",
-        fontSize: 13,
-    },
-
-    desc: {
-        color: "#888",
-        fontSize: 12,
-        marginVertical: 4,
-    },
-
-    priceRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-    },
-
-    price: {
-        fontSize: 16,
-        fontWeight: "700",
-        color: "#000",
-    },
-
-    mrp: {
-        textDecorationLine: "line-through",
-        color: "#999",
-    },
-
-    addBtn: {
-        marginTop: 8,
-        alignSelf: "flex-start",
-        paddingHorizontal: 18,
-        paddingVertical: 7,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: "#ff5722",
-    },
-
-    addText: {
-        color: "#ff5722",
-        fontWeight: "700",
-    },
-    content: {
-        flex: 1,
-        paddingHorizontal: 10,
-    },
-
-    listContent: {
-        paddingVertical: 10,
-    },
-
-    row: {
-        justifyContent: "space-between",
-    },
-
-    card: {
-        width: "48%",
-        backgroundColor: "#fff",
-        borderRadius: 12,
-        marginBottom: 12,
+        marginLeft: 10,
         overflow: "hidden",
-        borderWidth: 1,
-        borderColor: "#eee",
         elevation: 2,
     },
 
     image: {
         width: "100%",
-        height: 120,
+        aspectRatio: 1,
+        resizeMode: "cover",
     },
 
     info: {
-        padding: 10,
+        padding: 6,
     },
 
     foodName: {
-        fontSize: 15,
-        fontWeight: "700",
+        fontSize: 13,
+        fontWeight: "600",
     },
 
     qty: {
-        fontSize: 12,
+        fontSize: 11,
         color: "#666",
-        marginTop: 3,
+        marginTop: 2,
     },
 
     desc: {
-        fontSize: 12,
+        fontSize: 11,
         color: "#888",
-        marginTop: 4,
-        minHeight: 32,
+        marginTop: 2,
     },
 
     priceRow: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 8,
+        marginTop: 4,
     },
 
     price: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "700",
-        color: "#000",
     },
 
     mrp: {
-        marginLeft: 8,
-        fontSize: 13,
+        fontSize: 11,
         color: "#999",
         textDecorationLine: "line-through",
+        marginLeft: 6,
     },
 
     addBtn: {
-        marginTop: 10,
-        backgroundColor: "#ff5722",
-        borderRadius: 8,
-        paddingVertical: 8,
+        marginTop: 8,
+        backgroundColor: "#0A8F3D",
+        borderRadius: 6,
+        paddingVertical: 6,
         alignItems: "center",
     },
 
     addText: {
         color: "#fff",
-        fontWeight: "700",
+        fontWeight: "600",
+        fontSize: 12,
     },
 });
