@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     View,
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
-    Alert,
 } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
 import { storage } from "@/lib/storage";
 import Toast from "react-native-toast-message";
-
+import { styles } from "@/assets/styles/loginStyles";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -82,34 +80,3 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        padding: 20,
-    },
-    title: {
-        fontSize: 26,
-        fontWeight: "bold",
-        marginBottom: 20,
-        textAlign: "center",
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 15,
-    },
-    button: {
-        backgroundColor: "#009688",
-        padding: 15,
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: "#fff",
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-});

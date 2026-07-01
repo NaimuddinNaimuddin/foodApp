@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 
-export const signupStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         padding: 20,
     },
     title: {
@@ -11,6 +11,7 @@ export const signupStyles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 20,
         textAlign: "center",
+        marginTop: 80,
     },
     input: {
         borderWidth: 1,
@@ -20,7 +21,7 @@ export const signupStyles = StyleSheet.create({
         marginBottom: 15,
     },
     button: {
-        backgroundColor: "#4CAF50",
+        backgroundColor: "#009688",
         padding: 15,
         borderRadius: 8,
     },

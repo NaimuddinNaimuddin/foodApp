@@ -67,7 +67,6 @@ export default function CartScreen() {
             const { data } = await axios.post(`${API_URL}/orders/place`, {
                 ...cart, deliveryAddress
             });
-            // setCart(data);
             console.log({ data });
             loadCarts();
             Toast.show({
