@@ -10,6 +10,9 @@ import {
 import axios from "axios";
 import { router } from "expo-router";
 import { storage } from "@/lib/storage";
+import Toast from "react-native-toast-message";
+
+
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 const LoginScreen = () => {
@@ -18,37 +21,29 @@ const LoginScreen = () => {
 
     const handleLogin = async () => {
         if (!phone || !password) {
-            Alert.alert("Error", "All fields are required");
+            Toast.show({ type: "error", text1: "All fields are required" });
             return;
         }
 
         try {
             const response = await axios.post(
                 `${API_BASE_URL}/users/login`,
-                {
-                    phone,
-                    password,
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
+                { phone, password, },
             );
 
             if (response.status === 200) {
-                Alert.alert("Success", response.data.message);
+                Toast.show({ type: "success", text1: response.data.message });
                 await storage.setItem('userId', response.data.user.id);
                 await storage.setItem('phone', response.data.user.phone);
                 await storage.setItem('token', response.data.token);
-                router.replace('/(tabs)/food');
+                router.replace('/(tabs)/home');
             }
 
         } catch (error) {
             if (error.response) {
-                Alert.alert("Error", error.response.data.message);
+                Toast.show({ type: "error", text1: error.response.data.message });
             } else {
-                Alert.alert("Error", "Server not reachable");
+                Toast.show({ type: "error", text1: "Server not reachable" });
             }
         }
     };
