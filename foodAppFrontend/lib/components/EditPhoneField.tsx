@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     TextInput,
@@ -37,12 +37,28 @@ const EditPhoneField = () => {
         if (success) {
             setAlternatePhone(tempPhone);
             setModalVisible(false);
+            await storage.setItem('alt_phone', tempPhone);
         }
     };
 
     const handleCancel = () => {
         setModalVisible(false);
     };
+
+    useEffect(() => {
+        const loadAltPhone = async () => {
+            try {
+                const alt_phone = await storage.getItem("alt_phone");
+                if (alt_phone !== null) {
+                    setAlternatePhone(alt_phone);
+                }
+            } catch (err) {
+                console.error("Error loading address from AsyncStorage:", err);
+            }
+        };
+
+        loadAltPhone();
+    }, []);
 
     return (
         <View>

@@ -37,6 +37,7 @@ const EditAddressField = () => {
         if (success) {
             setDeliveryAddress(tempAddress);
             setModalVisible(false);
+            await storage.setItem('user_address', tempAddress);
         }
     };
 

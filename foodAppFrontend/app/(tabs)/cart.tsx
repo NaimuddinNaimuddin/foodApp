@@ -9,6 +9,7 @@ import { cartStyles as styles } from "../../assets/styles/cartStyles";
 import { storage } from "@/lib/storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SelectSkeleton } from "@/lib/components/Skeletion";
+import { router } from "expo-router";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -16,7 +17,6 @@ export default function CartScreen() {
     const [cart, setCart] = useState([] as any);
     const [isLoading, setIsLoading] = useState(false as boolean);
     console.log({ cart })
-    const deliveryAddress = "'13 Street , Siyana'";
 
     const loadCarts = async () => {
         try {
@@ -69,21 +69,25 @@ export default function CartScreen() {
 
     const placeOrder = async () => {
         try {
+            const deliveryAddress = await storage.getItem('user_address');
+            if (!deliveryAddress) return;
 
-            const { data } = await axios.post(`${API_URL}/orders/place`, {
+            const response = await axios.post(`${API_URL}/orders/place`, {
                 ...cart, deliveryAddress
             });
-            console.log({ data });
-            loadCarts();
-            Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: data.message,
-            })
+
+            if (response && response.status == 201) {
+                Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: response?.data?.message,
+                });
+                router.navigate('/(tabs)/orders');
+            }
 
         } catch (err) {
             console.log("Error removing item:", err);
-            throw err;
+            Toast.show({ type: "error", text1: 'Somthing Went Wrong. Try Again later' });
         }
     };
 

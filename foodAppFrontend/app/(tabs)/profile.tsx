@@ -20,6 +20,8 @@ export default function HomeScreen() {
     await storage.removeItem("token");
     await storage.removeItem("userId");
     await storage.removeItem("phone");
+    await storage.removeItem("alt_phone");
+    await storage.removeItem("user_address");
     router.replace("/login");
   };
 
