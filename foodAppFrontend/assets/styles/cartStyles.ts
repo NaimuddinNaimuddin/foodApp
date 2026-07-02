@@ -15,13 +15,7 @@ export const cartStyles = StyleSheet.create({
     cartItem: {
         flexDirection: "row",
         backgroundColor: "#FFFFFF",
-        borderRadius: 12,
-        padding: 12,
-        marginBottom: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 4,
+        padding: 10,
         elevation: 3,
     },
     foodImage: {
@@ -42,8 +36,8 @@ export const cartStyles = StyleSheet.create({
     },
     foodName: {
         flex: 1,
-        fontSize: 16,
-        fontWeight: "600",
+        fontSize: 12,
+        fontWeight: "400",
         color: "#333",
         marginRight: 8,
     },
@@ -56,7 +50,6 @@ export const cartStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginTop: 8,
     },
     stepper: {
         flexDirection: "row",
@@ -80,16 +73,14 @@ export const cartStyles = StyleSheet.create({
     },
     checkoutBar: {
         backgroundColor: "#FFFFFF",
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-        borderRadius: 16,
-        // borderTopRightRadius: 16,
+        paddingHorizontal: 14,
+        paddingVertical: 12,
+        borderRadius: 6,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
         elevation: 10,
-        marginHorizontal: 15,
         marginVertical: 10,
     },
 

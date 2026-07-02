@@ -7,22 +7,28 @@ import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
 import { cartStyles as styles } from "../../assets/styles/cartStyles";
 import { storage } from "@/lib/storage";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SelectSkeleton } from "@/lib/components/Skeletion";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function CartScreen() {
     const [cart, setCart] = useState([] as any);
+    const [isLoading, setIsLoading] = useState(false as boolean);
     console.log({ cart })
     const deliveryAddress = "'13 Street , Siyana'";
 
     const loadCarts = async () => {
         try {
+            setIsLoading(true);
             const userId = await storage.getItem('userId');
             if (!userId) return;
             const { data } = await axios.get(`${API_URL}/cart/${userId}`);
             setCart(data);
         } catch (err: any) {
             console.error("Error loading restaurants:", err.message);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -91,10 +97,25 @@ export default function CartScreen() {
         loadCarts();
     }, []);
 
+    if (isLoading) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <SelectSkeleton width={'100%'} height={80} style={{
+                    marginTop: 12,
+                    borderRadius: 12,
+                }} />
+                <SelectSkeleton width={'100%'} height={80} style={{
+                    marginTop: 12,
+                    borderRadius: 12,
+                }} />
+            </SafeAreaView>
+        );
+    }
+
     if (!cart || (cart.items && cart.items.length === 0)) {
         return (
             <View style={styles.center}>
-                <Text>Your cart is empty</Text>
+                <Text>Your cart is empty.</Text>
             </View>
         );
     }
@@ -119,12 +140,6 @@ export default function CartScreen() {
                                     {item.foodId?.name}
                                 </Text>
 
-                                <Text style={styles.price}>
-                                    ₹{(item.foodId?.price || 0) * item.quantity}
-                                </Text>
-                            </View>
-
-                            <View style={styles.bottomRow}>
                                 <View style={styles.stepper}>
                                     <TouchableOpacity
                                         onPress={() => decreaseQty(item.foodId._id)}
@@ -148,6 +163,13 @@ export default function CartScreen() {
                                         />
                                     </TouchableOpacity>
                                 </View>
+                            </View>
+
+                            <Text style={styles.foodName}>{item.foodId.quantity_info}</Text>
+                            <View>
+                                <Text style={styles.price}>
+                                    ₹{(item.foodId?.price || 0) * item.quantity}
+                                </Text>
                             </View>
                         </View>
                     </View>

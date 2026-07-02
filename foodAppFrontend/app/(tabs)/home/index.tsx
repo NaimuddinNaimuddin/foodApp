@@ -8,13 +8,13 @@ import {
   TextInput,
   View,
   Image,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { storage } from "@/lib/storage";
 import { styles } from '@/assets/styles/homeStyles';
+import { SkeletonCard, SelectSkeleton } from "@/lib/components/Skeletion";
 
 export default function FoodScreen() {
   const [area_code, setAreaCode] = useState('');
@@ -76,7 +76,35 @@ export default function FoodScreen() {
     })
   }, []);
 
-  if (isLoading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <SelectSkeleton width={'70%'} height={25} style={{
+          marginTop: 12,
+          borderRadius: 12,
+        }} />
+        <SelectSkeleton width={'100%'} height={18} style={{
+          marginTop: 12,
+          borderRadius: 12,
+        }} />
+        <SelectSkeleton width={'100%'} height={50} style={{
+          marginTop: 12,
+          borderRadius: 12,
+        }} />
+        <FlatList
+          data={Array.from({ length: 4 })}
+          numColumns={3}
+          keyExtractor={(_, index) => index.toString()}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            paddingHorizontal: 8,
+            marginTop: 12,
+          }}
+          renderItem={() => <SkeletonCard />}
+        />
+      </SafeAreaView>
+    );
+  }
   if (isError) return <Text>{error.message}</Text>;
 
   return (
@@ -110,9 +138,6 @@ export default function FoodScreen() {
         value={search}
         onChangeText={setSearch}
       />
-      {isLoading &&
-        "Loading..."
-      }
       <FlatList
         onRefresh={onRefresh}
         refreshing={isFetching}
@@ -127,7 +152,7 @@ export default function FoodScreen() {
           <Pressable
             style={styles.card}
             onPress={() =>
-              router.push({
+              router.navigate({
                 pathname: "/home/restaurant/[id]",
                 params: { id: item._id },
               })

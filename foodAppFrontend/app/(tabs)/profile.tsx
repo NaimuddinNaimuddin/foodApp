@@ -1,21 +1,20 @@
 import { storage } from "@/lib/storage";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import {
   Linking,
   View,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import { styles } from "@/assets/styles/profileStyles";
+import EditPhoneField from "@/lib/components/EditPhoneField";
+import EditAddressField from "@/lib/components/EditDeliveryAddress";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function HomeScreen() {
-  const [address, setAddress] = useState("");
-  const [alternatePhone, setAlternatePhone] = useState("");
 
   const handleLogout = async () => {
     await storage.removeItem("token");
@@ -30,23 +29,10 @@ export default function HomeScreen() {
         <Text style={styles.heading}>My Profile</Text>
 
         <Text style={styles.label}>Delivery Address</Text>
-        <TextInput
-          style={[styles.input, styles.addressInput]}
-          placeholder="Enter your delivery address"
-          multiline
-          value={address}
-          onChangeText={setAddress}
-        />
+        <EditAddressField />
 
         <Text style={styles.label}>Alternative Phone</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter alternative phone number"
-          keyboardType="phone-pad"
-          maxLength={10}
-          value={alternatePhone}
-          onChangeText={setAlternatePhone}
-        />
+        <EditPhoneField />
 
         <TouchableOpacity
           style={styles.option}

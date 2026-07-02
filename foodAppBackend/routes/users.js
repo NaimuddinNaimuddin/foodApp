@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
             user: {
                 id: user._id,
                 phone: user.phone,
-                delivery_address: user.delivery_address,
+                user_address: user.user_address,
                 alt_phone: user.alt_phone
             },
         });

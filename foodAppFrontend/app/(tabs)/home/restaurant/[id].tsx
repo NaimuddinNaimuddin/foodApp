@@ -1,11 +1,13 @@
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { FlatList, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native";
+import { FlatList, Text, View, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { restaurantStyles as styles } from "@/assets/styles/restaurantStyles";
 import { storage } from "@/lib/storage";
+import { SkeletonCard } from "@/lib/components/Skeletion";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -46,7 +48,23 @@ export default function RestaurantScreen() {
     }
   };
 
-  if (isLoading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  if (isLoading) {
+    return (
+      <SafeAreaView>
+        <FlatList
+          data={Array.from({ length: 7 })}
+          numColumns={3}
+          keyExtractor={(_, index) => index.toString()}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            paddingHorizontal: 15,
+            marginTop: 18,
+          }}
+          renderItem={() => <SkeletonCard />}
+        />
+      </SafeAreaView>
+    );
+  }
   if (isError) return <Text>{error.message}</Text>;
 
   return (

@@ -3,20 +3,21 @@ import {
   View,
   Text,
   FlatList,
-  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { Order } from "@/assets/types/orders";
 import { useFocusEffect } from "@react-navigation/native";
 import { storage } from "@/lib/storage";
 import { styles } from "@/assets/styles/orderStyles";
-import OrderTracker from "@/lib/components/OrderTracker";
+import OrderCard from "@/lib/components/OrderCard";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SelectSkeleton } from "@/lib/components/Skeletion";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function OrdersScreen() {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -30,6 +31,7 @@ export default function OrdersScreen() {
 
   const fetchOrders = async () => {
     try {
+      setLoading(true);
       const USER_ID = await storage.getItem('userId');
       if (!USER_ID) return;
       const res = await axios.get(`${API_BASE_URL}/orders/${USER_ID}`);
@@ -41,55 +43,19 @@ export default function OrdersScreen() {
     }
   };
 
-  const OrderCard = ({ order }: { order: Order }) => {
-    return (
-      <View style={styles.orderCard}>
-        <Text style={styles.orderId}>
-          Order •{" "}
-          {new Date(order.createdAt).toLocaleString("en-IN", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })}
-
-        </Text>
-
-        <OrderTracker status={order.status} />
-
-        <Text style={styles.currentStatus}>
-          Current Status: {order.status}
-        </Text>
-        <Text style={styles.address}>📍 {order.deliveryAddress}</Text>
-
-        <View style={styles.divider} />
-
-        {order.items.map((item: any) => (
-          <View key={item._id} style={styles.itemRow}>
-            <View>
-              <Text style={styles.foodName}>{item && item.name}</Text>
-              <Text style={styles.restaurant}>
-                {item && item.foodId && item.foodId.restaurant_id && item.foodId.restaurant_id.name}
-              </Text>
-            </View>
-
-            <Text style={styles.price}>
-              ₹{item && item.price} × {item.quantity}
-            </Text>
-          </View>
-        ))}
-
-        <View style={styles.divider} />
-
-        <Text style={styles.total}>Total: ₹{order.totalAmount}</Text>
-      </View>
-    );
-  };
-
   if (loading) {
-    return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <SelectSkeleton width={'100%'} height={180} style={{
+          marginTop: 12,
+          borderRadius: 12,
+        }} />
+        <SelectSkeleton width={'100%'} height={180} style={{
+          marginTop: 12,
+          borderRadius: 12,
+        }} />
+      </SafeAreaView>
+    );
   }
   if (!orders.length) {
     return (
