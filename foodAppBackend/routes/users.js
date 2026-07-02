@@ -37,26 +37,26 @@ router.post("/login", async (req, res) => {
     const { phone, password } = req.body;
 
     if (!phone || !password) {
-        return res.status(400).json({ message: "All fields are required" });
+        return res.status(400).json({ message: "All Fields are Required" });
     }
 
     try {
         // Check if user exists
         const user = await User.findOne({ phone });
         if (!user) {
-            return res.status(400).json({ message: "Invalid phone or password" });
+            return res.status(400).json({ message: "Phone Number Not Registered." });
         }
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: "Bcrypt Error.", error: 'Bcrypt err.' });
+            return res.status(400).json({ message: "Password is Wrong." });
         }
         const token = generateToken(user);
         console.log(token)
         // Login successful
         res.status(200).json({
-            message: "Login successful",
+            message: "Login Successful",
             token,
             user: {
                 id: user._id,
@@ -65,6 +65,42 @@ router.post("/login", async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: "Server Error", error: error });
+    }
+});
+
+router.post("/edit", async (req, res) => {
+    try {
+        const { user_address, alt_phone, user_id } = req.body;
+
+        if (!user_id) {
+            return res.status(400).json({ message: "User Id is Required" });
+        }
+
+        const updateFields = {};
+        if (!!user_address) {
+            updateFields.user_address = user_address;
+        }
+        if (!!alt_phone) {
+            updateFields.alt_phone = alt_phone;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            user_id,
+            { $set: updateFields },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({
+            message: "User details updated successfully",
+            data: updatedUser,
+        });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
