@@ -38,11 +38,14 @@ app.get("/orders/stream", (req, res) => {
   });
 });
 
-app.use("/restaurants", restaurantRoutes);
 app.use("/users", userRoutes);
+
+app.use("/restaurants", restaurantRoutes);
+app.use("/food", foodRoutes);
+
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
-app.use("/food", foodRoutes);
+
 app.use("/area", areaRoutes);
 app.use("/", policyRoutes);
 
