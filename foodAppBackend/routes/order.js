@@ -3,7 +3,7 @@ const router = express.Router();
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Food = require("../models/Food");
-const { notifyNewOrder } = require("../sse");
+const { notifyNewOrder } = require("../common/sse");
 
 router.post("/place", async (req, res) => {
     const { userId, items, deliveryAddress, paymentMethod = 'COD' } = req.body;

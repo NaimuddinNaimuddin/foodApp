@@ -1,4 +1,3 @@
-// sse.js
 const clients = [];
 
 function addClient(res) {
