@@ -11,7 +11,7 @@ const foodRoutes = require("./routes/food");
 const areaRoutes = require("./routes/area");
 const policyRoutes = require("./routes/policy");
 
-const { addClient, removeClient } = require("./sse");
+const { addClient, removeClient } = require("./common/sse");
 
 const app = express();
 
@@ -38,8 +38,7 @@ app.get("/orders/stream", (req, res) => {
   });
 });
 
-app.use("/users", userRoutes);
-
+app.use("/users",  userRoutes);
 app.use("/restaurants", restaurantRoutes);
 app.use("/food", foodRoutes);
 
@@ -48,7 +47,6 @@ app.use("/orders", orderRoutes);
 
 app.use("/area", areaRoutes);
 app.use("/", policyRoutes);
-
 
 mongoose
   .connect(process.env.MONGO_URI)

@@ -11,5 +11,12 @@
 10. work on products location 
 11. work on saving delivery address for user.
 12. delivery charges & other charges, conditions apply privacy policy.
-13. forget password and fields validatins.
-Make icons better transparent background
+13. forget password and fields validations.
+Make icons better transparent background.
+
+ADD to cart loading...
+consoles remove
+usecallback and usememo optimizations , code split uses.
+place order cod show loading...
+rate limiter
+

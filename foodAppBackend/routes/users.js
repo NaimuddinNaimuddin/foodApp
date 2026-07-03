@@ -3,9 +3,10 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require("../models/User");
 const generateToken = require("../config/jwt");
+const rateLimiter = require("../common/rateLimiter");
 
-// Signup API
-router.post("/signup", async (req, res) => {
+// Signup API --- One Requset per 1 minute
+router.post("/signup", rateLimiter(1000 * 1, 1), async (req, res) => {
     const { phone, password } = req.body;
 
     if (!phone || !password) {
@@ -33,7 +34,7 @@ router.post("/signup", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", rateLimiter(1000 * 1, 1), async (req, res) => {
     const { phone, password } = req.body;
 
     if (!phone || !password) {
@@ -53,7 +54,7 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Password is Wrong." });
         }
         const token = generateToken(user);
-        console.log(token,user)
+        console.log(token, user)
         // Login successful
         res.status(200).json({
             message: "Login Successful",
@@ -70,7 +71,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.post("/edit", async (req, res) => {
+router.post("/edit", rateLimiter(1000 * 1, 1), async (req, res) => {
     try {
         const { user_address, alt_phone, user_id } = req.body;
 
