@@ -24,7 +24,7 @@ export default function EditRestaurant() {
     // 🔹 Fetch restaurant details
     useEffect(() => {
         setLoading(true);
-        axios.get(`${API_BASE_URL}/restaurants/${id}`)
+        axios.get(`${API_BASE_URL}/admin/restaurants/${id}`)
             .then(res => {
                 const r = res.data;
                 setName(r.name);
@@ -69,7 +69,7 @@ export default function EditRestaurant() {
                 updatedImageId = public_id;
             }
 
-            await axios.put(`${API_BASE_URL}/restaurants/edit/${id}`, {
+            await axios.put(`${API_BASE_URL}/admin/restaurants/edit/${id}`, {
                 name,
                 category,
                 address,

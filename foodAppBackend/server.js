@@ -10,13 +10,20 @@ const orderRoutes = require("./routes/order");
 const foodRoutes = require("./routes/food");
 const areaRoutes = require("./routes/area");
 const policyRoutes = require("./routes/policy");
+const adminRoutes = require("./routes/adminRoutes");
 
+const ipBackstopLimiter = require("./common/ipLimiter");
+const adminBackstopLimiter = require("./common/adminLimiter");
 const { addClient, removeClient } = require("./common/sse");
 
 const app = express();
 
-app.use(express.json());
+app.set("trust proxy", 1);
 app.use(cors());
+app.use(express.json());
+
+app.use("/admin", adminBackstopLimiter);
+app.use(ipBackstopLimiter);
 
 app.get("/orders/stream", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
@@ -38,14 +45,14 @@ app.get("/orders/stream", (req, res) => {
   });
 });
 
-app.use("/users",  userRoutes);
+app.use("/admin", adminRoutes);
+
+app.use("/users", userRoutes);
+app.use("/area", areaRoutes);
 app.use("/restaurants", restaurantRoutes);
 app.use("/food", foodRoutes);
-
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
-
-app.use("/area", areaRoutes);
 app.use("/", policyRoutes);
 
 mongoose

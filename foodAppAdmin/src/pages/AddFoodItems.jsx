@@ -24,10 +24,10 @@ export default function AddFoodItem() {
 
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/restaurants`).then((res) => setRestaurants(res.data));
+    axios.get(`${API_BASE_URL}/admin/restaurants`).then((res) => setRestaurants(res.data));
   }, []);
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/area/all`).then((res) => setAreas(res.data));
+    axios.get(`${API_BASE_URL}/admin/area/all`).then((res) => setAreas(res.data));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -49,7 +49,7 @@ export default function AddFoodItem() {
         image_url: secure_url,
         image_id: public_id
       });
-      await axios.post(`${API_BASE_URL}/food/food-items`, {
+      await axios.post(`${API_BASE_URL}/admin/food/food-items`, {
         restaurant_id: selectedRestaurant,
         name,
         price,
@@ -134,7 +134,7 @@ export default function AddFoodItem() {
           onChange={(e) => setAreaCode(e.target.value)}
         >
           <option value="">Select Location</option>
-          {areas.map((area) => {
+          {areas.length > 0 && areas.map((area) => {
             return <option value={area._id}>{area.name} - {area.code}</option>
           })}
         </select>

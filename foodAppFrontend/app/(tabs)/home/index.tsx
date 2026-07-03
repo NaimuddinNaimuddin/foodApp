@@ -22,9 +22,12 @@ export default function FoodScreen() {
   const [phone, setPhone] = useState("");
 
   const fetchRestaurants = async () => {
-    const { data } = await axios.get(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants`
-    );
+    const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants`);
+    return data;
+  };
+
+  const fetchAreas = async () => {
+    const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/area/all`);
     return data;
   };
 
@@ -38,28 +41,16 @@ export default function FoodScreen() {
   } = useQuery({
     queryKey: ["restaurants"],
     queryFn: fetchRestaurants,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  const [areas, setAreas] = useState([]);
-  const [areaLoading, setAreaLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setAreaLoading(true);
-    axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/area/all`)
-      .then((res) => {
-        if (res.status == 200) {
-          setAreas(res.data);
-          console.log(res.data);
-        }
-        if (res.status == 404) {
-          alert('No Areas Found.')
-        }
-      })
-      .catch(() => alert("Areas fetch Error."))
-      .finally(() => setAreaLoading(false));
-  }, []);
+  const {
+    data: areas = [],
+  } = useQuery({
+    queryKey: ["areas"],
+    queryFn: fetchAreas,
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours
+  });
 
   const filtered = restaurants && restaurants.filter((r: { id: string, name: string, area_code: string }) => {
     const matchesSearch = (area_code == "" ? !r.area_code : r.area_code === area_code) && r.name.toLowerCase().includes(search.toLowerCase());
@@ -118,7 +109,6 @@ export default function FoodScreen() {
             selectedValue={area_code}
             onValueChange={(val) => {
               setAreaCode(val);
-              setOpen(false);
             }}
           >
             <Picker.Item label="Select Location" value="" />

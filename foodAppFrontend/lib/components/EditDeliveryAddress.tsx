@@ -28,7 +28,8 @@ const EditAddressField = () => {
     const handleSave = async () => {
         const USER_ID = await storage.getItem("userId");
         if (!USER_ID) return;
-
+        if (tempAddress == deliveryAddress) return;
+        
         const success = await updateUserDetails({
             user_id: USER_ID,
             user_address: tempAddress,

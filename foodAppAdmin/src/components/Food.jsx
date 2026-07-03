@@ -25,7 +25,7 @@ export default function RestaurantScreen() {
             try {
                 setLoading(true);
                 const res = await axios.get(
-                    `${API_BASE_URL}/food/${id}/food-items`
+                    `${API_BASE_URL}/admin/food/${id}/food-items`
                 );
 
                 setFoodItems(res.data);

@@ -9,7 +9,7 @@ export default function Orders() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${API_BASE_URL}/orders/all`)
+        axios.get(`${API_BASE_URL}/admin/orders/all`)
             .then((res) => {
                 if (res.status == 200) {
                     setOrders(res.data);

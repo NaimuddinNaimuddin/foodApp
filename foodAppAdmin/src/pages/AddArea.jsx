@@ -17,7 +17,7 @@ export default function CreateArea() {
         try {
             setLoading(true);
 
-            await axios.post(`${API_BASE_URL}/area/add`, {
+            await axios.post(`${API_BASE_URL}/admin/area/add`, {
                 name,
                 code,
             });

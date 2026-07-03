@@ -10,7 +10,9 @@ export default function EditFoodItem() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-
+    const [areaCode, setAreaCode] = useState("");
+    const [areas, setAreas] = useState([]);
+    console.log(areas);
     const [restaurants, setRestaurants] = useState([]);
     const [selectedRestaurant, setSelectedRestaurant] = useState("");
     const [name, setName] = useState("");
@@ -27,18 +29,23 @@ export default function EditFoodItem() {
     const [existingImageId, setExistingImageId] = useState("");
 
     useEffect(() => {
+        axios.get(`${API_BASE_URL}/admin/area/all`).then((res) => setAreas(res.data));
+    }, []);
+
+    useEffect(() => {
         setLoading(true);
         // Fetch restaurants
-        axios.get(`${API_BASE_URL}/restaurants`)
+        axios.get(`${API_BASE_URL}/admin/restaurants`)
             .then(res => setRestaurants(res.data));
 
         // Fetch food item
-        axios.get(`${API_BASE_URL}/food/food-items/${id}`)
+        axios.get(`${API_BASE_URL}/admin/food/food-items/${id}`)
             .then(res => {
                 const item = res.data;
                 setSelectedRestaurant(item.restaurant_id);
                 setName(item.name);
                 setPrice(item.price);
+                setAreaCode(item.area_id);
                 setMrp(item.mrp);
                 setQuantityInfo(item.quantity_info);
                 setCategory(item.category);
@@ -70,11 +77,12 @@ export default function EditFoodItem() {
                 image_id = uploaded.public_id;
             }
 
-            await axios.put(`${API_BASE_URL}/food/food-items/${id}`, {
+            await axios.put(`${API_BASE_URL}/admin/food/food-items/${id}`, {
                 restaurant_id: selectedRestaurant,
                 name,
                 price,
                 mrp,
+                area_id: areaCode,
                 quantity_info: quantityInfo,
                 category,
                 short_desc: shortDesc,
@@ -130,7 +138,16 @@ export default function EditFoodItem() {
 
                 <input className="form-control mb-2" value={category}
                     onChange={(e) => setCategory(e.target.value)} placeholder="Category" required />
-
+                <select
+                    className="form-control mb-2"
+                    value={areaCode}
+                    onChange={(e) => setAreaCode(e.target.value)}
+                >
+                    <option value="">Select Location</option>
+                    {areas.length > 0 && areas.map((area) => {
+                        return <option value={area._id}>{area.name} - {area.code}</option>
+                    })}
+                </select>
                 <input className="form-control mb-2" value={shortDesc}
                     onChange={(e) => setShortDesc(e.target.value)} placeholder="Short Description" />
 

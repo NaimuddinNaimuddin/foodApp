@@ -12,6 +12,15 @@ const rateLimiter = (windowMs, max, message = "Too many requests, Please try aga
         max,
         standardHeaders: true, // return rate limit info in RateLimit-* headers
         legacyHeaders: false,
+        keyGenerator: (req) => {
+            const userId =
+                req.params?.userId ||
+                req.params?.user_id ||
+                req.body?.userId ||
+                req.body?.user_id;
+
+            return userId ? userId.toString() : req.ip;
+        },
         message: {
             success: false,
             message,

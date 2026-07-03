@@ -41,7 +41,7 @@ export default function CreateRestaurant() {
             const imageUrl = await uploadImageToCloudinary();
 
             // 2. Save restaurant
-            await axios.post(`${API_BASE_URL}/restaurants`, {
+            await axios.post(`${API_BASE_URL}/admin/restaurants`, {
                 name,
                 image_url: imageUrl,
                 area_code: Number(areaCode),

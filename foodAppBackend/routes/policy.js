@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const rateLimiter = require("../common/rateLimiter");
 
-router.get("/privacy-policy", (req, res) => {
-    res.send(`
+router.get("/privacy-policy", rateLimiter(1000 * 60, 30), (req, res) => {
+  res.send(`
   <html>
     <head>
       <title>Privacy Policy</title>
@@ -44,8 +45,8 @@ router.get("/privacy-policy", (req, res) => {
   `);
 });
 
-router.get("/terms", (req, res) => {
-    res.send(`
+router.get("/terms", rateLimiter(1000 * 60, 30), (req, res) => {
+  res.send(`
   <html>
     <head>
       <title>Terms & Conditions</title>
@@ -76,8 +77,8 @@ router.get("/terms", (req, res) => {
   `);
 });
 
-router.get('/', (req, res) => {
-    res.send(`Hello Food App.`)
+router.get('/', rateLimiter(1000 * 60, 30), (req, res) => {
+  res.send(`Hello Food App.`)
 })
 
 module.exports = router;

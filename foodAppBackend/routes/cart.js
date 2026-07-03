@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Restaurant = require("../models/Restaurant");
-const Food = require("../models/Food");
 const Cart = require("../models/Cart");
+const rateLimiter = require("../common/rateLimiter");
 
 // Add to cart
-router.post("/add", async (req, res) => {
+router.post("/add", rateLimiter(1000 * 60, 30), async (req, res) => {
     const { userId, foodId } = req.body;
 
     let cart = await Cart.findOne({ userId });
@@ -24,21 +23,8 @@ router.post("/add", async (req, res) => {
     res.json({ message: "Added to cart", cart });
 });
 
-// get cart 
-router.get("/:userId", async (req, res) => {
-    try {
-        const cart = await Cart.findOne({ userId: req.params.userId }).populate("items.foodId");
-        if (!cart) return res.json(null);
-        // ✅ remove items where foodId is null
-        cart.items = cart.items.filter(item => item.foodId !== null);
-        res.json(cart);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
 // remove from cart
-router.delete("/remove/:userId/:productId", async (req, res) => {
+router.delete("/remove/:userId/:productId", rateLimiter(1000 * 60, 30), async (req, res) => {
     const { userId, productId } = req.params;
     console.log({ userId, productId })
     try {
@@ -59,7 +45,7 @@ router.delete("/remove/:userId/:productId", async (req, res) => {
 });
 
 // decrease count 
-router.put("/decrease/:userId/:productId", async (req, res) => {
+router.put("/decrease/:userId/:productId", rateLimiter(1000 * 60, 30), async (req, res) => {
     const { userId, productId } = req.params;
 
     try {
@@ -85,7 +71,7 @@ router.put("/decrease/:userId/:productId", async (req, res) => {
     }
 });
 
-router.put("/increase/:userId/:productId", async (req, res) => {
+router.put("/increase/:userId/:productId", rateLimiter(1000 * 60, 30), async (req, res) => {
     const { userId, productId } = req.params;
 
     try {
@@ -102,5 +88,17 @@ router.put("/increase/:userId/:productId", async (req, res) => {
     }
 });
 
+// get cart 
+router.get("/:userId", rateLimiter(1000 * 60, 100), async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ userId: req.params.userId }).populate("items.foodId");
+        if (!cart) return res.status(404).json(null);
+        // ✅ remove items where foodId is null
+        cart.items = cart.items.filter(item => item.foodId !== null);
+        res.status(200).json(cart);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 module.exports = router;

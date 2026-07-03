@@ -28,6 +28,7 @@ const EditPhoneField = () => {
     const handleSave = async () => {
         const USER_ID = await storage.getItem("userId");
         if (!USER_ID) return;
+        if (alternatePhone == tempPhone) return;
 
         const success = await updateUserDetails({
             user_id: USER_ID,

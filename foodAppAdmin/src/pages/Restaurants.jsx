@@ -21,7 +21,7 @@ export default function Restaurants() {
 
     useEffect(() => {
         setAreaLoading(true);
-        axios.get(`${API_BASE_URL}/area/all`)
+        axios.get(`${API_BASE_URL}/admin/area/all`)
             .then((res) => {
                 if (res.status == 200) {
                     setAreas(res.data);
@@ -39,7 +39,7 @@ export default function Restaurants() {
         try {
             setLoading(true);
             const { data } = await axios.get(
-                `${API_BASE_URL}/restaurants`
+                `${API_BASE_URL}/admin/restaurants`
             );
             setRestaurants(data);
             setLoading(false);

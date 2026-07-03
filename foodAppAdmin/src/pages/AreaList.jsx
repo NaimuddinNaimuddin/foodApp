@@ -9,7 +9,7 @@ export default function Areas() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${API_BASE_URL}/area/all`)
+        axios.get(`${API_BASE_URL}/admin/area/all`)
             .then((res) => {
                 if (res.status == 200) {
                     setAreas(res.data);

@@ -4,8 +4,9 @@ const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Food = require("../models/Food");
 const { notifyNewOrder } = require("../common/sse");
+const rateLimiter = require("../common/rateLimiter");
 
-router.post("/place", async (req, res) => {
+router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
     const { userId, items, deliveryAddress, paymentMethod = 'COD' } = req.body;
 
     if (!userId || !items || !items.length || !deliveryAddress) {
@@ -49,31 +50,14 @@ router.post("/place", async (req, res) => {
     }
 });
 
-router.get("/all", async (req, res) => {
-    try {
-
-        const orders = await Order.find({})
-            .populate({
-                path: "items.foodId",        // populate foodId first
-                populate: { path: "restaurant_id" } // nested populate inside food
-            });
-
-        if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
-
-        res.status(200).json(orders);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", rateLimiter(1000 * 60, 30), async (req, res) => {
     try {
         const { userId } = req.params;
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
-  console.log({userId});
+        console.log({ userId });
         const orders = await Order.find({
             userId,
             // createdAt: {

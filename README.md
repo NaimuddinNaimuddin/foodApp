@@ -20,3 +20,5 @@ usecallback and usememo optimizations , code split uses.
 place order cod show loading...
 rate limiter
 
+when err remove the imagebyid
+
