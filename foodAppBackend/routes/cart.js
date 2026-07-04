@@ -92,7 +92,7 @@ router.put("/increase/:userId/:productId", rateLimiter(1000 * 60, 30), async (re
 router.get("/:userId", rateLimiter(1000 * 60, 100), async (req, res) => {
     try {
         const cart = await Cart.findOne({ userId: req.params.userId }).populate("items.foodId");
-        if (!cart) return res.status(404).json(null);
+        if (!cart) return res.status(200).json({ items: [] });
         // ✅ remove items where foodId is null
         cart.items = cart.items.filter(item => item.foodId !== null);
         res.status(200).json(cart);

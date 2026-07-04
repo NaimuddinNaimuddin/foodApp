@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -19,27 +19,38 @@ export default function OrdersScreen() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
   useFocusEffect(
     React.useCallback(() => {
-      fetchOrders();
+      const controller = new AbortController();
+      fetchOrders(controller.signal);
+      return () => {
+        controller.abort();
+      };
     }, [])
   );
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (signal: any) => {
     try {
       setLoading(true);
-      const USER_ID = await storage.getItem('userId');
+      const USER_ID = await storage.getItem("userId");
       if (!USER_ID) return;
-      const res = await axios.get(`${API_BASE_URL}/orders/${USER_ID}`);
+
+      const res = await axios.get(
+        `${API_BASE_URL}/orders/${USER_ID}`, { signal }
+      );
+
       setOrders(res.data);
-    } catch (err) {
+    } catch (err: any) {
+      if (err.code === "ERR_CANCELED") {
+        console.log("Request cancelled");
+        return;
+      }
+
       console.log(err);
     } finally {
-      setLoading(false);
+      if (!signal.aborted) {
+        setLoading(false);
+      }
     }
   };
 

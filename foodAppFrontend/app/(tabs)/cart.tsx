@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Button, TouchableOpacity, Image } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
@@ -16,7 +16,6 @@ const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 export default function CartScreen() {
     const [cart, setCart] = useState([] as any);
     const [isLoading, setIsLoading] = useState(false as boolean);
-    console.log({ cart })
 
     const loadCarts = async () => {
         try {
@@ -96,10 +95,6 @@ export default function CartScreen() {
             loadCarts();
         }, [])
     );
-
-    useEffect(() => {
-        loadCarts();
-    }, []);
 
     if (isLoading) {
         return (
