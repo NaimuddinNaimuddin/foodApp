@@ -1,35 +1,7 @@
 
 import { View, StyleSheet, Text } from "react-native";
 import React from "react";
-
-const ORDER_STEPS = [
-    { label: "Placed", color: "#2196F3" },
-    { label: "Preparing", color: "#FF9800" },
-    { label: "Out for Delivery", color: "#9C27B0" },
-    { label: "Delivered", color: "#4CAF50" },
-];
-
-const getCurrentStep = (status: string) => {
-    switch (status?.toLowerCase()) {
-        case "placed":
-        case "pending":
-            return 0;
-
-        case "preparing":
-        case "accepted":
-            return 1;
-
-        case "out for delivery":
-        case "on the way":
-            return 2;
-
-        case "delivered":
-            return 3;
-
-        default:
-            return 0;
-    }
-};
+import { ORDER_STEPS, getCurrentStep } from "@/lib/constant";
 
 const OrderTracker = ({ status }: { status: string }) => {
     const current = getCurrentStep(status);

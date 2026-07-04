@@ -6,9 +6,10 @@ export const styles = StyleSheet.create({
         backgroundColor: "#f5f5f5",
     },
     heading: {
-        fontSize: 24,
-        fontWeight: "700",
-        margin: 20,
+        fontSize: 18,
+        fontWeight: "600",
+        margin: 18,
+        color: "1c1c1e",
     },
     label: {
         marginHorizontal: 20,

@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { FlatList, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
@@ -8,10 +8,13 @@ import { restaurantStyles as styles } from "@/assets/styles/restaurantStyles";
 import { storage } from "@/lib/storage";
 import { SkeletonCard } from "@/lib/components/Skeletion";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { handleApiError } from "@/lib/common/handleApiError";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function RestaurantScreen() {
+  const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const [addToCartItem, setAddToCartItem] = useState<string | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const fetchFoodItems = async (id: string) => {
@@ -34,18 +37,28 @@ export default function RestaurantScreen() {
   });
 
   const addToCart = async (foodId: string) => {
-    const userId = await storage.getItem('userId');
-    if (!userId) return;
-    const res = await axios.post(`${API_BASE_URL}/cart/add`, {
-      userId,
-      foodId
-    });
-    if (res.status == 200) {
-      Toast.show({
-        type: "success",
-        text1: "Added to Cart 🛒",
+    try {
+      const userId = await storage.getItem('userId');
+      if (!userId) return;
+      setAddToCartLoading(true);
+      setAddToCartItem(foodId);
+      const res = await axios.post(`${API_BASE_URL}/cart/add`, {
+        userId,
+        foodId
       });
+      if (res.status == 200) {
+        Toast.show({
+          type: "success",
+          text1: "Added to Cart 🛒",
+        });
+      }
+    } catch (err: any) {
+      handleApiError(err);
+    } finally {
+      setAddToCartLoading(false);
+      setAddToCartItem(null);
     }
+
   };
 
   if (isLoading) {
@@ -111,9 +124,16 @@ export default function RestaurantScreen() {
 
                   <TouchableOpacity
                     style={styles.addBtn}
+                    disabled={addToCartLoading && food._id === addToCartItem}
                     onPress={() => addToCart(food._id)}
                   >
-                    <Text style={styles.addText}>ADD</Text>
+                    <Text style={styles.addText}>
+                      {
+                        (addToCartLoading && food._id === addToCartItem) ?
+                          <ActivityIndicator size={"small"} color={"#fff"} />
+                          : "ADD"
+                      }
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>

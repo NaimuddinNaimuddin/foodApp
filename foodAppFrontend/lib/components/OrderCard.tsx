@@ -18,13 +18,8 @@ export default function OrderCard({ order }: { order: Order }) {
                 })}
 
             </Text>
-
-            <OrderTracker status={order.status} />
-
-            <Text style={styles.currentStatus}>
-                Current Status: {order.status}
-            </Text>
             <Text style={styles.address}>📍 {order.deliveryAddress}</Text>
+            <OrderTracker status={order.status} />
 
             <View style={styles.divider} />
 

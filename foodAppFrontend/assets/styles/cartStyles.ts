@@ -71,6 +71,16 @@ export const cartStyles = StyleSheet.create({
         textAlign: "right",
         marginVertical: 14,
     },
+    button: {
+        backgroundColor: "#0b831f",
+        padding: 15,
+        borderRadius: 8,
+    },
+    buttonText: {
+        color: "#fff",
+        textAlign: "center",
+        fontWeight: "bold",
+    },
     checkoutBar: {
         backgroundColor: "#FFFFFF",
         paddingHorizontal: 14,

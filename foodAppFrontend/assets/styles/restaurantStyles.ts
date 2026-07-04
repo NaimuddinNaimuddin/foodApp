@@ -72,6 +72,7 @@ export const restaurantStyles = StyleSheet.create({
         borderRadius: 6,
         paddingVertical: 6,
         alignItems: "center",
+        height:30,
     },
 
     addText: {

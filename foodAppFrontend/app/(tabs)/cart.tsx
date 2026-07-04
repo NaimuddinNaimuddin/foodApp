@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Button, TouchableOpacity, Image } from "react-native";
+import { View, Text, FlatList, Button, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { useState } from "react";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
@@ -10,12 +10,14 @@ import { storage } from "@/lib/storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SelectSkeleton } from "@/lib/components/Skeletion";
 import { router } from "expo-router";
+import { handleApiError } from "@/lib/common/handleApiError";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function CartScreen() {
     const [cart, setCart] = useState([] as any);
     const [isLoading, setIsLoading] = useState(false as boolean);
+    const [isOrderPlacing, setIsOrderPlacing] = useState(false as boolean);
 
     const loadCarts = async () => {
         try {
@@ -25,7 +27,7 @@ export default function CartScreen() {
             const { data } = await axios.get(`${API_URL}/cart/${userId}`);
             setCart(data);
         } catch (err: any) {
-            console.error("Error loading restaurants:", err.message);
+            handleApiError(err);
         } finally {
             setIsLoading(false);
         }
@@ -38,8 +40,7 @@ export default function CartScreen() {
             const { data } = await axios.put(`${API_URL}/cart/decrease/${userId}/${productId}`);
             setCart(data);
         } catch (err) {
-            console.log("Error decreasing quantity:", err);
-            throw err;
+            handleApiError(err);
         }
     };
     const increaseQty = async (productId: string) => {
@@ -49,8 +50,7 @@ export default function CartScreen() {
             const { data } = await axios.put(`${API_URL}/cart/increase/${userId}/${productId}`);
             setCart(data);
         } catch (err) {
-            console.log("Error increasing quantity:", err);
-            throw err;
+            handleApiError(err);
         }
     };
 
@@ -61,8 +61,7 @@ export default function CartScreen() {
             const { data } = await axios.delete(`${API_URL}/cart/remove/${userId}/${productId}`);
             setCart(data);
         } catch (err) {
-            console.log("Error removing item:", err);
-            throw err;
+            handleApiError(err);
         }
     };
 
@@ -70,7 +69,7 @@ export default function CartScreen() {
         try {
             const deliveryAddress = await storage.getItem('user_address');
             if (!deliveryAddress) return;
-
+            setIsOrderPlacing(true);
             const response = await axios.post(`${API_URL}/orders/place`, {
                 ...cart, deliveryAddress
             });
@@ -85,8 +84,9 @@ export default function CartScreen() {
             }
 
         } catch (err) {
-            console.log("Error removing item:", err);
-            Toast.show({ type: "error", text1: 'Somthing Went Wrong. Try Again later' });
+            handleApiError(err);
+        } finally {
+            setIsOrderPlacing(false);
         }
     };
 
@@ -187,7 +187,13 @@ export default function CartScreen() {
                     </View>
 
                     <View style={styles.orderButton}>
-                        <Button title="Place Order - COD" onPress={() => placeOrder()} />
+                        <TouchableOpacity style={styles.button} disabled={isOrderPlacing} onPress={() => placeOrder()} >
+                            <Text style={styles.buttonText}>
+                                {isOrderPlacing ?
+                                    <ActivityIndicator size={"small"} color={"#fff"} />
+                                    : "Place Order - COD"}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             )}
