@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import '../styles/Orders.css';
+import { useNavigate } from "react-router-dom";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Areas() {
+    const navigate = useNavigate();
     const [areas, setAreas] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -26,6 +28,11 @@ export default function Areas() {
     return (
         <div>
             {loading && 'Loading...'}
+            <div style={{ display: 'flex', marginBottom: '20px', justifyContent: 'end' }}>
+                <button
+                    onClick={() => navigate('/areas/add')}
+                    className="addBtn">ADD Area</button>
+            </div>
             <div className="orders-container">
                 {areas.map((area) => (
                     <div className="order-card" key={area._id}>

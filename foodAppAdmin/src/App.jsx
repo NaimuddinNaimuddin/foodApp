@@ -10,6 +10,7 @@ import Orders from "./pages/Orders";
 
 import SideNav from "./components/SideNav";
 import Food from "./components/Food";
+import Foods from "./pages/Foods";
 import "react-toastify/dist/ReactToastify.css";
 import CreateArea from "./pages/AddArea";
 import AreaList from "./pages/AreaList";
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/restaurant/edit/:id" element={<EditRestaurant />} />
 
             <Route path="/restaurant/:id" element={<Food />} />
+            <Route path="/foods" element={<Foods />} />
             <Route path="/food/add" element={<AddFoodItems />} />
             <Route path="/food/edit/:id" element={<EditFoodItems />} />
           </Routes>

@@ -55,6 +55,11 @@ export default function Restaurants() {
 
     return (
         <div className="container">
+            <div style={{ display: 'flex', marginBottom: '20px', justifyContent: 'end' }}>
+                <button
+                    onClick={() => navigate('/restaurant/add')}
+                    className="addBtn">ADD Restaurant</button>
+            </div>
             <div className="pickerContainer">
                 <select value={area_code} onChange={(e) => setAreaCode(e.target.value)}>
                     <option value="">📍 Select Location</option>

@@ -19,7 +19,7 @@ const rateLimiter = (windowMs, max, message = "Too many requests, Please try aga
                 req.body?.userId ||
                 req.body?.user_id;
 
-            return userId ? userId.toString() : req.ip;
+            return userId ? userId.toString() : rateLimit.ipKeyGenerator(req.ip);
         },
         message: {
             success: false,
