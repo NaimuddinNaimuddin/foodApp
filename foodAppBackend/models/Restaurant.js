@@ -25,6 +25,7 @@ const RestaurantSchema = new mongoose.Schema({
   },
   area_code: {
     type: String,
+    default: '0',
   },
   status: {
     type: String,

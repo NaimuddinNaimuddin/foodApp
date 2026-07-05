@@ -94,7 +94,7 @@ export default function CreateRestaurant() {
                     value={areaCode}
                     onChange={(e) => setAreaCode(e.target.value)}
                 >
-                    <option value="">Select Location</option>
+                    <option value="0">Select Location</option>
                     <option value="245412">245412</option>
                     <option value="201003">201003</option>
                 </select>
