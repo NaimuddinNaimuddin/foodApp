@@ -1,54 +1,40 @@
 const mongoose = require("mongoose");
 
-const RestaurantSchema = new mongoose.Schema({
-  image_url: {
-    type: String,
-  },
-  image_id: {
-    type: String,
-  },
+const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true
   },
-  category: {
+  image_id: {
+    type: String,
+  },
+  image_url: {
+    type: String,
+  },
+  type: {
     type: String,
     required: true,
     default: 'Food'
   },
-  ratings: {
-    type: Number,
-    default: 5,
-  },
-  address: {
-    type: String,
-  },
   area_code: {
     type: String,
     default: '0',
+    index: true,
+  },
+  isBanner: {
+    type: Boolean,
+    default: false,
+  },
+  sort_order: {
+    type: Number,
+    default: 0
   },
   status: {
-    type: String,
-    default: 'open',
+    type: Boolean,
+    default: true,
   },
-  // location: {
-  //   type: {
-  //     type: String,
-  //     enum: ["Point"],
-  //     required: true
-  //   },
-  //   coordinates: {
-  //     type: [Number], // [longitude, latitude]
-  //     required: true
-  //   }
-  // },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+}, { timestamps: true });
 
-// Required for geospatial queries
-// RestaurantSchema.index({ location: "2dsphere" });
+schema.index({ area_code: 1, isBanner: 1, sort_order: 1 });
 
-module.exports = mongoose.model("Restaurant", RestaurantSchema);
+module.exports = mongoose.model("Restaurant", schema);
