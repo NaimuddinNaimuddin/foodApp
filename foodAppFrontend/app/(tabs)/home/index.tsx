@@ -15,14 +15,15 @@ import axios from "axios";
 import { storage } from "@/lib/storage";
 import { styles } from '@/assets/styles/homeStyles';
 import { SkeletonCard, SelectSkeleton } from "@/lib/components/Skeletion";
+import Toast from "react-native-toast-message";
 
 export default function FoodScreen() {
   const [area_code, setAreaCode] = useState('');
   const [search, setSearch] = useState("");
   const [phone, setPhone] = useState("");
 
-  const fetchRestaurants = async () => {
-    const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants`);
+  const fetchHomeCategories = async (area_code: string) => {
+    const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants/by-area-code/grouped/${area_code}`);
     return data;
   };
 
@@ -32,17 +33,20 @@ export default function FoodScreen() {
   };
 
   const {
-    data: restaurants = [],
+    data,
     isLoading,
     isFetching,
     isError,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["restaurants"],
-    queryFn: fetchRestaurants,
-    staleTime: 1000 * 60 * 60, // 1 hour
+    queryKey: ["restaurants", area_code],
+    queryFn: () => fetchHomeCategories(area_code as string),
+    staleTime: 1000 * 60 * 10, // 1 hour
+    enabled: !!area_code, // waits until state is populated (not null)
   });
+
+  console.log(data, "data")
 
   const {
     data: areas = [],
@@ -52,10 +56,12 @@ export default function FoodScreen() {
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
-  const filtered = restaurants && restaurants.filter((r: { id: string, name: string, area_code: string }) => {
-    const matchesSearch = (area_code == "" ? !r.area_code : r.area_code === area_code) && r.name.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch;
-  });
+  // const filtered = restaurants && restaurants.filter((r: { id: string, name: string, area_code: string }) => {
+  //   const matchesSearch = (area_code == "" ? !r.area_code : r.area_code === area_code) && r.name.toLowerCase().includes(search.toLowerCase());
+  //   return matchesSearch;
+  // });
+
+  const filtered: any = [];
 
   const onRefresh = async () => {
     await refetch();
