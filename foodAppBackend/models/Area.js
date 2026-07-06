@@ -10,10 +10,15 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    delivery_charge_in_rs: {
+        type: Number,
+        required: true,
+        default: 20,
+    },
     isActive: {
         type: Boolean,
         default: true,
     },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Area", schema);

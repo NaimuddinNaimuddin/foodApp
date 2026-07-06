@@ -8,6 +8,8 @@ import {
   TextInput,
   View,
   Image,
+  Dimensions,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
@@ -16,14 +18,21 @@ import { storage } from "@/lib/storage";
 import { styles } from '@/assets/styles/homeStyles';
 import { SkeletonCard, SelectSkeleton } from "@/lib/components/Skeletion";
 import Toast from "react-native-toast-message";
+import { Category } from "@/lib/types/home";
+import Carousel, { Pagination } from "react-native-reanimated-carousel";
+import { useSharedValue } from "react-native-reanimated";
+
+const { width } = Dimensions.get("window");
 
 export default function FoodScreen() {
-  const [area_code, setAreaCode] = useState('');
+
+  const [areaId, setAreaId] = useState('');
   const [search, setSearch] = useState("");
   const [phone, setPhone] = useState("");
+  const progress = useSharedValue(0);
 
-  const fetchHomeCategories = async (area_code: string) => {
-    const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants/by-area-code/grouped/${area_code}`);
+  const fetchHomeCategories = async (_areaId: string) => {
+    const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants/by-area-code/grouped/${_areaId}`);
     return data;
   };
 
@@ -40,13 +49,11 @@ export default function FoodScreen() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["restaurants", area_code],
-    queryFn: () => fetchHomeCategories(area_code as string),
-    staleTime: 1000 * 60 * 10, // 1 hour
-    enabled: !!area_code, // waits until state is populated (not null)
+    queryKey: ["restaurants", areaId],
+    queryFn: () => fetchHomeCategories(areaId as string),
+    staleTime: 1000 * 60 * 10, // 10 min
+    enabled: !!areaId, // waits until state is populated (not null)
   });
-
-  console.log(data, "data")
 
   const {
     data: areas = [],
@@ -56,12 +63,8 @@ export default function FoodScreen() {
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
-  // const filtered = restaurants && restaurants.filter((r: { id: string, name: string, area_code: string }) => {
-  //   const matchesSearch = (area_code == "" ? !r.area_code : r.area_code === area_code) && r.name.toLowerCase().includes(search.toLowerCase());
-  //   return matchesSearch;
-  // });
-
-  const filtered: any = [];
+  const filteredCategories = data && data.categories && data.categories.length > 0 &&
+    data.categories.filter((c: Category) => c.name.toLowerCase().includes(search.toLowerCase())) || [];
 
   const onRefresh = async () => {
     await refetch();
@@ -70,6 +73,9 @@ export default function FoodScreen() {
   useEffect(() => {
     storage.getItem('phone').then((_phone: any) => {
       setPhone(_phone);
+    })
+    storage.getItem('areaId').then((_areaId: any) => {
+      setAreaId(_areaId);
     })
   }, []);
 
@@ -102,7 +108,10 @@ export default function FoodScreen() {
       </SafeAreaView>
     );
   }
-  if (isError) return <Text>{error.message}</Text>;
+
+  if (isError) {
+    Toast.show({ type: 'error', text1: error.message || "Something Went Wrong." })
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -112,62 +121,120 @@ export default function FoodScreen() {
         </Text>
         <View style={styles.dropdown}>
           <Picker
-            selectedValue={area_code}
+            selectedValue={areaId}
             onValueChange={(val) => {
-              setAreaCode(val);
+              setAreaId(val);
+              storage.setItem('areaId', val)
             }}
           >
             <Picker.Item label="Select Location" value="" />
-            {areas.map((area: any) => (
+            {areas && areas.length > 0 && areas.map((area: any) => (
               <Picker.Item
                 key={area.code}
                 label={`${area.code} - ${area.name}`}
-                value={area.code}
+                value={area._id}
               />
             ))}
           </Picker>
         </View>
       </View>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search Grocery Items..."
-        value={search}
-        onChangeText={setSearch}
-      />
-      <FlatList
-        onRefresh={onRefresh}
-        refreshing={isFetching}
-        numColumns={3}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          paddingHorizontal: 8,
-        }}
-        data={filtered}
-        keyExtractor={(item: { _id: string, name: string, image_url: string, ratings: string, status: string, category: string }) => item._id}
-        renderItem={({ item }) => (
-          <Pressable
-            style={styles.card}
-            onPress={() =>
-              router.navigate({
-                pathname: "/home/restaurant/[id]",
-                params: { id: item._id },
-              })
-            }
-          >
-            <Image
-              source={{ uri: item.image_url }}
-              style={styles.image}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search Grocery Items..."
+          value={search}
+          onChangeText={setSearch}
+        />
+        {data && data.banners && data.banners.length > 0 &&
+          <View style={{ marginBottom: 10, marginTop: 10 }}>
+            <Carousel
+              width={width}
+              height={180}
+              data={data.banners}
+              loop
+              onProgressChange={progress}
+              autoPlay
+              snapEnabled
+              autoPlayInterval={3000}
+              scrollAnimationDuration={800}
+              renderItem={({ item }: { item: Category }) => (
+                <Pressable
+                  onPress={() =>
+                    router.navigate({
+                      pathname: "/home/restaurant/[id]",
+                      params: { id: item._id },
+                    })
+                  }
+                >
+                  <Image
+                    source={{ uri: item.image_url }}
+                    style={{
+                      width: width * 0.92,
+                      height: 180,
+                      borderRadius: 12,
+                    }}
+                    resizeMode="cover"
+                  />
+                </Pressable>
+              )}
             />
+            <Pagination.Custom
+              progress={progress}
+              data={data.banners}
+              dotStyle={{
+                width: 6,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: "#D1D5DB",
+                marginHorizontal: 4,
+                marginVertical: 10,
+              }}
+              activeDotStyle={{
+                width: 6,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: "#FF0000",
+                marginHorizontal: 4,
+                marginVertical: 10,
+              }}
+            />
+          </View>
+        }
+        <FlatList
+          onRefresh={onRefresh}
+          refreshing={isFetching}
+          numColumns={3}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            paddingHorizontal: 0,
+          }}
+          data={filteredCategories}
+          keyExtractor={(item: { _id: string, name: string, image_url: string }) => item._id}
+          renderItem={({ item }) => (
+            <Pressable
+              style={styles.card}
+              onPress={() =>
+                router.navigate({
+                  pathname: "/home/restaurant/[id]",
+                  params: { id: item._id },
+                })
+              }
+            >
+              <Image
+                source={{ uri: item.image_url }}
+                style={styles.image}
+              />
 
-            <View style={styles.details}>
-              <Text style={styles.category} numberOfLines={1}>
-                {item.name}
-              </Text>
-            </View>
+              <View style={styles.details}>
+                <Text style={styles.category} numberOfLines={1}>
+                  {item.name}
+                </Text>
+              </View>
 
-          </Pressable>
-        )}
-      />
+            </Pressable>
+          )}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }

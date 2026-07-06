@@ -2,38 +2,46 @@ const express = require("express");
 const router = express.Router();
 const commonController = require("../controllers/commonController");
 const rateLimiter = require("../common/rateLimiter");
+const Restaurant = require("../models/Restaurant");
+const mongoose = require("mongoose");
+
 // Get all restaurants
 router.get("/", rateLimiter(1000 * 60, 30), async (req, res) => {
     const restaurants = await Restaurant.find({ status: 'ACTIVE' });
     res.json(restaurants);
 });
 
-router.get("/by-area-code/grouped/:area_code", rateLimiter(1000 * 60, 30), async (req, res) => {
+router.get("/by-area-code/grouped/:area_id", rateLimiter(1000 * 60, 30), async (req, res) => {
     try {
-        const areaCode = req.params.area_code;
-        if (!areaCode) return res.status(400).json({ message: 'Area Code is Required.' });
-
-        const result = await Category.aggregate([
-            { $match: { status: true, area_code: { $in: [areaCode, "0"] }, } },
+        const areaId = req.params.area_id;
+        if (!areaId) return res.status(400).json({ message: 'AreaId is Required.' });
+        const [result] = await Restaurant.aggregate([
+            {
+                $match: {
+                    status: true, $or: [
+                        { area_id: new mongoose.Types.ObjectId(areaId) },
+                        { area_id: null }
+                    ],
+                }
+            },
             {
                 $facet: {
                     banners: [
-                        { $match: { isBanner: true } },
+                        { $match: { is_banner: true } },
                         { $sort: { sort_order: 1 } },
                         { $project: { name: 1, image_url: 1 } },
                     ],
                     categories: [
-                        { $match: { isBanner: false } },
+                        { $match: { is_banner: false } },
                         { $sort: { sort_order: 1 } },
                         { $project: { name: 1, image_url: 1 } },
                     ],
                 },
             },
         ]);
-
         res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({ success: false, message: "Server error", error });
     }
 });
 

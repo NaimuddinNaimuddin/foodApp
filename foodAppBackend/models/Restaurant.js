@@ -11,17 +11,16 @@ const schema = new mongoose.Schema({
   image_url: {
     type: String,
   },
-  type: {
+  category: {
     type: String,
-    required: true,
-    default: 'Food'
+    default: null,
   },
-  area_code: {
-    type: String,
-    default: '0',
-    index: true,
+  area_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Area",
+    default: null,
   },
-  isBanner: {
+  is_banner: {
     type: Boolean,
     default: false,
   },
@@ -35,6 +34,6 @@ const schema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-schema.index({ area_code: 1, isBanner: 1, sort_order: 1 });
+schema.index({ is_banner: 1, sort_order: 1 });
 
 module.exports = mongoose.model("Restaurant", schema);

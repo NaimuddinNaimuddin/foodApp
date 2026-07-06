@@ -9,7 +9,7 @@ router.get("/area/all", commonController.getArea);
 router.get("/restaurants/:id", adminController.getRestaurantById);
 router.get("/restaurants", commonController.getAllRestaurants);
 router.post("/restaurants", adminController.addRestaurants);
-router.put("/restaurants/edit/:id", adminController.editCategoryById);
+router.put("/restaurants/:id", adminController.editCategoryById);
 
 router.get("/food/food-items/:id", adminController.getFoodItemsById);
 router.put("/food/food-items/:id", adminController.editFoodItems);

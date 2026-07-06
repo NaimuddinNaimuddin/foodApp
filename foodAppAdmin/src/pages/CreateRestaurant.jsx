@@ -1,120 +1,201 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-// import GetCurrentLocation from "../components/GetCurrentLocation";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME;
 const YOUR_UPLOAD_PRESET = import.meta.env.VITE_YOUR_UPLOAD_PRESET;
 
-export default function CreateRestaurant() {
-    const [name, setName] = useState("");
-    const [category, setCategory] = useState("");
-    const [image, setImage] = useState("");
-    const [address, setAddress] = useState("");
-    const [areaCode, setAreaCode] = useState("");
-    const [status, setStatus] = useState("");
-    // const [location, setLocation] = useState("");
-    const [loading, setLoading] = useState(false);
+const initialFormState = {
+    name: "",
+    category: null,
+    area_id: null,
+    is_banner: false,
+    sort_order: 0,
+    status: true,
+};
 
-    const uploadImageToCloudinary = async () => {
-        const formData = new FormData();
-        formData.append("file", image);
-        formData.append("upload_preset", YOUR_UPLOAD_PRESET);
+export default function CreateRestaurant() {
+    const [formData, setFormData] = useState(initialFormState);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [areas, setAreas] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [successMsg, setSuccessMsg] = useState(null);
+
+    useEffect(() => {
+        const fetchAreas = async () => {
+            try {
+                const res = await axios.get(`${API_BASE_URL}/area/all`);
+                setAreas(res.data);
+            } catch (err) {
+                console.error("Failed to load areas:", err);
+            }
+        };
+        fetchAreas();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
+    };
+
+    const uploadImageToCloudinary = async (file) => {
+        const uploadData = new FormData();
+        uploadData.append("file", file);
+        uploadData.append("upload_preset", YOUR_UPLOAD_PRESET);
 
         const res = await axios.post(
             `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-            formData
+            uploadData
         );
 
-        return res.data.secure_url;
+        return { url: res.data.secure_url, publicId: res.data.public_id };
+    };
+
+    const resetForm = () => {
+        setFormData(initialFormState);
+        setImageFile(null);
+        setImagePreview(null);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+        setSuccessMsg(null);
 
-        if (!image) return alert("Please select an image");
-        // if (!location) return alert("Please select location");
+        if (!formData.name.trim()) {
+            setError("Restaurant name is required.");
+            return;
+        }
+        if (!imageFile) {
+            setError("Please select an image.");
+            return;
+        }
+
         try {
             setLoading(true);
+            const { url: imageUrl, publicId: imageId } = await uploadImageToCloudinary(imageFile);
 
-            // 1. Upload image
-            const imageUrl = await uploadImageToCloudinary();
-
-            // 2. Save restaurant
             await axios.post(`${API_BASE_URL}/admin/restaurants`, {
-                name,
+                name: formData.name,
+                category: formData.category,
                 image_url: imageUrl,
-                area_code: Number(areaCode),
-                // latitude: location.lat,
-                // longitude: location.lng,
+                image_id: imageId,
+                area_id: formData.area_id,
+                is_banner: formData.is_banner,
+                sort_order: Number(formData.sort_order),
+                status: formData.status,
             });
 
-            alert("Restaurant created!");
-            setName("");
-            setImage(null);
+            setSuccessMsg("Restaurant created successfully!");
+            resetForm();
         } catch (err) {
             console.error(err);
-            alert("Error creating restaurant");
+            setError(err?.response?.data?.message || "Error creating restaurant.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div style={{ margin: "20px 100px" }}>
+        <div style={{ margin: "20px 100px", maxWidth: 500 }}>
             <h2>Create Restaurant</h2>
+
+            {error && <p style={{ color: "#e74c3c" }}>{error}</p>}
+            {successMsg && <p style={{ color: "#2ecc71" }}>{successMsg}</p>}
 
             <form onSubmit={handleSubmit}>
                 <input
                     className="form-control mb-2"
                     type="text"
+                    name="name"
                     placeholder="Restaurant Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={formData.name}
+                    onChange={handleChange}
                     required
                 />
+
                 <input
                     className="form-control mb-2"
                     type="text"
+                    name="category"
                     placeholder="Restaurant Category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    required
+                    value={formData.category}
+                    onChange={handleChange}
                 />
-                <input
-                    className="form-control mb-2"
-                    type="text"
-                    placeholder="Restaurant Address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    required
-                />
+
                 <select
                     className="form-control mb-2"
-                    value={areaCode}
-                    onChange={(e) => setAreaCode(e.target.value)}
+                    name="area_id"
+                    value={formData.area_id}
+                    onChange={handleChange}
                 >
-                    <option value="0">Select Location</option>
-                    <option value="245412">245412</option>
-                    <option value="201003">201003</option>
+                    <option value={""}>Global (All Areas)</option>
+                    {areas.map((area) => (
+                        <option key={area._id} value={area._id}>
+                            {area.name} ({area.code})
+                        </option>
+                    ))}
                 </select>
+
                 <input
                     className="form-control mb-2"
-                    type="text"
-                    placeholder="Restaurant Status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    required
+                    type="number"
+                    name="sort_order"
+                    placeholder="Sort Order"
+                    value={formData.sort_order}
+                    onChange={handleChange}
                 />
+
+                <div className="mb-2">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="is_banner"
+                            checked={formData.is_banner}
+                            onChange={handleChange}
+                        />
+                        {" "}Show as Banner
+                    </label>
+                </div>
+
+                <div className="mb-2">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="status"
+                            checked={formData.status}
+                            onChange={handleChange}
+                        />
+                        {" "}Active
+                    </label>
+                </div>
+
                 <input
                     className="form-control mb-2"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setImage(e.target.files[0])}
+                    onChange={handleImageChange}
                 />
 
-                {/* <h4>Select Location</h4> */}
-                {/* <GetCurrentLocation onLocationSelect={setLocation} /> */}
+                {imagePreview && (
+                    <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{ width: 100, height: 100, objectFit: "cover", borderRadius: 8, marginBottom: 10 }}
+                    />
+                )}
 
                 <button className="btn btn-info mb-2" type="submit" disabled={loading}>
                     {loading ? "Uploading..." : "Create"}

@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { styles } from "@/assets/styles/profileStyles";
 import EditPhoneField from "@/lib/components/EditPhoneField";
 import EditAddressField from "@/lib/components/EditDeliveryAddress";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -32,8 +33,8 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
         {/* Header row with title + three-dot menu */}
         <View style={localStyles.headerRow}>
           <Text style={styles.heading}>My Profile</Text>
@@ -65,31 +66,33 @@ export default function HomeScreen() {
         >
           <Text style={styles.optionText}>Terms & Conditions</Text>
         </TouchableOpacity>
-      </ScrollView>
 
-      {/* Dropdown menu modal */}
-      <Modal
-        visible={menuVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setMenuVisible(false)}
-      >
-        <Pressable
-          style={localStyles.overlay}
-          onPress={() => setMenuVisible(false)}
-        >
-          <View style={localStyles.dropdown}>
-            <TouchableOpacity
-              style={localStyles.dropdownItem}
-              onPress={handleLogout}
+
+        {/* Dropdown menu modal */}
+        {menuVisible &&
+          <Modal
+            visible={menuVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setMenuVisible(false)}
+          >
+            <Pressable
+              style={localStyles.overlay}
+              onPress={() => setMenuVisible(false)}
             >
-              <Ionicons name="log-out-outline" size={18} color="#e74c3c" />
-              <Text style={localStyles.dropdownItemText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
-        </Pressable>
-      </Modal>
-    </View>
+              <View style={localStyles.dropdown}>
+                <TouchableOpacity
+                  style={localStyles.dropdownItem}
+                  onPress={handleLogout}
+                >
+                  <Ionicons name="log-out-outline" size={18} color="#e74c3c" />
+                  <Text style={localStyles.dropdownItemText}>Logout</Text>
+                </TouchableOpacity>
+              </View>
+            </Pressable>
+          </Modal>}
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -98,9 +101,11 @@ const localStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingRight: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 3,
     backgroundColor: "#FFF",
-    marginBottom: 20,
+    marginBottom: 16,
+
   },
   menuBtn: {
     padding: 8,
@@ -111,14 +116,14 @@ const localStyles = StyleSheet.create({
   },
   dropdown: {
     position: "absolute",
-    top: 55, // adjust based on your header height
-    right: 15,
+    top: 45, // relative to header (much safer now)
+    right: 10,
     backgroundColor: "#fff",
     borderRadius: 8,
     paddingVertical: 6,
     minWidth: 140,
-    elevation: 5, // Android shadow
-    shadowColor: "#000", // iOS shadow
+    elevation: 5,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,

@@ -125,23 +125,33 @@ const getAllOrders = async (req, res) => {
 }
 
 const addRestaurants = async (req, res) => {
+    console.log(req.body);
+    const { name, image_url, area_id, image_id, category, is_banner = false, sort_order = 0 } = req.body;
+    console.log(req.body);
     try {
-        const { name, image_url, area_code } = req.body;
-        console.log({ name, image_url });
         const restaurant = new Restaurant({
             name,
+            image_id,
             image_url,
-            area_code,
-            // location: {
-            //   type: "Point",
-            //   coordinates: [longitude, latitude]
-            // }
+            category: category || null,
+            area_id: area_id || null,
+            is_banner,
+            sort_order,
         });
 
         await restaurant.save();
         res.status(201).json(restaurant);
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        // Delete uploaded image if DB save fails
+        if (image_id) {
+            try {
+                await cloudinary.uploader.destroy(image_id);
+            } catch (deleteErr) {
+                console.error("Failed to delete image:", deleteErr);
+            }
+        }
+        console.log("Err: ", err)
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
 }
 
@@ -168,54 +178,74 @@ const addProductToCategory = async (req, res) => {
 }
 
 const editCategoryById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const {
-            name,
-            category,
-            address,
-            status,
-            image_url,
-            image_id,
-            area_code,
-            // latitude,
-            // longitude
-        } = req.body;
+    const { id } = req.params;
+    const {
+        name,
+        image_id,
+        image_url,
+        category,
+        area_id,
+        is_banner,
+        sort_order,
+        status,
+    } = req.body;
+    console.log(req.body);
 
-        // Validation
-        if (!name || !category || !address || !status) {
+    try {
+        if (!id || !name) {
             return res.status(400).json({ error: "Required fields missing" });
         }
 
-        // Find restaurant
         const restaurant = await Restaurant.findById(id);
         if (!restaurant) {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Delete old image if replaced
+        const oldImageId = restaurant.image_id;
+        let imageChanged = false;
+
+        // Only mark change, DO NOT delete yet
         if (image_url && image_url !== restaurant.image_url) {
-            if (restaurant.image_id) {
-                await cloudinary.uploader.destroy(restaurant.image_id);
-            }
+            restaurant.image_url = image_url;
+            restaurant.image_id = image_id;
+            imageChanged = true;
         }
 
         // Update fields
         restaurant.name = name;
-        restaurant.category = category;
-        restaurant.address = address;
-        restaurant.status = status;
-        restaurant.area_code = area_code;
-        restaurant.image_url = image_url || restaurant.image_url;
         restaurant.image_id = image_id || restaurant.image_id;
-        // restaurant.latitude = latitude || restaurant.latitude;
-        // restaurant.longitude = longitude || restaurant.longitude;
+        restaurant.image_url = image_url || restaurant.image_url;
+        restaurant.category = category;
+        restaurant.area_id = area_id;
+        restaurant.is_banner = is_banner;
+        restaurant.sort_order = sort_order;
+        restaurant.status = status;
 
         await restaurant.save();
+
+        // DELETE OLD IMAGE ONLY AFTER SUCCESS
+        if (imageChanged && oldImageId) {
+            try {
+                const deleteResult = await cloudinary.uploader.destroy(oldImageId);
+                console.log("old image deleted after save:", deleteResult);
+            } catch (err) {
+                console.log("Cloudinary delete failed:", err.message);
+            }
+        }
 
         res.status(200).json({ message: "Restaurant updated successfully" });
 
     } catch (err) {
+        // Delete uploaded image if DB save fails
+        if (image_id) {
+            try {
+                const deleteResult = await cloudinary.uploader.destroy(image_id);
+                console.log("new image delete if edit saved err", deleteResult);
+
+            } catch (deleteErr) {
+                console.error("Failed to delete image:", deleteErr);
+            }
+        }
         console.error(err);
         res.status(500).json({ error: "Server error" });
     }

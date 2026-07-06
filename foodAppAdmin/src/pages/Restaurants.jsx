@@ -9,7 +9,8 @@ export default function Restaurants() {
     const [loading, setLoading] = useState(false);
 
     const [search, setSearch] = useState("");
-    const [area_code, setAreaCode] = useState("");
+    const [area_code, setAreaCode] = useState("0");
+    console.log({ area_code })
     const [restaurants, setRestaurants] = useState([]);
 
     useEffect(() => {
@@ -50,7 +51,8 @@ export default function Restaurants() {
     };
 
     const filtered = restaurants.filter((r) => {
-        return (!area_code ? !r.area_code : r.area_code === area_code || !r.area_code) && (r.name.toLowerCase().includes(search.toLowerCase()));
+        console.log(area_code === r.area_code)
+        return (area_code === r.area_code) && (r.name.toLowerCase().includes(search.toLowerCase()));
     });
 
     return (
@@ -62,10 +64,10 @@ export default function Restaurants() {
             </div>
             <div className="pickerContainer">
                 <select value={area_code} onChange={(e) => setAreaCode(e.target.value)}>
-                    <option value="">📍 Select Location</option>
+                    <option value="0">📍 Select Location</option>
                     {areas.map((area) => {
                         return (
-                            <option key={area.code} value={area.code}>{area.code} - {area.name}</option>
+                            <option key={area.code} value={area._id}>{area.code} - {area.name}</option>
                         )
                     })}
                 </select>
