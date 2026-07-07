@@ -105,12 +105,8 @@ export const styles = StyleSheet.create({
     dropdown: {
         marginTop: 10,
         backgroundColor: "#fff",
-        borderRadius: 12,
         overflow: "hidden",
         elevation: 4,
-        shadowColor: "#000",
-        shadowOpacity: 0.08,
-        shadowRadius: 10,
         marginBottom: 15,
     },
     wrapper: {

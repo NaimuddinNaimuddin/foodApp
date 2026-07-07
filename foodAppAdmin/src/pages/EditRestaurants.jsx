@@ -31,7 +31,7 @@ export default function EditRestaurant() {
         const fetchData = async () => {
             try {
                 const [areasRes, restaurantRes] = await Promise.all([
-                    axios.get(`${API_BASE_URL}/area/all`),
+                    axios.get(`${API_BASE_URL}/admin/area/all`),
                     axios.get(`${API_BASE_URL}/admin/restaurants/${id}`)
                 ]);
 
@@ -124,7 +124,6 @@ export default function EditRestaurant() {
 
             setSuccessMsg("Restaurant updated successfully!");
             setImageFile(null);
-            setExistingImage(null);
         } catch (err) {
             console.error(err);
             setError(err?.response?.data?.message || "Error updating restaurant.");

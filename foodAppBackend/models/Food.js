@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
-const FoodSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   restaurant_id: {
     type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true,
+  },
+  area_id: {
+    type: mongoose.Schema.Types.ObjectId, ref: "Area", required: true,
   },
   name: {
     type: String, required: true,
   },
   price: {
     type: Number, required: true
-  },
-  area_id: {
-    type: mongoose.Schema.Types.ObjectId, ref: "Area", required: true,
   },
   mrp: {
     type: Number, required: true
@@ -31,10 +31,18 @@ const FoodSchema = new mongoose.Schema({
   image_id: {
     type: String,
   },
-  is_available: {
+  is_in_stock: {
+    type: Boolean,
+    default: false,
+  },
+  sort_order: {
+    type: Number,
+    default: 0
+  },
+  status: {
     type: Boolean,
     default: true,
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model("Food", FoodSchema);
+module.exports = mongoose.model("Food", schema);

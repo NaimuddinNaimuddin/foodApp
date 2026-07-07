@@ -4,6 +4,16 @@ const Food = require("../models/Food");
 const Order = require("../models/Order");
 const Restaurant = require("../models/Restaurant");
 
+const getArea = async (req, res) => {
+    try {
+        const areas = await Area.find({});
+        if (!areas.length) return res.status(404).json({ message: 'No Area Found.' })
+        res.status(200).json(areas);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 const addArea = async (req, res) => {
     const { code, name, status = true } = req.body;
 
@@ -262,6 +272,7 @@ const getFoodItemsById = async (req, res) => {
 }
 
 module.exports = {
+    getArea,
     addArea,
     getRestaurantById,
     addRestaurants,

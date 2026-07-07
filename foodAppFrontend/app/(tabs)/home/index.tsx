@@ -16,12 +16,11 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { storage } from "@/lib/storage";
 import { styles } from '@/assets/styles/homeStyles';
-import { SkeletonCard, SelectSkeleton } from "@/lib/components/Skeletion";
 import Toast from "react-native-toast-message";
 import { Category } from "@/lib/types/home";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-
+import HomeLoading from "@/lib/components/HomeLoading";
 const { width } = Dimensions.get("window");
 
 export default function FoodScreen() {
@@ -80,33 +79,7 @@ export default function FoodScreen() {
   }, []);
 
   if (isLoading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <SelectSkeleton width={'70%'} height={25} style={{
-          marginTop: 12,
-          borderRadius: 12,
-        }} />
-        <SelectSkeleton width={'100%'} height={18} style={{
-          marginTop: 12,
-          borderRadius: 12,
-        }} />
-        <SelectSkeleton width={'100%'} height={50} style={{
-          marginTop: 12,
-          borderRadius: 12,
-        }} />
-        <FlatList
-          data={Array.from({ length: 4 })}
-          numColumns={3}
-          keyExtractor={(_, index) => index.toString()}
-          columnWrapperStyle={{
-            justifyContent: "space-between",
-            paddingHorizontal: 8,
-            marginTop: 12,
-          }}
-          renderItem={() => <SkeletonCard />}
-        />
-      </SafeAreaView>
-    );
+    return <HomeLoading />;
   }
 
   if (isError) {
@@ -131,12 +104,12 @@ export default function FoodScreen() {
             {areas && areas.length > 0 && areas.map((area: any) => (
               <Picker.Item
                 key={area.code}
-                label={`${area.code} - ${area.name}`}
+                label={`${area.name} - ${area.code}`}
                 value={area._id}
               />
             ))}
           </Picker>
-        </View>
+            </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TextInput

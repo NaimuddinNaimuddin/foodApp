@@ -15,7 +15,10 @@ const schema = new mongoose.Schema({
         required: true,
         default: 20,
     },
-    isActive: {
+    delivery_text: {
+        type: String,
+    },
+    status: {
         type: Boolean,
         default: true,
     },
