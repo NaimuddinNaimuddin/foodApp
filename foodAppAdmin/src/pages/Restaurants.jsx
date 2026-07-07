@@ -9,7 +9,7 @@ export default function Restaurants() {
     const [loading, setLoading] = useState(false);
 
     const [search, setSearch] = useState("");
-    const [area_code, setAreaCode] = useState("0");
+    const [area_code, setAreaCode] = useState("");
     console.log({ area_code })
     const [restaurants, setRestaurants] = useState([]);
 
@@ -42,7 +42,9 @@ export default function Restaurants() {
             const { data } = await axios.get(
                 `${API_BASE_URL}/admin/restaurants`
             );
-            setRestaurants(data);
+            if (data && data.length > 0) {
+                setRestaurants(data);
+            }
             setLoading(false);
         } catch (err) {
             console.error("Error loading restaurants:", err.message);
@@ -51,8 +53,8 @@ export default function Restaurants() {
     };
 
     const filtered = restaurants.filter((r) => {
-        console.log(area_code === r.area_code)
-        return (area_code === r.area_code) && (r.name.toLowerCase().includes(search.toLowerCase()));
+        console.log(r, area_code === r.area_code);
+        return (area_code === r.area_id) && (r.name.toLowerCase().includes(search.toLowerCase()));
     });
 
     return (
@@ -64,8 +66,8 @@ export default function Restaurants() {
             </div>
             <div className="pickerContainer">
                 <select value={area_code} onChange={(e) => setAreaCode(e.target.value)}>
-                    <option value="0">📍 Select Location</option>
-                    {areas.map((area) => {
+                    <option value="">📍 Select Location</option>
+                    {areas && areas.length > 0 && areas.map((area) => {
                         return (
                             <option key={area.code} value={area._id}>{area.code} - {area.name}</option>
                         )

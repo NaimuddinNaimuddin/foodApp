@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -13,13 +13,14 @@ import { handleApiError } from "@/lib/common/handleApiError";
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function RestaurantScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [areaId, setAreaId] = useState('');
   const [addToCartLoading, setAddToCartLoading] = useState(false);
   const [addToCartItem, setAddToCartItem] = useState<string | null>(null);
-  const { id } = useLocalSearchParams<{ id: string }>();
 
-  const fetchFoodItems = async (id: string) => {
+  const fetchFoodItems = async (id: string, areaId: string) => {
     const res = await axios.get(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/food/${id}/food-items`
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/food/list/${id}/${areaId}`
     );
     return res.data;
   };
@@ -30,10 +31,10 @@ export default function RestaurantScreen() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["food-items", id],
-    queryFn: () => fetchFoodItems(id),
+    queryKey: ["food/list", id, areaId],
+    queryFn: () => fetchFoodItems(id, areaId),
     staleTime: 1000 * 60 * 5,
-    enabled: !!id, // (wait until id exists)
+    enabled: !!id && !!areaId,
   });
 
   const addToCart = async (foodId: string) => {
@@ -61,6 +62,12 @@ export default function RestaurantScreen() {
 
   };
 
+  useEffect(() => {
+    storage.getItem('areaId').then((_areaId: any) => {
+      setAreaId(_areaId);
+    })
+  }, []);
+
   if (isLoading) {
     return (
       <SafeAreaView>
@@ -78,7 +85,10 @@ export default function RestaurantScreen() {
       </SafeAreaView>
     );
   }
-  if (isError) return <Text>{error.message}</Text>;
+
+  if (isError) {
+    Toast.show({ type: 'error', text1: error.message || "Something Went Wrong." })
+  }
 
   return (
     <FlatList

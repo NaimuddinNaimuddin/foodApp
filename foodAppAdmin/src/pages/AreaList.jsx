@@ -17,11 +17,8 @@ export default function Areas() {
                     setAreas(res.data);
                     console.log(res.data);
                 }
-                if (res.status == 404) {
-                    alert('No Areas Found.')
-                }
             })
-            .catch(() => alert("Areas fetch Error."))
+            .catch(() => alert("Areas Fetch Error or No Area Found"))
             .finally(() => setLoading(false));
     }, []);
 
@@ -34,20 +31,23 @@ export default function Areas() {
                     className="addBtn">ADD Area</button>
             </div>
             <div className="orders-container">
-                {areas.map((area) => (
+                {areas && areas.length > 0 && areas.map((area) => (
                     <div className="order-card" key={area._id}>
-                        <div className="order-header">
-                            <span>
-                                {area.status}
+                        <p className="amount">
+                            {area?.name} - {area?.code} -
+                            <span style={{ border: '1px solid #eee' }}>
+                                {area?.status ? 'ACTIVE' : 'INACTIVE'}
                             </span>
-                        </div>
-
-                        <p className="amount">
-                            {area.name}
                         </p>
                         <p className="amount">
-                            {area.code}
+                            Delivery Charges (in Rs) - {area?.delivery_charge_in_rs}
                         </p>
+                        <p className="amount">
+                            Delivery Text - {area?.delivery_text}
+                        </p>
+                        <button onClick={() => navigate(`/areas/edit/${area._id}`)} className="btn btn-warning">
+                            EDIT
+                        </button>
 
                     </div>
                 ))}

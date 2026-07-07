@@ -22,8 +22,6 @@ const schema = new mongoose.Schema({
   category: {
     type: String, required: true
   },
-  short_desc: String,
-  long_desc: String,
   image_url: {
     type: String,
     default: 'https://res.cloudinary.com/naimucloudinary/image/upload/v1767041768/food_kyeqm9.png',
@@ -31,9 +29,13 @@ const schema = new mongoose.Schema({
   image_id: {
     type: String,
   },
-  is_in_stock: {
-    type: Boolean,
-    default: false,
+  total_count: {
+    type: Number,
+    default: 0,
+  },
+  low_stock_count: {
+    type: Number,
+    default: 10,
   },
   sort_order: {
     type: Number,

@@ -26,7 +26,7 @@ export default function CreateRestaurant() {
     useEffect(() => {
         const fetchAreas = async () => {
             try {
-                const res = await axios.get(`${API_BASE_URL}/area/all`);
+                const res = await axios.get(`${API_BASE_URL}/admin/area/all`);
                 setAreas(res.data);
             } catch (err) {
                 console.error("Failed to load areas:", err);

@@ -3,6 +3,7 @@ const Area = require("../models/Area");
 const Food = require("../models/Food");
 const Order = require("../models/Order");
 const Restaurant = require("../models/Restaurant");
+const mongoose = require("mongoose");
 
 const getArea = async (req, res) => {
     try {
@@ -14,8 +15,24 @@ const getArea = async (req, res) => {
     }
 }
 
+const getAreaById = async (req, res) => {
+    try {
+        const { areaId } = req.params;
+        console.log(areaId);
+        if (!areaId || !mongoose.Types.ObjectId.isValid(areaId)) {
+            return res.status(400).json({ success: false, message: "Invalid area ID" });
+        }
+
+        const areas = await Area.findById(areaId);
+        if (!areas) return res.status(404).json({ message: 'No Area Found.' })
+        res.status(200).json(areas);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 const addArea = async (req, res) => {
-    const { code, name, status = true } = req.body;
+    const { code, name, delivery_charge_in_rs, delivery_text, status = true } = req.body;
 
     if (!code || !name) {
         return res.status(400).json({ message: "All Fields Are Required" });
@@ -24,12 +41,14 @@ const addArea = async (req, res) => {
     try {
         const existingCode = await Area.findOne({ code });
         if (existingCode) {
-            return res.status(400).json({ message: "Code Already Exists" });
+            return res.status(400).json({ message: "Code Already Exists." });
         }
 
         const newArea = new Area({
             code,
             name,
+            delivery_charge_in_rs,
+            delivery_text,
             status,
         });
 
@@ -37,6 +56,52 @@ const addArea = async (req, res) => {
 
         res.status(201).json({ message: "Code Added Successfully" });
     } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+const editArea = async (req, res) => {
+    const { id } = req.params;
+    const { code, name, delivery_charge_in_rs, delivery_text, status } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: "Area ID is required" });
+    }
+
+    if (!code || !name) {
+        return res.status(400).json({ message: "Code and Name are required" });
+    }
+
+    try {
+        // check if area exists
+        const area = await Area.findById(id);
+        if (!area) {
+            return res.status(404).json({ message: "Area not found" });
+        }
+
+        // check if the new code is already taken by a DIFFERENT area
+        const duplicateCode = await Area.findOne({ code, _id: { $ne: id } });
+        if (duplicateCode) {
+            return res.status(400).json({ message: "Code already exists." });
+        }
+
+        await Area.findByIdAndUpdate(
+            id,
+            {
+                $set: {
+                    code,
+                    name,
+                    delivery_charge_in_rs,
+                    delivery_text,
+                    ...(status !== undefined && { status }),
+                },
+            },
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({ message: "Area Updated Successfully" });
+    } catch (error) {
+        console.error("Edit area error:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };
@@ -272,8 +337,10 @@ const getFoodItemsById = async (req, res) => {
 }
 
 module.exports = {
+    getAreaById,
     getArea,
     addArea,
+    editArea,
     getRestaurantById,
     addRestaurants,
     editCategoryById,

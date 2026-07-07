@@ -14,6 +14,7 @@ import Foods from "./pages/Foods";
 import "react-toastify/dist/ReactToastify.css";
 import CreateArea from "./pages/AddArea";
 import AreaList from "./pages/AreaList";
+import EditArea from "./pages/Editarea";
 
 export default function App() {
   return (
@@ -26,9 +27,10 @@ export default function App() {
         <div style={{ width: '80%' }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/areas/add" element={<CreateArea />} />
+
             <Route path="/areas/list" element={<AreaList />} />
+            <Route path="/areas/add" element={<CreateArea />} />
+            <Route path="/areas/edit/:id" element={<EditArea />} />
 
             <Route path="/restaurants" element={<Restaurants />} />
             <Route path="/restaurant/add" element={<CreateRestaurant />} />
@@ -38,6 +40,8 @@ export default function App() {
             <Route path="/foods" element={<Foods />} />
             <Route path="/food/add" element={<AddFoodItems />} />
             <Route path="/food/edit/:id" element={<EditFoodItems />} />
+
+            <Route path="/orders" element={<Orders />} />
           </Routes>
         </div>
       </div>

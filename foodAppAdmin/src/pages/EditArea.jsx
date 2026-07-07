@@ -1,9 +1,13 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export default function CreateArea() {
+export default function EditArea() {
+    const { id } = useParams();
     const [name, setName] = useState("");
     const [code, setCode] = useState("");
     const [delivery_charge_in_rs, setdelivery_charge_in_rs] = useState(null);
@@ -11,6 +15,20 @@ export default function CreateArea() {
     const [status, setstatus] = useState(true);
 
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        axios.get(`${API_BASE_URL}/admin/areabyId/${id}`)
+            .then((res) => {
+                if (res && res.data && res.data.code) {
+                    setName(res.data.name);
+                    setCode(res.data.code);
+                    setdelivery_charge_in_rs(res.data.delivery_charge_in_rs);
+                    setdelivery_text(res.data.delivery_text);
+                    setstatus(res.data.status);
+                }
+            })
+            .catch((err) => alert(err.message || "Fect Area By Id Error."))
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +38,7 @@ export default function CreateArea() {
         try {
             setLoading(true);
 
-            await axios.post(`${API_BASE_URL}/admin/area/add`, {
+            await axios.put(`${API_BASE_URL}/admin/area/edit/${id}`, {
                 name,
                 code,
                 delivery_charge_in_rs,
@@ -28,12 +46,10 @@ export default function CreateArea() {
                 status
             });
 
-            alert("Area created!");
-            setName("");
-            setCode("");
+            alert("Area Edited!");
         } catch (err) {
             console.error(err);
-            alert("Error creating Area");
+            alert("Error Edit Area");
         } finally {
             setLoading(false);
         }
@@ -41,7 +57,7 @@ export default function CreateArea() {
 
     return (
         <div style={{ margin: "20px 100px" }}>
-            <h2>Create Area</h2>
+            <h2>Edit Area</h2>
 
             <form onSubmit={handleSubmit}>
                 <input
@@ -78,13 +94,13 @@ export default function CreateArea() {
                     <input
                         type="checkbox"
                         checked={status}
-                        onChange={(e) => setstatus(e.target.value)}
+                        onChange={(e) => setstatus(e.target.checked)}
                     />
                     Active
                 </label>
 
                 <button className="btn btn-info mb-2 mt-2" type="submit" disabled={loading}>
-                    {loading ? "Uploading..." : "Create"}
+                    {loading ? "Uploading..." : "Edit"}
                 </button>
             </form>
         </div>

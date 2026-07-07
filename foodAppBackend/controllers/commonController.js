@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const getArea = async (req, res) => {
     try {
         const areas = await Area.find({ status: true });
+        console.log(areas)
         if (!areas.length) return res.status(404).json({ message: 'No Area Found.' })
         res.status(200).json(areas);
     } catch (err) {
@@ -15,11 +16,18 @@ const getArea = async (req, res) => {
 
 const getFoodItemsGroupedByCategory = async (req, res) => {
     try {
+        if (!req.params.restaurantId || !req.params.areaId) {
+            return res.status(400).json({ message: "Bad Request." })
+        }
         const groupedItems = await Food.aggregate([
             {
                 $match: {
-                    restaurant_id: new mongoose.Types.ObjectId(req.params.id),
-                    is_available: true,
+                    restaurant_id: new mongoose.Types.ObjectId(req.params.restaurantId),
+                    status: true,
+                    $or: [
+                        { area_id: new mongoose.Types.ObjectId(req.params.areaId) },
+                        { area_id: null }
+                    ]
                 },
             },
             {

@@ -21,3 +21,10 @@ usecallback and usememo optimizations , code split uses.
 when err remove the imagebyid
 consoles remove
 
+user change location remove cart 
+add to favorites button for user 
+validation for user ordering cart from other location
+may be user ordering for others
+
+suggest other screens if user on empty screens
+

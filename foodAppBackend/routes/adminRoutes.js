@@ -4,7 +4,9 @@ const adminController = require("../controllers/adminController");
 const commonController = require("../controllers/commonController");
 
 router.post("/area/add", adminController.addArea);
+router.put("/area/edit/:id", adminController.editArea);
 router.get("/area/all", adminController.getArea);
+router.get("/areabyId/:areaId", adminController.getAreaById);
 
 router.get("/restaurants/:id", adminController.getRestaurantById);
 router.get("/restaurants", commonController.getAllRestaurants);

@@ -18,7 +18,8 @@ router.get("/by-area-code/grouped/:area_id", rateLimiter(1000 * 60, 30), async (
         const [result] = await Restaurant.aggregate([
             {
                 $match: {
-                    status: true, $or: [
+                    status: true,
+                    $or: [
                         { area_id: new mongoose.Types.ObjectId(areaId) },
                         { area_id: null }
                     ],
