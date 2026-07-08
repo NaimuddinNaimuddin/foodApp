@@ -14,13 +14,12 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [areaId, setAreaId] = useState('');
   const [addToCartLoading, setAddToCartLoading] = useState(false);
   const [addToCartItem, setAddToCartItem] = useState<string | null>(null);
 
-  const fetchFoodItems = async (id: string, areaId: string) => {
+  const fetchFoodItems = async (id: string) => {
     const res = await axios.get(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/food/list/${id}/${areaId}`
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/food/list/${id}`
     );
     return res.data;
   };
@@ -31,10 +30,10 @@ export default function RestaurantScreen() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["food/list", id, areaId],
-    queryFn: () => fetchFoodItems(id, areaId),
+    queryKey: ["food/list", id],
+    queryFn: () => fetchFoodItems(id),
     staleTime: 1000 * 60 * 5,
-    enabled: !!id && !!areaId,
+    enabled: !!id,
   });
 
   const addToCart = async (foodId: string) => {
@@ -61,12 +60,6 @@ export default function RestaurantScreen() {
     }
 
   };
-
-  useEffect(() => {
-    storage.getItem('areaId').then((_areaId: any) => {
-      setAreaId(_areaId);
-    })
-  }, []);
 
   if (isLoading) {
     return (
