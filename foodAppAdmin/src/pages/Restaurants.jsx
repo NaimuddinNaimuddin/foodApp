@@ -9,7 +9,7 @@ export default function Restaurants() {
     const [loading, setLoading] = useState(false);
 
     const [search, setSearch] = useState("");
-    const [area_code, setAreaCode] = useState("");
+    const [area_code, setAreaCode] = useState(null);
     console.log({ area_code })
     const [restaurants, setRestaurants] = useState([]);
 
@@ -65,7 +65,7 @@ export default function Restaurants() {
                     className="addBtn">ADD Restaurant</button>
             </div>
             <div className="pickerContainer">
-                <select value={area_code} onChange={(e) => setAreaCode(e.target.value)}>
+                <select value={area_code} onChange={(e) => setAreaCode(!e.target.value ? null : e.target.value)}>
                     <option value="">📍 Select Location</option>
                     {areas && areas.length > 0 && areas.map((area) => {
                         return (

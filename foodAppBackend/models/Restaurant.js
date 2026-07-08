@@ -34,6 +34,4 @@ const schema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-schema.index({ is_banner: 1, sort_order: 1 });
-
 module.exports = mongoose.model("Restaurant", schema);

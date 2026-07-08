@@ -73,7 +73,7 @@ export default function EditArea() {
                     type="number"
                     placeholder="Area Code"
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    onChange={(e) => setCode(e.target.value.slice(0, 8))}
                     required
                 />
                 <input
