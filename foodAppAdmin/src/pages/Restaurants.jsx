@@ -28,9 +28,6 @@ export default function Restaurants() {
                     setAreas(res.data);
                     console.log(res.data);
                 }
-                if (res.status == 404) {
-                    alert('No Areas Found.')
-                }
             })
             .catch(() => alert("Areas fetch Error."))
             .finally(() => setAreaLoading(false));

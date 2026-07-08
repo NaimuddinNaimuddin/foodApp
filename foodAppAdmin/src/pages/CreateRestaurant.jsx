@@ -7,8 +7,8 @@ const YOUR_UPLOAD_PRESET = import.meta.env.VITE_YOUR_UPLOAD_PRESET;
 
 const initialFormState = {
     name: "",
-    category: null,
-    area_id: null,
+    category: "",
+    area_id: undefined,
     is_banner: false,
     sort_order: 0,
     status: true,
@@ -92,7 +92,7 @@ export default function CreateRestaurant() {
                 category: formData.category,
                 image_url: imageUrl,
                 image_id: imageId,
-                area_id: formData.area_id,
+                area_id: formData.area_id || null,
                 is_banner: formData.is_banner,
                 sort_order: Number(formData.sort_order),
                 status: formData.status,
@@ -141,10 +141,10 @@ export default function CreateRestaurant() {
                     value={formData.area_id}
                     onChange={handleChange}
                 >
-                    <option value={""}>Global (All Areas)</option>
+                    <option value={""}>Global - All Areas</option>
                     {areas.map((area) => (
                         <option key={area._id} value={area._id}>
-                            {area.name} ({area.code})
+                            {area.name} - {area.code})
                         </option>
                     ))}
                 </select>
