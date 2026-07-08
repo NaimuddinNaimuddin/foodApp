@@ -14,8 +14,8 @@ export default function EditFoodItem() {
 
     const [selectedRestaurant, setSelectedRestaurant] = useState("");
     const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [mrp, setMrp] = useState("");
+    const [price, setPrice] = useState(undefined);
+    const [mrp, setMrp] = useState(undefined);
     const [quantityInfo, setQuantityInfo] = useState("");
     const [category, setCategory] = useState("");
     const [sort_order, setsort_order] = useState(0);

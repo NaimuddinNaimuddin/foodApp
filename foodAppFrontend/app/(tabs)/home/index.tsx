@@ -21,6 +21,7 @@ import { Category } from "@/lib/types/home";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import HomeLoading from "@/lib/components/HomeLoading";
+
 const { width } = Dimensions.get("window");
 
 export default function FoodScreen() {

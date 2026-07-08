@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -125,7 +125,12 @@ export default function RestaurantScreen() {
                     <Text style={styles.mrp}>₹{food.mrp}</Text>
                   </View>
 
-                  <TouchableOpacity
+                  {food && !food.in_stock &&
+                    <TouchableOpacity style={styles.addBtn}>
+                      <Text style={styles.addText}> Out of Stock </Text>
+                    </TouchableOpacity>}
+
+                  {food && food.in_stock && <TouchableOpacity
                     style={styles.addBtn}
                     disabled={addToCartLoading && food._id === addToCartItem}
                     onPress={() => addToCart(food._id)}
@@ -137,7 +142,7 @@ export default function RestaurantScreen() {
                           : "ADD"
                       }
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
                 </View>
               </View>
             )}
