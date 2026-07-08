@@ -2,10 +2,9 @@ const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
   restaurant_id: {
-    type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true,
-  },
-  area_id: {
-    type: mongoose.Schema.Types.ObjectId, ref: "Area", required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Restaurant",
+    required: true,
   },
   name: {
     type: String, required: true,
@@ -29,17 +28,17 @@ const schema = new mongoose.Schema({
   image_id: {
     type: String,
   },
-  total_count: {
-    type: Number,
-    default: 0,
-  },
-  low_stock_count: {
-    type: Number,
-    default: 10,
-  },
   sort_order: {
     type: Number,
     default: 0
+  },
+  stock_order: {
+    type: Number,
+    default: 0, // Easily out of stock or Low Expiry Date Range
+  },
+  in_stock: {
+    type: Boolean,
+    default: false,
   },
   status: {
     type: Boolean,

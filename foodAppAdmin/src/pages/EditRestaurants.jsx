@@ -8,8 +8,8 @@ const YOUR_UPLOAD_PRESET = import.meta.env.VITE_YOUR_UPLOAD_PRESET;
 
 const initialFormState = {
     name: "",
-    category: null,
-    area_id: null,
+    category: "",
+    area_id: undefined,
     is_banner: false,
     sort_order: 0,
     status: true,
@@ -41,8 +41,8 @@ export default function EditRestaurant() {
 
                 setFormData({
                     name: r.name || "",
-                    category: r.category || null,
-                    area_id: r.area_id || null,
+                    category: r.category || '',
+                    area_id: r.area_id || undefined,
                     is_banner: r.is_banner || false,
                     sort_order: r.sort_order || 0,
                     status: r.status ?? true,
@@ -157,7 +157,6 @@ export default function EditRestaurant() {
                     placeholder="Restaurant Category"
                     value={formData.category}
                     onChange={handleChange}
-                    required
                 />
 
                 <select

@@ -27,4 +27,5 @@ validation for user ordering cart from other location
 may be user ordering for others
 
 suggest other screens if user on empty screens
+Number should not be negative
 

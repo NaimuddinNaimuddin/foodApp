@@ -16,18 +16,14 @@ const getArea = async (req, res) => {
 
 const getFoodItemsGroupedByCategory = async (req, res) => {
     try {
-        if (!req.params.restaurantId || !req.params.areaId) {
+        if (!req.params.id) {
             return res.status(400).json({ message: "Bad Request." })
         }
         const groupedItems = await Food.aggregate([
             {
                 $match: {
-                    restaurant_id: new mongoose.Types.ObjectId(req.params.restaurantId),
+                    restaurant_id: new mongoose.Types.ObjectId(req.params.id),
                     status: true,
-                    $or: [
-                        { area_id: new mongoose.Types.ObjectId(req.params.areaId) },
-                        { area_id: null }
-                    ]
                 },
             },
             {

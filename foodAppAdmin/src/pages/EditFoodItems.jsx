@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { uploadImageToCloudinary } from "../services/imageUpload";
 import { toast } from "react-toastify";
@@ -8,20 +8,20 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function EditFoodItem() {
     const { id } = useParams();
-    const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
-    const [areaCode, setAreaCode] = useState("");
-    const [areas, setAreas] = useState([]);
-    console.log(areas);
     const [restaurants, setRestaurants] = useState([]);
+
     const [selectedRestaurant, setSelectedRestaurant] = useState("");
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [mrp, setMrp] = useState("");
     const [quantityInfo, setQuantityInfo] = useState("");
     const [category, setCategory] = useState("");
-    const [shortDesc, setShortDesc] = useState("");
-    const [longDesc, setLongDesc] = useState("");
+    const [sort_order, setsort_order] = useState(0);
+    const [stock_order, setstock_order] = useState(0);
+    const [status, setstatus] = useState(true);
+    const [in_stock, setin_stock] = useState(false);
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
 
@@ -29,14 +29,11 @@ export default function EditFoodItem() {
     const [existingImageId, setExistingImageId] = useState("");
 
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/admin/area/all`).then((res) => setAreas(res.data));
-    }, []);
-
-    useEffect(() => {
         setLoading(true);
         // Fetch restaurants
         axios.get(`${API_BASE_URL}/admin/restaurants`)
-            .then(res => setRestaurants(res.data));
+            .then(res => setRestaurants(res.data))
+            .catch(() => toast.error("Failed to load restaurants."));
 
         // Fetch food item
         axios.get(`${API_BASE_URL}/admin/food/food-items/${id}`)
@@ -45,12 +42,13 @@ export default function EditFoodItem() {
                 setSelectedRestaurant(item.restaurant_id);
                 setName(item.name);
                 setPrice(item.price);
-                setAreaCode(item.area_id);
                 setMrp(item.mrp);
                 setQuantityInfo(item.quantity_info);
                 setCategory(item.category);
-                setShortDesc(item.short_desc || "");
-                setLongDesc(item.long_desc || "");
+                setstock_order(item.stock_order);
+                setsort_order(item.sort_order);
+                setstatus(item.status);
+                setin_stock(item.in_stock);
                 setExistingImageUrl(item.image_url);
                 setExistingImageId(item.image_id);
             })
@@ -61,7 +59,8 @@ export default function EditFoodItem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) {
+        if (Number(price) > Number(mrp)) return alert("Price should less than MRP.");
+        if (!id || !selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) {
             return alert("Required Fields Missing.");
         }
 
@@ -82,20 +81,20 @@ export default function EditFoodItem() {
                 name,
                 price,
                 mrp,
-                area_id: areaCode,
                 quantity_info: quantityInfo,
                 category,
-                short_desc: shortDesc,
-                long_desc: longDesc,
+                stock_order,
+                sort_order,
+                status,
+                in_stock,
                 image_url,
                 image_id
             });
-            setLoading(false);
             toast.success("Food Item Updated!");
         } catch (err) {
-            setLoading(false);
-            console.error(err);
             toast.error("Error Updating Food Item.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -138,21 +137,40 @@ export default function EditFoodItem() {
 
                 <input className="form-control mb-2" value={category}
                     onChange={(e) => setCategory(e.target.value)} placeholder="Category" required />
-                <select
+                <input
                     className="form-control mb-2"
-                    value={areaCode}
-                    onChange={(e) => setAreaCode(e.target.value)}
-                >
-                    <option value="">Select Location</option>
-                    {areas.length > 0 && areas.map((area) => {
-                        return <option value={area._id}>{area.name} - {area.code}</option>
-                    })}
-                </select>
-                <input className="form-control mb-2" value={shortDesc}
-                    onChange={(e) => setShortDesc(e.target.value)} placeholder="Short Description" />
-
-                <input className="form-control mb-2" value={longDesc}
-                    onChange={(e) => setLongDesc(e.target.value)} placeholder="Long Description" />
+                    type="number"
+                    placeholder="Sort Order"
+                    value={sort_order}
+                    onChange={(e) => setsort_order(e.target.value.slice(0, 4))}
+                />
+                <input
+                    className="form-control mb-2"
+                    type="number"
+                    placeholder="Stock Order"
+                    value={stock_order}
+                    onChange={(e) => setstock_order(e.target.value.slice(0, 4))}
+                />
+                <div className="mb-2">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={in_stock}
+                            onChange={(e) => setin_stock(e.target.checked)}
+                        />
+                        {" "} In Stock
+                    </label>
+                </div>
+                <div className="mb-2">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={status}
+                            onChange={(e) => setstatus(e.target.checked)}
+                        />
+                        {" "}Active
+                    </label>
+                </div>
 
                 <div className="d-flex">
                     {existingImageUrl && (

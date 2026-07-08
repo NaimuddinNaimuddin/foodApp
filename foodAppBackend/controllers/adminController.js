@@ -108,51 +108,23 @@ const editArea = async (req, res) => {
 
 const addFoodItems = async (req, res) => {
     try {
-        const { restaurant_id, area_id, name, price, mrp, quantity_info, category, short_desc, long_desc, image_url, image_id } = req.body;
-        console.log({ restaurant_id, name, price, mrp, quantity_info, category, short_desc, long_desc, image_url, image_id, area_id });
-        if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category || !area_id) return res.status(400).json({ error: "Bad Request." });
+        console.log(req.body);
+        const { restaurant_id, name, price, mrp, quantity_info, category } = req.body;
+        if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ error: "Bad Request." });
 
-        const foodItem = await Food.create({
-            restaurant_id,
-            name,
-            price,
-            mrp,
-            quantity_info,
-            category,
-            short_desc,
-            long_desc,
-            image_url,
-            image_id,
-            area_id,
-        });
+        await Food.create(req.body);
 
-        res.status(201).json(foodItem);
+        res.status(201).json({ message: 'Food item Added.' });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ error: "Server error", err });
     }
 };
 
 const editFoodItems = async (req, res) => {
     try {
         const { id } = req.params;
-        const {
-            restaurant_id,
-            name,
-            price,
-            mrp,
-            quantity_info,
-            category,
-            short_desc,
-            long_desc,
-            area_id,
-            image_url,
-            image_id,
-        } = req.body;
-
-        if (!area_id || !restaurant_id || !name || !price || !mrp || !quantity_info || !category) {
-            return res.status(400).json({ error: "Bad Request" });
-        }
+        const { restaurant_id, name, price, mrp, quantity_info, category, stock_order, sort_order, status, in_stock, image_id, image_url } = req.body;
+        if (!id || !restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ error: "Bad Request." });
 
         const food = await Food.findById(id);
         if (!food) return res.status(404).json({ error: "Food item not found" });
@@ -168,18 +140,18 @@ const editFoodItems = async (req, res) => {
         food.mrp = mrp;
         food.quantity_info = quantity_info;
         food.category = category;
-        food.short_desc = short_desc;
-        food.long_desc = long_desc;
+        food.stock_order = stock_order;
+        food.sort_order = sort_order;
+        food.status = status;
+        food.in_stock = in_stock;
         food.image_url = image_url;
         food.image_id = image_id;
-        food.area_id = area_id;
 
         await food.save();
-        res.json(food);
+        res.status(200).json({ message: 'Edit Success.' });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ error: "Server error", err });
     }
 }
 
@@ -332,8 +304,13 @@ const getRestaurantById = async (req, res) => {
 }
 
 const getFoodItemsById = async (req, res) => {
-    const item = await Food.findById(req.params.id);
-    res.json(item);
+    try {
+        if (!req.params.id) return res.status(400).json({ message: 'Bad Request.' })
+        const item = await Food.findById(req.params.id);
+        res.status(200).json(item);
+    } catch (err) {
+        res.status(500).json({ error: 'Server Err', err })
+    }
 }
 
 module.exports = {

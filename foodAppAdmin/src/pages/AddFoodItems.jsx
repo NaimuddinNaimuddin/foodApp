@@ -6,49 +6,34 @@ import { toast } from "react-toastify";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function AddFoodItem() {
-  const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [restaurants, setRestaurants] = useState([]);
 
-  const [areaCode, setAreaCode] = useState("");
-  const [areas, setAreas] = useState([]);
-  console.log(areas);
   const [selectedRestaurant, setSelectedRestaurant] = useState("");
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [mrp, setMrp] = useState("");
+  const [price, setPrice] = useState(undefined);
+  const [mrp, setMrp] = useState(undefined);
   const [quantityInfo, setQuantityInfo] = useState("");
   const [category, setCategory] = useState("");
-  const [shortDesc, setShortDesc] = useState("");
-  const [longDesc, setLongDesc] = useState("");
+  const [sort_order, setsort_order] = useState(0);
+  const [stock_order, setstock_order] = useState(0);
+  const [status, setstatus] = useState(true);
+  const [in_stock, setin_stock] = useState(false);
   const [image, setImage] = useState(null);
 
-
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/admin/restaurants`).then((res) => setRestaurants(res.data));
-  }, []);
-  useEffect(() => {
-    axios.get(`${API_BASE_URL}/admin/area/all`).then((res) => setAreas(res.data));
+    axios.get(`${API_BASE_URL}/admin/restaurants`)
+      .then((res) => setRestaurants(res.data))
+      .catch((err) => alert('Restaurant Fetch Err.'));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (price > mrp) return alert("Price should less than MRP.");
+    if (Number(price) > Number(mrp)) return alert("Price should less than MRP.");
     if (!selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) return alert("Required Fields Missing.");
     try {
       setLoading(true);
       const { secure_url, public_id } = await uploadImageToCloudinary(image);
-      console.log({
-        restaurant_id: selectedRestaurant,
-        name,
-        price,
-        mrp,
-        quantity_info: quantityInfo,
-        category,
-        short_desc: shortDesc,
-        long_desc: longDesc,
-        image_url: secure_url,
-        image_id: public_id
-      });
       await axios.post(`${API_BASE_URL}/admin/food/food-items`, {
         restaurant_id: selectedRestaurant,
         name,
@@ -56,18 +41,19 @@ export default function AddFoodItem() {
         mrp,
         quantity_info: quantityInfo,
         category,
-        short_desc: shortDesc,
-        long_desc: longDesc,
+        stock_order,
+        sort_order,
+        status,
+        in_stock,
         image_url: secure_url,
         image_id: public_id,
-        area_id: areaCode,
       });
-      setLoading(false);
-      toast.success("Food Item Added!")
+      toast.success("Food Item Added!");
     } catch (err) {
-      setLoading(false);
       console.error(err);
       toast.error("Error Adding Food Item.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,6 +79,7 @@ export default function AddFoodItem() {
           type="text"
           placeholder="Food Name"
           value={name}
+          maxLength={30}
           onChange={(e) => setName(e.target.value)}
           required
         />
@@ -101,7 +88,8 @@ export default function AddFoodItem() {
           type="number"
           placeholder="Price"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          maxLength={10}
+          onChange={(e) => setPrice(e.target.value.slice(0, 6))}
           required
         />
         <input
@@ -109,7 +97,7 @@ export default function AddFoodItem() {
           type="number"
           placeholder="MRP"
           value={mrp}
-          onChange={(e) => setMrp(e.target.value)}
+          onChange={(e) => setMrp(e.target.value.slice(0, 6))}
           required
         />
         <input
@@ -117,6 +105,7 @@ export default function AddFoodItem() {
           type="text"
           placeholder="Quantity Info"
           value={quantityInfo}
+          maxLength={30}
           onChange={(e) => setQuantityInfo(e.target.value)}
           required
         />
@@ -125,33 +114,44 @@ export default function AddFoodItem() {
           type="text"
           placeholder="Category"
           value={category}
+          maxLength={15}
           onChange={(e) => setCategory(e.target.value)}
           required
         />
-        <select
-          className="form-control mb-2"
-          value={areaCode}
-          onChange={(e) => setAreaCode(e.target.value)}
-        >
-          <option value="">Select Location</option>
-          {areas.length > 0 && areas.map((area) => {
-            return <option value={area._id}>{area.name} - {area.code}</option>
-          })}
-        </select>
         <input
           className="form-control mb-2"
-          type="text"
-          placeholder="Short Description"
-          value={shortDesc}
-          onChange={(e) => setShortDesc(e.target.value)}
+          type="number"
+          placeholder="Sort Order"
+          value={sort_order}
+          onChange={(e) => setsort_order(e.target.value.slice(0, 4))}
         />
         <input
           className="form-control mb-2"
-          type="text"
-          placeholder="Long Description"
-          value={longDesc}
-          onChange={(e) => setLongDesc(e.target.value)}
+          type="number"
+          placeholder="Stock Order"
+          value={stock_order}
+          onChange={(e) => setstock_order(e.target.value.slice(0, 4))}
         />
+        <div className="mb-2">
+          <label>
+            <input
+              type="checkbox"
+              checked={in_stock}
+              onChange={(e) => setin_stock(e.target.checked)}
+            />
+            {" "} In Stock
+          </label>
+        </div>
+        <div className="mb-2">
+          <label>
+            <input
+              type="checkbox"
+              checked={status}
+              onChange={(e) => setstatus(e.target.checked)}
+            />
+            {" "}Active
+          </label>
+        </div>
         <input
           className="form-control mb-2"
           type="file"
@@ -159,8 +159,8 @@ export default function AddFoodItem() {
           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
         />
-        <button className="btn btn-info" type="submit">
-          Submit
+        <button disabled={loading} className="btn btn-info" type="submit">
+          {loading ? "Adding..." : "Submit"}
         </button>
       </form>
     </div>
