@@ -32,17 +32,16 @@ const LoginScreen = () => {
         try {
             setLoading(true);
             const response = await axios.post(
-                `${API_BASE_URL}/users/login`,
+                `${API_BASE_URL}/vendor/login`,
                 { phone, password, },
             );
 
             if (response.status === 200 && response.data) {
                 await storage.setItem('token', response.data?.token);
-                await storage.setItem('userId', response.data?.user?.id);
-                await storage.setItem('phone', response.data?.user?.phone);
+                await storage.setItem('vendor_id', response.data?.vendor?.id);
+                await storage.setItem('phone', response.data?.vendor?.phone);
+                await storage.setItem('area_id', response.data?.vendor?.area_id);
 
-                await storage.setItem('alt_phone', response.data?.user?.alt_phone || '');
-                await storage.setItem('user_address', response.data?.user?.user_address || '');
                 router.replace('/(tabs)/orders');
             }
 
@@ -87,11 +86,6 @@ const LoginScreen = () => {
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.navigate("/")}>
-                <Text style={{ marginTop: 15, color: "#ee0000", textAlign: "center" }}>
-                    Dont have an account? Signup.
-                </Text>
-            </TouchableOpacity>
         </View>
     );
 };

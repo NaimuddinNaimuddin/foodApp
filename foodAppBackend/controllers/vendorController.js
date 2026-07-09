@@ -22,7 +22,7 @@ exports.loginVendor = async (req, res) => {
         const matched = await bcrypt.compare(password, vendor.password);
 
         if (!matched) {
-            return res.status(400).json({ message: "Invalid credentials." });
+            return res.status(400).json({ message: "Password Invalid." });
         }
 
         const token = jwt.sign(
