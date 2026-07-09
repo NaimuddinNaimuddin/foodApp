@@ -27,6 +27,9 @@ export default function SideNav() {
             <Link to="/orders" className={isActive(["/orders"])}>
                 Orders
             </Link>
+            <Link to="/vendors/list" className={isActive(["/vendors/list"])}>
+                Vendors
+            </Link>
         </nav>
     );
 }

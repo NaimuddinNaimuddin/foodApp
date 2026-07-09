@@ -15,6 +15,9 @@ import "react-toastify/dist/ReactToastify.css";
 import CreateArea from "./pages/AddArea";
 import AreaList from "./pages/AreaList";
 import EditArea from "./pages/Editarea";
+import VendorList from "./pages/VendorList";
+import CreateVendor from "./pages/CreateVendor";
+import EditVendor from "./pages/EditVendor";
 
 export default function App() {
   return (
@@ -42,6 +45,10 @@ export default function App() {
             <Route path="/food/edit/:id" element={<EditFoodItems />} />
 
             <Route path="/orders" element={<Orders />} />
+
+            <Route path="/vendors/list" element={<VendorList />} />
+            <Route path="/vendors/create" element={<CreateVendor />} />
+            <Route path="/vendors/edit/:id" element={<EditVendor />} />
           </Routes>
         </div>
       </div>
