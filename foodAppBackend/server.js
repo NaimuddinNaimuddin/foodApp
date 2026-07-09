@@ -11,6 +11,7 @@ const foodRoutes = require("./routes/food");
 const areaRoutes = require("./routes/area");
 const policyRoutes = require("./routes/policy");
 const adminRoutes = require("./routes/adminRoutes");
+const vendorRoutes = require("./routes/vendorRoutes");
 
 const ipBackstopLimiter = require("./common/ipLimiter");
 const adminBackstopLimiter = require("./common/adminLimiter");
@@ -46,6 +47,7 @@ app.get("/orders/stream", (req, res) => {
 });
 
 app.use("/admin", adminRoutes);
+app.use("/vendor", vendorRoutes);
 
 app.use("/users", userRoutes);
 app.use("/area", areaRoutes);
