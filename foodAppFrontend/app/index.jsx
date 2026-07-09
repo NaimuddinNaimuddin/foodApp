@@ -58,6 +58,7 @@ const SignupScreen = () => {
                 style={styles.input}
                 placeholder="Phone Number"
                 value={phone}
+                keyboardType="phone-pad"
                 onChangeText={setPhone}
                 maxLength={10}
             />

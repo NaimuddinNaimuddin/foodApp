@@ -29,7 +29,8 @@ const EditAddressField = () => {
         const USER_ID = await storage.getItem("userId");
         if (!USER_ID) return;
         if (tempAddress == deliveryAddress) return;
-        
+        if (!tempAddress.trim()) return;
+
         const success = await updateUserDetails({
             user_id: USER_ID,
             user_address: tempAddress,
@@ -64,15 +65,16 @@ const EditAddressField = () => {
     return (
         <View>
             <View style={styles.row}>
-                <TextInput
-                    style={[styles.input, { flex: 1 }]}
-                    placeholder="Enter delivery address"
-                    value={deliveryAddress}
-                    editable={false}
-                    pointerEvents="none"
-                    multiline
-                    numberOfLines={4}
-                />
+                <TouchableOpacity style={[styles.input, { flex: 1 }]} onPress={openModal}>
+                    <TextInput
+                        placeholder="Enter delivery address"
+                        value={deliveryAddress}
+                        editable={false}
+                        pointerEvents="none"
+                        multiline
+                        numberOfLines={4}
+                    />
+                </TouchableOpacity>
                 <TouchableOpacity onPress={openModal} style={styles.editIconBtn}>
                     <MaterialIcons name="edit" size={30} color="#555" />
                 </TouchableOpacity>

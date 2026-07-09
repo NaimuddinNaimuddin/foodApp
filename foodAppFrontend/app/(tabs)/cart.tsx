@@ -68,7 +68,14 @@ export default function CartScreen() {
     const placeOrder = async () => {
         try {
             const deliveryAddress = await storage.getItem('user_address');
-            if (!deliveryAddress) return;
+            if (!deliveryAddress) {
+                Toast.show({
+                    type: 'info',
+                    text1: 'Please Add Delivery Address.'
+                });
+                router.navigate('/(tabs)/profile');
+                return;
+            }
             setIsOrderPlacing(true);
             const response = await axios.post(`${API_URL}/orders/place`, {
                 ...cart, deliveryAddress

@@ -37,11 +37,12 @@ const LoginScreen = () => {
             );
 
             if (response.status === 200 && response.data) {
+                await storage.setItem('token', response.data?.token);
                 await storage.setItem('userId', response.data?.user?.id);
                 await storage.setItem('phone', response.data?.user?.phone);
-                await storage.setItem('alt_phone', response.data?.user?.alt_phone);
-                await storage.setItem('user_address', response.data?.user?.user_address);
-                await storage.setItem('token', response.data?.token);
+                
+                await storage.setItem('alt_phone', response.data?.user?.alt_phone || '');
+                await storage.setItem('user_address', response.data?.user?.user_address || '');
                 router.replace('/(tabs)/home');
             }
 
