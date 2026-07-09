@@ -3,9 +3,10 @@ import {
     View,
     Text,
     FlatList,
+    Alert,
 } from "react-native";
 import axios from "axios";
-// import { Order } from "@/assets/types/orders";
+import { Order } from "@/assets/types/orders";
 // import { useFocusEffect } from "@react-navigation/native";
 import { storage } from "@/lib/storage";
 import { styles } from "@/assets/styles/orderStyles";
@@ -19,24 +20,22 @@ export default function OrdersScreen() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // useEffect(
-    //     React.useCallback(() => {
-    //         const controller = new AbortController();
-    //         fetchOrders(controller.signal);
-    //         return () => {
-    //             controller.abort();
-    //         };
-    //     }, [])
-    // );
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchOrders(controller.signal);
+        return () => {
+            controller.abort();
+        };
+    }, []);
 
     const fetchOrders = async (signal: any) => {
         try {
             setLoading(true);
-            const USER_ID = await storage.getItem("userId");
-            if (!USER_ID) return;
+            const AREA_ID = await storage.getItem("area_id");
+            if (!AREA_ID) return;
 
             const res = await axios.get(
-                `${API_BASE_URL}/orders/${USER_ID}`, { signal }
+                `${API_BASE_URL}/vendor/orders/${AREA_ID}`, { signal }
             );
 
             setOrders(res.data);
@@ -45,8 +44,7 @@ export default function OrdersScreen() {
                 console.log("Request cancelled");
                 return;
             }
-
-            console.log(err);
+            Alert.alert(err?.response?.data?.message || 'Server Err.')
         } finally {
             if (!signal.aborted) {
                 setLoading(false);
@@ -78,7 +76,7 @@ export default function OrdersScreen() {
     return (
         <FlatList
             data={orders}
-            keyExtractor={(item: any) => item._id}
+            keyExtractor={(item: Order) => item._id}
             contentContainerStyle={styles.container}
             renderItem={({ item }) => <OrderCard order={item} />}
         />

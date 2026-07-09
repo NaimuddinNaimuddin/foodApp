@@ -68,6 +68,7 @@ export default function CartScreen() {
     const placeOrder = async () => {
         try {
             const deliveryAddress = await storage.getItem('user_address');
+            const areaId = await storage.getItem('areaId');
             if (!deliveryAddress) {
                 Toast.show({
                     type: 'info',
@@ -78,7 +79,7 @@ export default function CartScreen() {
             }
             setIsOrderPlacing(true);
             const response = await axios.post(`${API_URL}/orders/place`, {
-                ...cart, deliveryAddress
+                ...cart, deliveryAddress, areaId
             });
 
             if (response && response.status == 201) {

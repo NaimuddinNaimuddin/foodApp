@@ -7,9 +7,9 @@ const { notifyNewOrder } = require("../common/sse");
 const rateLimiter = require("../common/rateLimiter");
 
 router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
-    const { userId, items, deliveryAddress, paymentMethod = 'COD' } = req.body;
+    const { userId, items, areaId, deliveryAddress, paymentMethod = 'COD' } = req.body;
 
-    if (!userId || !items || !items.length || !deliveryAddress) {
+    if (!areaId || !userId || !items || !items.length || !deliveryAddress) {
         return res.status(400).json({ message: "All fields are required" });
     }
     console.log(req.body);
@@ -33,6 +33,7 @@ router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
 
         const order = new Order({
             userId,
+            areaId,
             items: _items,
             totalAmount: total,
             deliveryAddress,

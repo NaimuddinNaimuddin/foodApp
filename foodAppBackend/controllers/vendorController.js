@@ -1,8 +1,35 @@
-const Vendor = require("../models/Vendor");
 const mongoose = require("mongoose");
-
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+const Vendor = require("../models/Vendor");
+const Order = require("../models/Order");
+
+exports.ordersVendor = async (req, res) => {
+    try {
+        const { area_id } = req.params;
+        if (!area_id) return res.send(400).json({ message: 'Area Id Missing.' });
+
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+
+        const orders = await Order.find({
+            areaId: area_id,
+        })
+            .populate({
+                path: "items.foodId",        // populate foodId first
+                populate: { path: "restaurant_id" } // nested populate inside food
+            });
+
+        if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
+
+        res.json(orders);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
 
 exports.loginVendor = async (req, res) => {
     try {

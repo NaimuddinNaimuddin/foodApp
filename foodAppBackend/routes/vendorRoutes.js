@@ -8,6 +8,7 @@ const {
     updateVendor,
     deleteVendor,
     loginVendor,
+    ordersVendor,
 } = require("../controllers/vendorController");
 
 router.get("/:id", getVendor);
@@ -17,5 +18,6 @@ router.put("/:id", updateVendor);
 router.delete("/:id", deleteVendor);
 
 router.post("/login", loginVendor);
+router.get("/orders/:area_id", ordersVendor);
 
 module.exports = router;
