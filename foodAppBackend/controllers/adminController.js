@@ -7,8 +7,7 @@ const mongoose = require("mongoose");
 
 const getArea = async (req, res) => {
     try {
-        const areas = await Area.find({});
-        if (!areas.length) return res.status(404).json({ message: 'No Area Found.' })
+        const areas = await Area.find().lean();
         res.status(200).json(areas);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -104,6 +103,15 @@ const editArea = async (req, res) => {
     }
 };
 
+const getFoodItemsList = async (req, res) => {
+    try {
+        const foods = await Food.find().lean();
+        res.status(200).json(foods);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 const addFoodItems = async (req, res) => {
     try {
         const { restaurant_id, name, price, mrp, quantity_info, category } = req.body;
@@ -113,7 +121,7 @@ const addFoodItems = async (req, res) => {
 
         res.status(201).json({ message: 'Food item Added.' });
     } catch (err) {
-        res.status(500).json({ error: "Server error", err });
+        res.status(500).json({ message: "Server error", err });
     }
 };
 
@@ -150,23 +158,21 @@ const editFoodItems = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: "Server error", err });
     }
-}
+};
 
 const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find({})
+        const orders = await Order.find()
             .populate({
                 path: "items.foodId",        // populate foodId first
                 populate: { path: "restaurant_id" } // nested populate inside food
-            });
-
-        if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
+            }).lean();
 
         res.status(200).json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-}
+};
 
 const addRestaurants = async (req, res) => {
     const { name, image_url, area_id, image_id, category, is_banner = false, sort_order = 0 } = req.body;
@@ -192,15 +198,13 @@ const addRestaurants = async (req, res) => {
                 console.error("Failed to delete image:", deleteErr);
             }
         }
-        console.log("Err: ", err)
-        res.status(500).json({ message: 'Server Error', error: err.message });
+        res.status(500).json({ message: 'Server Error', err });
     }
-}
+};
 
 const addProductToCategory = async (req, res) => {
     try {
         const { name, price, image_url, restaurantId, category, area_code } = req.body;
-        console.log({ name, price, image_url, restaurantId, category, area_code });
         if (!restaurantId) return res.status(400).json({ error: "Restaurant ID required" });
 
         const foodItem = await Food.create({
@@ -214,10 +218,9 @@ const addProductToCategory = async (req, res) => {
 
         res.status(201).json(foodItem);
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: "Server error" });
     }
-}
+};
 
 const editCategoryById = async (req, res) => {
     const { id } = req.params;
@@ -287,12 +290,16 @@ const editCategoryById = async (req, res) => {
         }
         res.status(500).json({ error: "Server error" });
     }
-}
+};
 
 const getRestaurantById = async (req, res) => {
-    const items = await Restaurant.findById(req.params.id);
-    res.json(items);
-}
+    try {
+        const items = await Restaurant.findById(req.params.id);
+        res.status(200).json(items);
+    } catch (err) {
+        res.status(500).json({ error: 'Server Err', err })
+    }
+};
 
 const getFoodItemsById = async (req, res) => {
     try {
@@ -302,9 +309,10 @@ const getFoodItemsById = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: 'Server Err', err })
     }
-}
+};
 
 module.exports = {
+    getFoodItemsList,
     getAreaById,
     getArea,
     addArea,

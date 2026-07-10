@@ -18,17 +18,17 @@ export default function SideNav() {
             <Link to="/areas/list" className={isActive(["/areas/list", "/areas/add"])}>
                 Areas
             </Link>
-            <Link to="/restaurants" className={isActive(["/restaurants", "/restaurant/add"])}>
-                Restaurants
+            <Link to="/vendors/list" className={isActive(["/vendors/list"])}>
+                Vendors
             </Link>
             <Link to="/foods" className={isActive(["/foods"])}>
                 Foods
             </Link>
+            <Link to="/restaurants" className={isActive(["/restaurants", "/restaurant/add"])}>
+                Restaurants
+            </Link>
             <Link to="/orders" className={isActive(["/orders"])}>
                 Orders
-            </Link>
-            <Link to="/vendors/list" className={isActive(["/vendors/list"])}>
-                Vendors
             </Link>
         </nav>
     );

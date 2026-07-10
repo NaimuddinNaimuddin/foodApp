@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/FoodScreen.css";
 import { toast } from "react-toastify";
+import FoodTable from "../components/FoodTable";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Foods() {
@@ -10,22 +12,21 @@ export default function Foods() {
     const [loading, setLoading] = useState(false);
 
     const [search, setSearch] = useState("");
+    const [foods, setfoods] = useState([]);
     const [area_code, setAreaCode] = useState("");
 
     useEffect(() => {
-        // loadRestaurants();
+        loadFoods();
     }, []);
 
-    const loadRestaurants = async () => {
+    const loadFoods = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(
-                `${API_BASE_URL}/admin/restaurants`
-            );
-            setRestaurants(data);
-            setLoading(false);
+            const { data } = await axios.get(`${API_BASE_URL}/admin/food/list`);
+            setfoods(data);
         } catch (err) {
-            toast.error("Error loading restaurants.");
+            toast.error("Error loading foods.");
+        } finally {
             setLoading(false);
         }
     };
@@ -35,10 +36,11 @@ export default function Foods() {
             <div style={{ display: 'flex', marginBottom: '20px', justifyContent: 'end' }}>
                 <button
                     onClick={() => navigate('/food/add')}
-                    className="addBtn">ADD Food</button>
+                    className="addBtn">
+                    ADD Food
+                </button>
             </div>
 
-            {/* Search */}
             <input
                 className="searchBar"
                 placeholder="Search foods..."
@@ -46,8 +48,7 @@ export default function Foods() {
                 onChange={(e) => setSearch(e.target.value)}
             />
 
-            {/* Foods List */}
-
+            <FoodTable foods={foods} />
         </div>
     );
 }

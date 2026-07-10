@@ -16,7 +16,7 @@ work on saving delivery address for user.
 delivery charges & other charges, conditions apply privacy policy.
 forget password and fields validations.
 Make icons better transparent background.
-
+Automated tests & add ts support for node
 usecallback and usememo optimizations , code split uses.
 
 when err remove the imagebyid
@@ -45,33 +45,10 @@ app.use((err, req, res, next) => {
     });
 });
 
-
-const NodeCache = require("node-cache");
-
-const cache = new NodeCache({
-    stdTTL: 300
-});
-
 const asyncHandler = fn =>
     (req, res, next) =>
         Promise.resolve(fn(req, res, next))
             .catch(next);
-
-
-Restaurant.find().lean()
-
-
-restaurantSchema.index({
-    area: 1
-});
-
-restaurantSchema.index({
-    vendorId: 1
-});
-
-restaurantSchema.index({
-    category: 1
-});
 
 Priority	Optimization	Impact
 ⭐⭐⭐⭐⭐	Add MongoDB indexes	Very High

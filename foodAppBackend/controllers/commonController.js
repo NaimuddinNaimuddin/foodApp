@@ -5,8 +5,7 @@ const mongoose = require("mongoose");
 
 const getArea = async (req, res) => {
     try {
-        const areas = await Area.find({ status: true });
-        if (!areas.length) return res.status(404).json({ message: 'No Area Found.' })
+        const areas = await Area.find({ status: true }).lean();
         res.status(200).json(areas);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -46,8 +45,12 @@ const getFoodItemsGroupedByCategory = async (req, res) => {
 }
 
 const getAllRestaurants = async (req, res) => {
-    const restaurants = await Restaurant.find();
-    res.json(restaurants);
+    try {
+        const restaurants = await Restaurant.find().lean();
+        res.status(200).json(restaurants);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 }
 
 module.exports = {

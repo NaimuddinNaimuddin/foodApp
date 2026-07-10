@@ -13,6 +13,7 @@ router.get("/restaurants", commonController.getAllRestaurants);
 router.post("/restaurants", adminController.addRestaurants);
 router.put("/restaurants/:id", adminController.editCategoryById);
 
+router.get("/food/list", adminController.getFoodItemsList);
 router.get("/food/food-items/:id", adminController.getFoodItemsById);
 router.put("/food/food-items/:id", adminController.editFoodItems);
 router.get("/food/:id/food-items", commonController.getFoodItemsGroupedByCategory);

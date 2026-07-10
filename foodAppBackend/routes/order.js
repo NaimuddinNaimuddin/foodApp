@@ -62,9 +62,7 @@ router.get("/:userId", rateLimiter(1000 * 60, 30), async (req, res) => {
         }).populate({
             path: "items.foodId",        // populate foodId first
             populate: { path: "restaurant_id" } // nested populate inside food
-        });
-
-        if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
+        }).lean();
 
         res.status(200).json(orders);
     } catch (err) {

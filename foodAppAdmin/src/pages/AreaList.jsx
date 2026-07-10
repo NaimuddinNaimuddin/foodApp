@@ -29,28 +29,44 @@ export default function Areas() {
                     onClick={() => navigate('/areas/add')}
                     className="addBtn">ADD Area</button>
             </div>
-            <div className="orders-container">
-                {areas && areas.length > 0 && areas.map((area) => (
-                    <div className="order-card" key={area._id}>
-                        <p className="amount">
-                            {area?.name} - {area?.code} -
-                            <span style={{ border: '1px solid #eee' }}>
+            <table className="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Delivery Charges (in Rs)</th>
+                        <th>Delivery Text</th>
+                        <th width="180">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {areas && areas.length > 0 && areas.map((area) => (
+                        <tr key={area._id}>
+                            <td>
+                                {area?.name}
+                            </td>
+                            <td>
+                                {area?.code}
+                            </td>
+                            <td>
                                 {area?.status ? 'ACTIVE' : 'INACTIVE'}
-                            </span>
-                        </p>
-                        <p className="amount">
-                            Delivery Charges (in Rs) - {area?.delivery_charge_in_rs}
-                        </p>
-                        <p className="amount">
-                            Delivery Text - {area?.delivery_text}
-                        </p>
-                        <button onClick={() => navigate(`/areas/edit/${area._id}`)} className="btn btn-warning">
-                            EDIT
-                        </button>
-
-                    </div>
-                ))}
-            </div>
+                            </td>
+                            <td>
+                                {area?.delivery_charge_in_rs}
+                            </td>
+                            <td>
+                                {area?.delivery_text}
+                            </td>
+                            <td>
+                                <button onClick={() => navigate(`/areas/edit/${area._id}`)} className="btn btn-warning">
+                                    EDIT
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

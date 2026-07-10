@@ -45,7 +45,7 @@ export default function VendorList() {
                 </thead>
 
                 <tbody>
-                    {vendors.map((item) => (
+                    {vendors && vendors.length > 0 && vendors.map((item) => (
                         <tr key={item._id}>
                             <td>{item.name}</td>
                             <td>{item.phone}</td>

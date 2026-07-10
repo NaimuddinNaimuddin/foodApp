@@ -21,11 +21,9 @@ exports.ordersVendor = async (req, res) => {
             .populate({
                 path: "items.foodId",        // populate foodId first
                 populate: { path: "restaurant_id" } // nested populate inside food
-            });
+            }).lean();
 
-        if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
-
-        res.json(orders);
+        res.status(200).json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -119,11 +117,11 @@ exports.createVendor = async (req, res) => {
 exports.getVendors = async (req, res) => {
     try {
         const vendors = await Vendor.find()
+            .sort({ createdAt: -1 })
             .populate("area_id", "name code")
-            .sort({ createdAt: -1 });
+            .lean();
 
-        res.json(vendors);
-
+        res.status(200).json(vendors);
     } catch (err) {
         res.status(500).json({ message: "Server Error." });
     }
