@@ -42,11 +42,9 @@ export default function OrdersScreen() {
       setOrders(res.data);
     } catch (err: any) {
       if (err.code === "ERR_CANCELED") {
-        console.log("Request cancelled");
         return;
       }
 
-      console.log(err);
     } finally {
       if (!signal.aborted) {
         setLoading(false);

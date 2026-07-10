@@ -54,7 +54,6 @@ router.post("/login", rateLimiter(1000 * 60, 15), async (req, res) => {
             return res.status(400).json({ message: "Password is Wrong." });
         }
         const token = generateToken(user);
-        console.log(token, user)
         // Login successful
         res.status(200).json({
             message: "Login Successful",
@@ -102,8 +101,7 @@ router.post("/edit", rateLimiter(1000 * 60, 10), async (req, res) => {
             data: updatedUser,
         });
     } catch (error) {
-        console.error("Error updating user:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error", error });
     }
 });
 

@@ -111,8 +111,7 @@ exports.createVendor = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server Error." });
+        res.status(500).json({ message: "Server Error.", err });
     }
 };
 
@@ -186,8 +185,7 @@ exports.updateVendor = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server Error." });
+        res.status(500).json({ message: "Server Error.", err });
     }
 };
 

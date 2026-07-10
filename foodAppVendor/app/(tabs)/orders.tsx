@@ -46,7 +46,6 @@ export default function OrdersScreen() {
             };
 
             eventSource.onerror = (err) => {
-                console.log(err);
                 Toast.show({ type: 'error', text1: 'Live Connection Error.' });
                 eventSource?.close();
             };
@@ -71,7 +70,6 @@ export default function OrdersScreen() {
             setOrders(res.data);
         } catch (err: any) {
             if (err.code === "ERR_CANCELED") {
-                console.log("Request cancelled");
                 return;
             }
             Alert.alert(err?.response?.data?.message || 'Server Err.');

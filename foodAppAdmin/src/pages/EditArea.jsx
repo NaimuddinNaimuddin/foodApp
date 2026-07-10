@@ -48,7 +48,6 @@ export default function EditArea() {
 
             alert("Area Edited!");
         } catch (err) {
-            console.error(err);
             alert("Error Edit Area");
         } finally {
             setLoading(false);

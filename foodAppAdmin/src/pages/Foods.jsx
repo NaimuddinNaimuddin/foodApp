@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/FoodScreen.css";
+import { toast } from "react-toastify";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Foods() {
@@ -24,7 +25,7 @@ export default function Foods() {
             setRestaurants(data);
             setLoading(false);
         } catch (err) {
-            console.error("Error loading restaurants:", err.message);
+            toast.error("Error loading restaurants.");
             setLoading(false);
         }
     };
@@ -46,7 +47,7 @@ export default function Foods() {
             />
 
             {/* Foods List */}
-          
+
         </div>
     );
 }

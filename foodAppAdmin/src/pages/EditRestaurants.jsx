@@ -50,7 +50,6 @@ export default function EditRestaurant() {
 
                 setExistingImage(r.image_url || null);
             } catch (err) {
-                console.error("Failed to load data:", err);
                 setError("Failed to load restaurant data");
             }
         };
@@ -125,7 +124,6 @@ export default function EditRestaurant() {
             setSuccessMsg("Restaurant updated successfully!");
             setImageFile(null);
         } catch (err) {
-            console.error(err);
             setError(err?.response?.data?.message || "Error updating restaurant.");
         } finally {
             setLoading(false);

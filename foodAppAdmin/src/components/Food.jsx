@@ -34,7 +34,6 @@ export default function RestaurantScreen() {
                     setSelectedCategory(res.data[0].category);
                 }
             } catch (err) {
-                console.error(err);
                 setError("Failed to load food items");
             } finally {
                 setLoading(false);

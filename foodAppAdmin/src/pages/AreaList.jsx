@@ -15,7 +15,6 @@ export default function Areas() {
             .then((res) => {
                 if (res.status == 200) {
                     setAreas(res.data);
-                    console.log(res.data);
                 }
             })
             .catch(() => alert("Areas Fetch Error or No Area Found"))

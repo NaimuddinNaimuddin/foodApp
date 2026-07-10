@@ -26,16 +26,12 @@ router.post("/add", rateLimiter(1000 * 60, 30), async (req, res) => {
 // remove from cart
 router.delete("/remove/:userId/:productId", rateLimiter(1000 * 60, 30), async (req, res) => {
     const { userId, productId } = req.params;
-    console.log({ userId, productId })
     try {
         const cart = await Cart.findOne({ userId })
         if (!cart) return res.status(404).send("Cart not found");
-        console.log(JSON.stringify({ cart }))
         cart.items = cart.items.filter(i => i.foodId.toString() !== productId);
-        console.log(JSON.stringify(cart.items))
 
         await cart.save();
-        console.log(JSON.stringify({ cart }))
         const cartReturn = await Cart.findOne({ userId }).populate("items.foodId");
 
         res.json(cartReturn);

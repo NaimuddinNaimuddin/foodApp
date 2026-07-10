@@ -12,7 +12,6 @@ router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
     if (!areaId || !userId || !items || !items.length || !deliveryAddress) {
         return res.status(400).json({ message: "All fields are required" });
     }
-    console.log(req.body);
 
     try {
         let total = 0;
@@ -46,7 +45,6 @@ router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
         await Cart.deleteOne({ userId });
         res.status(201).json({ message: "Order placed successfully", order });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
@@ -58,22 +56,17 @@ router.get("/:userId", rateLimiter(1000 * 60, 30), async (req, res) => {
         startOfToday.setHours(0, 0, 0, 0);
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
-        console.log({ userId });
+
         const orders = await Order.find({
             userId,
-            // createdAt: {
-            //     $gte: startOfToday,
-            //     $lte: endOfToday,
-            // },
-        })
-            .populate({
-                path: "items.foodId",        // populate foodId first
-                populate: { path: "restaurant_id" } // nested populate inside food
-            });
+        }).populate({
+            path: "items.foodId",        // populate foodId first
+            populate: { path: "restaurant_id" } // nested populate inside food
+        });
 
         if (!orders || !orders.length) return res.status(404).json({ message: "No orders found" });
 
-        res.json(orders);
+        res.status(200).json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

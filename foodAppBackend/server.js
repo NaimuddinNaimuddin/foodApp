@@ -40,7 +40,10 @@ app.use("/orders", orderRoutes);
 app.use("/", policyRoutes);
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    maxPoolSize: 20,
+    minPoolSize: 5
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
 

@@ -2,6 +2,7 @@ place order cod show loading_______________________
 rate limiter________________________________________
 Orders section live update Admin____________________________
 ADD to cart loading___________________
+console remove____________
 add otp login user
 payment gateway
 riders app
@@ -19,7 +20,6 @@ Make icons better transparent background.
 usecallback and usememo optimizations , code split uses.
 
 when err remove the imagebyid
-consoles remove
 
 user change location remove cart 
 add to favorites button for user 
@@ -32,3 +32,54 @@ Number should not be negative
 Delivery Services - express and normal
 
 ensure user order product from his area only
+
+allow orders status changes  Accept reject
+
+use npm compression and morgan helmet
+
+app.use((err, req, res, next) => {
+    console.error(err);
+
+    res.status(500).json({
+        message: "Internal Server Error"
+    });
+});
+
+
+const NodeCache = require("node-cache");
+
+const cache = new NodeCache({
+    stdTTL: 300
+});
+
+const asyncHandler = fn =>
+    (req, res, next) =>
+        Promise.resolve(fn(req, res, next))
+            .catch(next);
+
+
+Restaurant.find().lean()
+
+
+restaurantSchema.index({
+    area: 1
+});
+
+restaurantSchema.index({
+    vendorId: 1
+});
+
+restaurantSchema.index({
+    category: 1
+});
+
+Priority	Optimization	Impact
+⭐⭐⭐⭐⭐	Add MongoDB indexes	Very High
+⭐⭐⭐⭐⭐	Use .lean() on read queries	Very High
+⭐⭐⭐⭐⭐	Cache frequently read data (Redis or in-memory)	Very High
+⭐⭐⭐⭐	Use compression	High
+⭐⭐⭐⭐	Tune MongoDB connection pool	High
+⭐⭐⭐⭐	Run with PM2 in cluster mode	High
+⭐⭐⭐	Add Helmet and body size limits	Medium
+⭐⭐⭐	Use Pino for structured logging	Medium
+⭐⭐	Graceful shutdown and health checks	Medium

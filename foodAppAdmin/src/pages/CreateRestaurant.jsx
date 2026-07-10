@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME;
@@ -29,7 +30,7 @@ export default function CreateRestaurant() {
                 const res = await axios.get(`${API_BASE_URL}/admin/area/all`);
                 setAreas(res.data);
             } catch (err) {
-                console.error("Failed to load areas:", err);
+                toast.error("Failed to load areas:");
             }
         };
         fetchAreas();
@@ -101,7 +102,6 @@ export default function CreateRestaurant() {
             setSuccessMsg("Restaurant created successfully!");
             resetForm();
         } catch (err) {
-            console.error(err);
             setError(err?.response?.data?.message || "Error creating restaurant.");
         } finally {
             setLoading(false);

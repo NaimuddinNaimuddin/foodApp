@@ -26,7 +26,6 @@ export default function GetCurrentLocation({ onLocationSelect, buttonText = "Get
       },
       (err) => {
         setError("Unable to retrieve your location");
-        console.error(err);
         setLoading(false);
       }
     );

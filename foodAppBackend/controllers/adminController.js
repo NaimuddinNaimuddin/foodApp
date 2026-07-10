@@ -18,7 +18,6 @@ const getArea = async (req, res) => {
 const getAreaById = async (req, res) => {
     try {
         const { areaId } = req.params;
-        console.log(areaId);
         if (!areaId || !mongoose.Types.ObjectId.isValid(areaId)) {
             return res.status(400).json({ success: false, message: "Invalid area ID" });
         }
@@ -101,14 +100,12 @@ const editArea = async (req, res) => {
 
         res.status(200).json({ message: "Area Updated Successfully" });
     } catch (error) {
-        console.error("Edit area error:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };
 
 const addFoodItems = async (req, res) => {
     try {
-        console.log(req.body);
         const { restaurant_id, name, price, mrp, quantity_info, category } = req.body;
         if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ error: "Bad Request." });
 
@@ -172,9 +169,7 @@ const getAllOrders = async (req, res) => {
 }
 
 const addRestaurants = async (req, res) => {
-    console.log(req.body);
     const { name, image_url, area_id, image_id, category, is_banner = false, sort_order = 0 } = req.body;
-    console.log(req.body);
     try {
         const restaurant = new Restaurant({
             name,
@@ -236,7 +231,6 @@ const editCategoryById = async (req, res) => {
         sort_order,
         status,
     } = req.body;
-    console.log(req.body);
 
     try {
         if (!id || !name) {
@@ -279,9 +273,7 @@ const editCategoryById = async (req, res) => {
                 console.log("Cloudinary delete failed:", err.message);
             }
         }
-
         res.status(200).json({ message: "Restaurant updated successfully" });
-
     } catch (err) {
         // Delete uploaded image if DB save fails
         if (image_id) {
@@ -293,7 +285,6 @@ const editCategoryById = async (req, res) => {
                 console.error("Failed to delete image:", deleteErr);
             }
         }
-        console.error(err);
         res.status(500).json({ error: "Server error" });
     }
 }

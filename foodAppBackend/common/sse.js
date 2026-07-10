@@ -1,29 +1,4 @@
-// const clients = [];
-
-// function addClient(res) {
-//     clients.push(res);
-//     console.log("Admin connected. Total:", clients.length);
-// }
-
-// function removeClient(res) {
-//     const index = clients.indexOf(res);
-//     if (index !== -1) clients.splice(index, 1);
-//     console.log("Admin disconnected. Total:", clients.length);
-// }
-
-// function notifyNewOrder(order) {
-//     clients.forEach((client) => {
-//         client.write(
-//             `data: ${JSON.stringify({
-//                 type: "new_order",
-//                 order,
-//             })}\n\n`
-//         );
-//     });
-// }
-
-const clients = new Map(); // area_id -> Set of response objects
-console.log("clients", clients);
+const clients = new Map();
 
 function addClient(areaId, res) {
     if (!clients.has(areaId)) {
@@ -47,7 +22,6 @@ function removeClient(areaId, res) {
 }
 
 function notifyNewOrder(order) {
-    console.log("order", order);
     const areaId = order.areaId?.toString();
     if (!areaId) return;
 

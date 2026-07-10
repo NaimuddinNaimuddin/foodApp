@@ -50,7 +50,6 @@ export default function AddFoodItem() {
       });
       toast.success("Food Item Added!");
     } catch (err) {
-      console.error(err);
       toast.error("Error Adding Food Item.");
     } finally {
       setLoading(false);

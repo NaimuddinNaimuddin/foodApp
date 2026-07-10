@@ -10,7 +10,6 @@ export default function Restaurants() {
 
     const [search, setSearch] = useState("");
     const [area_code, setAreaCode] = useState(null);
-    console.log({ area_code })
     const [restaurants, setRestaurants] = useState([]);
 
     useEffect(() => {
@@ -26,7 +25,6 @@ export default function Restaurants() {
             .then((res) => {
                 if (res.status == 200) {
                     setAreas(res.data);
-                    console.log(res.data);
                 }
             })
             .catch(() => alert("Areas fetch Error."))
@@ -44,13 +42,11 @@ export default function Restaurants() {
             }
             setLoading(false);
         } catch (err) {
-            console.error("Error loading restaurants:", err.message);
             setLoading(false);
         }
     };
 
     const filtered = restaurants.filter((r) => {
-        console.log(r, area_code === r.area_code);
         return (area_code === r.area_id) && (r.name.toLowerCase().includes(search.toLowerCase()));
     });
 

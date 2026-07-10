@@ -32,7 +32,6 @@ export default function CreateArea() {
             setName("");
             setCode("");
         } catch (err) {
-            console.error(err);
             alert("Error creating Area");
         } finally {
             setLoading(false);
