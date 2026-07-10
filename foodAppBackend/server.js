@@ -24,6 +24,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/admin", adminBackstopLimiter);
+app.use("/vendor", adminBackstopLimiter);
 app.use(ipBackstopLimiter);
 
 app.use("/stream", sse);

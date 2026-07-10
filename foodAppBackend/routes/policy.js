@@ -3,6 +3,7 @@ const router = express.Router();
 const rateLimiter = require("../common/rateLimiter");
 
 router.get("/privacy-policy", rateLimiter(1000 * 60, 30), (req, res) => {
+  res.set("Cache-Control", "public, max-age=3600");
   res.send(`
   <html>
     <head>
@@ -46,35 +47,35 @@ router.get("/privacy-policy", rateLimiter(1000 * 60, 30), (req, res) => {
 });
 
 router.get("/terms", rateLimiter(1000 * 60, 30), (req, res) => {
+  res.set("Cache-Control", "public, max-age=3600");
   res.send(`
-  <html>
-    <head>
-      <title>Terms & Conditions</title>
-    </head>
-    <body>
-      <h1>Terms & Conditions</h1>
+    <html>
+      <head>
+        <title>Terms & Conditions</title>
+      </head>
+      <body>
+        <h1>Terms & Conditions</h1>
 
-      <h2>Usage Rules</h2>
-      <p>You agree to use this app only for lawful purposes.</p>
+        <h2>Usage Rules</h2>
+        <p>You agree to use this app only for lawful purposes.</p>
 
-      <h2>User Accounts</h2>
-      <p>You are responsible for maintaining your account security.</p>
+        <h2>User Accounts</h2>
+        <p>You are responsible for maintaining your account security.</p>
 
-      <h2>Service Changes</h2>
-      <p>We may update or modify the app at any time.</p>
+        <h2>Service Changes</h2>
+        <p>We may update or modify the app at any time.</p>
 
-      <h2>Orders</h2>
-      <p>All orders are subject to availability and confirmation.</p>
+        <h2>Orders</h2>
+        <p>All orders are subject to availability and confirmation.</p>
 
-      <h2>Termination</h2>
-      <p>We may suspend accounts violating our policies.</p>
+        <h2>Termination</h2>
+        <p>We may suspend accounts violating our policies.</p>
 
-      <h2>Contact</h2>
-      <p>Email: support@yourapp.com</p>
+        <h2>Contact</h2>
+        <p>Email: support@yourapp.com</p>
 
-    </body>
-  </html>
-  `);
+      </body>
+    </html>`);
 });
 
 router.get('/', rateLimiter(1000 * 60, 30), (req, res) => {
