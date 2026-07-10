@@ -29,3 +29,6 @@ may be user ordering for others
 suggest other screens if user on empty screens
 Number should not be negative
 
+Delivery Services - express and normal
+
+ensure user order product from his area only

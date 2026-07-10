@@ -13,9 +13,9 @@ const policyRoutes = require("./routes/policy");
 const adminRoutes = require("./routes/adminRoutes");
 const vendorRoutes = require("./routes/vendorRoutes");
 
+const sse = require("./routes/sse");
 const ipBackstopLimiter = require("./common/ipLimiter");
 const adminBackstopLimiter = require("./common/adminLimiter");
-const { addClient, removeClient } = require("./common/sse");
 
 const app = express();
 
@@ -26,25 +26,7 @@ app.use(express.json());
 app.use("/admin", adminBackstopLimiter);
 app.use(ipBackstopLimiter);
 
-app.get("/orders/stream", (req, res) => {
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-
-  // Send initial connection message
-  res.write(
-    `data: ${JSON.stringify({
-      type: "connected",
-      message: "SSE Connected",
-    })}\n\n`
-  );
-
-  addClient(res);
-
-  req.on("close", () => {
-    removeClient(res);
-  });
-});
+app.use("/stream", sse);
 
 app.use("/admin", adminRoutes);
 app.use("/vendor", vendorRoutes);

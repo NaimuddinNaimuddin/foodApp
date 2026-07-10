@@ -13,11 +13,12 @@ import { styles } from "@/assets/styles/orderStyles";
 import OrderCard from "@/lib/components/OrderCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SelectSkeleton } from "@/lib/components/Skeletion";
+import Toast from "react-native-toast-message";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function OrdersScreen() {
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState([] as Order[]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -25,6 +26,35 @@ export default function OrdersScreen() {
         fetchOrders(controller.signal);
         return () => {
             controller.abort();
+        };
+    }, []);
+
+    useEffect(() => {
+        let eventSource: EventSource | null = null;
+
+        const connectSSE = async () => {
+            const areaId = await storage.getItem("area_id");
+            if (!areaId) return;
+
+            eventSource = new EventSource(`${API_BASE_URL}/stream/orders/${areaId}`);
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === "new_order" && data.order) {
+                    Toast.show({ type: 'success', text1: 'New Order.', visibilityTime: 10000 });
+                    setOrders((prev) => [data.order, ...prev]);
+                }
+            };
+
+            eventSource.onerror = (err) => {
+                console.log(err);
+                Toast.show({ type: 'error', text1: 'Live Connection Error.' });
+                eventSource?.close();
+            };
+        };
+
+        connectSSE();
+        return () => {
+            eventSource?.close();
         };
     }, []);
 
@@ -44,7 +74,7 @@ export default function OrdersScreen() {
                 console.log("Request cancelled");
                 return;
             }
-            Alert.alert(err?.response?.data?.message || 'Server Err.')
+            Alert.alert(err?.response?.data?.message || 'Server Err.');
         } finally {
             if (!signal.aborted) {
                 setLoading(false);
