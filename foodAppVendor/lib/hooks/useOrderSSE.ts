@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { AppState, AppStateStatus } from "react-native";
+// import { AppState, AppStateStatus } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventSource from "react-native-sse";
 
@@ -15,9 +15,8 @@ export const useOrderSSE = ({ onNewOrder }: UseOrderSSEOptions) => {
     const areaIdRef = useRef<string | null>(null);
 
     const connect = useCallback(async () => {
-
         if (!areaIdRef.current) {
-            const stored = await AsyncStorage.getItem("vendor_area_code");
+            const stored = await AsyncStorage.getItem("area_id");
             if (!stored) return;
             areaIdRef.current = stored;
         }
@@ -39,7 +38,6 @@ export const useOrderSSE = ({ onNewOrder }: UseOrderSSEOptions) => {
         es.addEventListener("message", (event) => {
             try {
                 const data = JSON.parse(event.data ?? "");
-
                 if (data.type === "new_order") onNewOrder(data.order);
             } catch (err) {
                 console.error("SSE parse error:", err);
@@ -54,20 +52,20 @@ export const useOrderSSE = ({ onNewOrder }: UseOrderSSEOptions) => {
     }, [onNewOrder]);
 
     // pause/resume on app background/foreground
-    useEffect(() => {
-        const handleAppState = (state: AppStateStatus) => {
-            if (state === "active") {
-                if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
-                connect();
-            } else if (state === "background") {
-                eventSourceRef.current?.close();
-                if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
-            }
-        };
+    // useEffect(() => {
+    //     const handleAppState = (state: AppStateStatus) => {
+    //         if (state === "active") {
+    //             if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
+    //             connect();
+    //         } else if (state === "background") {
+    //             eventSourceRef.current?.close();
+    //             if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
+    //         }
+    //     };
 
-        const sub = AppState.addEventListener("change", handleAppState);
-        return () => sub.remove();
-    }, [connect]);
+    //     const sub = AppState.addEventListener("change", handleAppState);
+    //     return () => sub.remove();
+    // }, [connect]);
 
     // initial connect + cleanup on unmount
     useEffect(() => {
