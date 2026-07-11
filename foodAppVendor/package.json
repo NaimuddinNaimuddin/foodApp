@@ -41,7 +41,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "apk-expo": "eas build --platform android --profile preview"
+    "preview": "eas build --platform android --profile preview"
   },
   "private": true
 }
