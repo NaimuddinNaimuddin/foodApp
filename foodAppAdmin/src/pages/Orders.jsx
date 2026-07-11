@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import '../styles/Orders.css';
+import OrdersTable from "../components/OrderTable";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Orders() {
@@ -14,61 +15,26 @@ export default function Orders() {
                 if (res.status == 200) {
                     setOrders(res.data);
                 }
-                if (res.status == 404) {
-                    alert('No Orders Found.')
-                }
             })
             .catch(() => alert("Order fetch Error."))
             .finally(() => setLoading(false));
     }, []);
 
-    useEffect(() => {
-        const eventSource = new EventSource(`${API_BASE_URL}/orders/stream`);
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+    // useEffect(() => {
+    //     const eventSource = new EventSource(`${API_BASE_URL}/orders/stream`);
+    //     eventSource.onmessage = (event) => {
+    //         const data = JSON.parse(event.data);
 
-            if (data.type === "new_order") {
-                setOrders((prev) => [data.order, ...prev]);
-            }
-        };
-    }, [])
+    //         if (data.type === "new_order") {
+    //             setOrders((prev) => [data.order, ...prev]);
+    //         }
+    //     };
+    // }, [])
 
     return (
-        <div>
+        <div className="container-fluid mt-4">
             {loading && 'Loading...'}
-            <div className="orders-container">
-                {orders.map((order) => (
-                    <div className="order-card" key={order._id}>
-                        <div className="order-header">
-                            <h4>Order #{order._id}</h4>
-                            <span className={`status ${order.status.toLowerCase()}`}>
-                                {order.status}
-                            </span>
-                        </div>
-
-                        <p className="amount">
-                            Total: ₹{order.totalAmount}
-                        </p>
-
-                        <div className="items-list">
-                            {order.items.map((item) => (
-                                <div className="item-card" key={item._id}>
-                                    <img
-                                        src={item.image_url}
-                                        alt={item.name}
-                                    />
-
-                                    <div>
-                                        <h5>{item.name}</h5>
-                                        <p>Qty: {item.quantity}</p>
-                                        <p>₹{item.price}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <OrdersTable orders={orders} />
         </div>
     );
 };

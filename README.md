@@ -40,6 +40,8 @@ const asyncHandler = fn =>
         Promise.resolve(fn(req, res, next))
             .catch(next);
 
+remove unnecessary code and files images , decrese build size            
+
 Priority	Optimization	Impact
 ⭐⭐⭐⭐⭐	Add MongoDB indexes	Very High
 ⭐⭐⭐⭐⭐	Use .lean() on read queries	Very High____________
