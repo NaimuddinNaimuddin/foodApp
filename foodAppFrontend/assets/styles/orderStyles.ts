@@ -28,6 +28,18 @@ export const styles = StyleSheet.create({
         fontSize: 12,
         color: "#555",
     },
+    badge: {
+        alignSelf: "flex-start",
+        backgroundColor: "#F44336",
+        color: "#FFF",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "600",
+        overflow: "hidden",
+        marginTop: 10,
+    },
     divider: {
         height: 1,
         backgroundColor: "#eee",

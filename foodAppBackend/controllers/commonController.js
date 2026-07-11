@@ -2,6 +2,40 @@ const Area = require("../models/Area");
 const Food = require("../models/Food");
 const Restaurant = require("../models/Restaurant");
 const mongoose = require("mongoose");
+const Order = require("../models/Order");
+
+const updateOrderStatus = async (req, res) => {
+    try {
+        const { orderId, status } = req.body;
+
+        if (!orderId || !status) {
+            return res.status(400).json({
+                success: false,
+                message: "orderId and status are required.",
+            });
+        }
+
+        const order = await Order.findById(orderId);
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found.",
+            });
+        }
+
+        order.status = status;
+        await order.save();
+
+        return res.status(200).json({
+            message: "Order status updated successfully.",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal server error.", error
+        });
+    }
+};
 
 const getArea = async (req, res) => {
     try {
@@ -57,4 +91,5 @@ module.exports = {
     getArea,
     getAllRestaurants,
     getFoodItemsGroupedByCategory,
+    updateOrderStatus
 };

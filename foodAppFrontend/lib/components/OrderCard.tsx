@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import { styles } from "@/assets/styles/orderStyles";
 import { Order } from "@/assets/types/orders";
 import OrderTracker from "./OrderTracker";
+import { OrderStatus } from "../constant";
 
 export default function OrderCard({ order }: { order: Order }) {
     return (
@@ -19,7 +20,9 @@ export default function OrderCard({ order }: { order: Order }) {
 
             </Text>
             <Text style={styles.address}>📍 {order.deliveryAddress}</Text>
-            <OrderTracker status={order.status} />
+            {order.status === OrderStatus.CANCELLED ?
+                (<Text style={styles.badge}> {OrderStatus.CANCELLED} </Text>)
+                : (<OrderTracker status={order.status} />)}
 
             <View style={styles.divider} />
 

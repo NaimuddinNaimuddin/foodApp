@@ -22,6 +22,7 @@ export default function OrdersScreen() {
     const pathname = usePathname();
     const [orders, setOrders] = useState([] as Order[]);
     const [loading, setLoading] = useState(false);
+    const [statusloading, setstatusloading] = useState(false);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -63,6 +64,33 @@ export default function OrdersScreen() {
         }
     };
 
+    const changeOrderStatus = async (orderId: string, status: string) => {
+        try {
+            setstatusloading(true);
+            const response = await axios.patch(
+                `${API_BASE_URL}/vendor/order-status`,
+                { orderId, status }
+            );
+
+            if (response.status == 200 && response.data.message) {
+                Toast.show({
+                    type: "success",
+                    text1: response.data.message,
+                });
+                setOrders((prev: any) => prev.map((order: Order) =>
+                    order._id === orderId ? { ...order, status } : order
+                ));
+            }
+        } catch (error: any) {
+            Toast.show({
+                type: "error",
+                text1: error.response?.data?.message || "Something went wrong",
+            });
+        } finally {
+            setstatusloading(false);
+        }
+    };
+
     if (loading) {
         return (
             <SafeAreaView style={styles.container}>
@@ -89,7 +117,7 @@ export default function OrdersScreen() {
             data={orders}
             keyExtractor={(item: Order) => item._id}
             contentContainerStyle={styles.container}
-            renderItem={({ item }) => <OrderCard order={item} />}
+            renderItem={({ item }) => <OrderCard statusloading={statusloading} changeOrderStatus={changeOrderStatus} order={item} />}
         />
     );
 }

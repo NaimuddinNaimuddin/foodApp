@@ -34,6 +34,7 @@ Delivery Services - express and normal
 ensure user order product from his area only
 
 allow orders status changes  Accept reject
+Live update user order status
 
 const asyncHandler = fn =>
     (req, res, next) =>

@@ -1,6 +1,23 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+    buttonRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 10,
+    },
+    actionButton: {
+        flex: 1,
+        paddingVertical: 10,
+        borderRadius: 8,
+        alignItems: "center",
+        marginHorizontal: 4,
+    },
+    buttonText: {
+        color: "#fff",
+        fontWeight: "600",
+        fontSize: 14,
+    },
     container: {
         padding: 12,
     },
@@ -32,6 +49,18 @@ export const styles = StyleSheet.create({
         height: 1,
         backgroundColor: "#eee",
         marginVertical: 8,
+    },
+    badge: {
+        alignSelf: "flex-start",
+        backgroundColor: "#F44336",
+        color: "#FFF",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: "600",
+        overflow: "hidden",
+        marginTop: 10,
     },
     itemRow: {
         flexDirection: "row",

@@ -1,3 +1,4 @@
+import { OrderStatus } from "@/lib/constant";
 
 export interface OrderItem {
   _id: string;
@@ -12,7 +13,7 @@ export interface Order {
   totalAmount: number;
   deliveryAddress: string;
   paymentMethod: "COD" | "Online";
-  status: "Pending" | "Confirmed" | "Delivered" | "Cancelled";
+  status: OrderStatus;
   createdAt: string;
   updatedAt: string;
 }

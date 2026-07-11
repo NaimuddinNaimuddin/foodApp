@@ -9,7 +9,7 @@ const OrderTracker = ({ status }: { status: string }) => {
     return (
         <View style={styles.tracker}>
             {ORDER_STEPS.map((step, index) => (
-                <React.Fragment key={step.label}>
+                <React.Fragment key={step.value}>
                     <View style={styles.step}>
                         <View
                             style={[
@@ -30,7 +30,7 @@ const OrderTracker = ({ status }: { status: string }) => {
                                 },
                             ]}
                         >
-                            {step.label}
+                            {step.value}
                         </Text>
                     </View>
 
