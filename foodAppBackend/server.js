@@ -31,11 +31,10 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
+app.use("/stream", sse);
 app.use("/admin", adminBackstopLimiter);
 app.use("/vendor", adminBackstopLimiter);
 app.use(ipBackstopLimiter);
-
-app.use("/stream", sse);
 
 app.use("/admin", adminRoutes);
 app.use("/vendor", vendorRoutes);
@@ -50,16 +49,41 @@ app.use("/", policyRoutes);
 
 app.use(errorHandler);
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    maxPoolSize: 20,
-    minPoolSize: 5
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error(err));
-
 const PORT = process.env.PORT || 8080;
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      maxPoolSize: 20,
+      minPoolSize: 5,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log("✅ MongoDB connected");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ MongoDB connection failed:", error.message);
+    process.exit(1);
+  }
+}
+
+mongoose.connection.on("disconnected", () => {
+  console.warn("⚠️ MongoDB disconnected");
 });
+mongoose.connection.on("reconnected", () => {
+  console.log("✅ MongoDB reconnected");
+});
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB error:", err);
+});
+
+process.on("SIGINT", async () => {
+  await mongoose.connection.close();
+  console.log("MongoDB connection closed.");
+  process.exit(0);
+});
+
+startServer();
