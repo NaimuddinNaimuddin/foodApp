@@ -35,16 +35,6 @@ ensure user order product from his area only
 
 allow orders status changes  Accept reject
 
-use npm compression and morgan helmet
-
-app.use((err, req, res, next) => {
-    console.error(err);
-
-    res.status(500).json({
-        message: "Internal Server Error"
-    });
-});
-
 const asyncHandler = fn =>
     (req, res, next) =>
         Promise.resolve(fn(req, res, next))
@@ -52,11 +42,11 @@ const asyncHandler = fn =>
 
 Priority	Optimization	Impact
 ⭐⭐⭐⭐⭐	Add MongoDB indexes	Very High
-⭐⭐⭐⭐⭐	Use .lean() on read queries	Very High
+⭐⭐⭐⭐⭐	Use .lean() on read queries	Very High____________
 ⭐⭐⭐⭐⭐	Cache frequently read data (Redis or in-memory)	Very High
-⭐⭐⭐⭐	Use compression	High
-⭐⭐⭐⭐	Tune MongoDB connection pool	High
+⭐⭐⭐⭐	Use compression	High_________________
+⭐⭐⭐⭐	Tune MongoDB connection pool	High__________
 ⭐⭐⭐⭐	Run with PM2 in cluster mode	High
-⭐⭐⭐	Add Helmet and body size limits	Medium
-⭐⭐⭐	Use Pino for structured logging	Medium
+⭐⭐⭐	Add Helmet and body size limits	Medium_________
+⭐⭐⭐	Use Pino for structured logging	Medium_________
 ⭐⭐	Graceful shutdown and health checks	Medium
