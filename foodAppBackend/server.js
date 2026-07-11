@@ -69,21 +69,4 @@ async function startServer() {
     process.exit(1);
   }
 }
-
-mongoose.connection.on("disconnected", () => {
-  console.warn("⚠️ MongoDB disconnected");
-});
-mongoose.connection.on("reconnected", () => {
-  console.log("✅ MongoDB reconnected");
-});
-mongoose.connection.on("error", (err) => {
-  console.error("MongoDB error:", err);
-});
-
-process.on("SIGINT", async () => {
-  await mongoose.connection.close();
-  console.log("MongoDB connection closed.");
-  process.exit(0);
-});
-
 startServer();
