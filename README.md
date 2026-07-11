@@ -53,3 +53,12 @@ Priority	Optimization	Impact
 ⭐⭐⭐	Add Helmet and body size limits	Medium_________
 ⭐⭐⭐	Use Pino for structured logging	Medium_________
 ⭐⭐	Graceful shutdown and health checks	Medium
+
+Google Play Store & IOS store 25 dollar deploy - vendor and user app
+node js server on Render 5 dollar per month
+
+admin panel deploy REact js
+mongodb 
+
+otp service
+cloudinary service

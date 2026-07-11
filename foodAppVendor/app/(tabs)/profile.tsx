@@ -1,5 +1,5 @@
 import { storage } from "@/lib/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Linking,
     View,
@@ -18,6 +18,7 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function HomeScreen() {
     const [menuVisible, setMenuVisible] = useState(false);
+    const [phone, setPhone] = useState<string | null>('');
 
     const handleLogout = async () => {
         setMenuVisible(false);
@@ -28,6 +29,16 @@ export default function HomeScreen() {
 
         router.replace("/");
     };
+
+    useEffect(() => {
+        const getUserDetails = async () => {
+            const phone = await storage.getItem("phone");
+            if (!!phone) {
+                setPhone(phone)
+            };
+        };
+        getUserDetails();
+    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -43,7 +54,7 @@ export default function HomeScreen() {
                         <Ionicons name="ellipsis-vertical" size={22} color="#333" />
                     </TouchableOpacity>
                 </View>
-
+                <Text style={styles.heading}> Phone: {phone}</Text>
                 <TouchableOpacity
                     style={styles.option}
                     onPress={() => Linking.openURL(`${API_BASE_URL}/privacy-policy`)}

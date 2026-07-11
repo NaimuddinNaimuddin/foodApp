@@ -4,18 +4,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
 import { useEffect } from "react";
 import { storage } from "@/lib/storage";
-// import { isTokenValid } from "@/lib/checkAuth";
 
 export default function RootLayout() {
 
   useEffect(() => {
     const checkAuth = async () => {
       const token = await storage.getItem("token");
-      // const valid = isTokenValid(token);
       if (!token) {
-        await storage.removeItem("token");
-        await storage.removeItem("user");
-
         router.replace("/login");
       } else {
         router.replace("/(tabs)/home");
