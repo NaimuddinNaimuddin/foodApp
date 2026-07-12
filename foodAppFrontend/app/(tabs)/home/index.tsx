@@ -10,6 +10,8 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +23,7 @@ import { Category } from "@/lib/types/home";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import HomeLoading from "@/lib/components/HomeLoading";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -30,6 +33,7 @@ export default function FoodScreen() {
   const [search, setSearch] = useState("");
   const [phone, setPhone] = useState("");
   const progress = useSharedValue(0);
+  const [showAreaModal, setShowAreaModal] = useState(false);
 
   const fetchHomeCategories = async (_areaId: string) => {
     const { data } = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/restaurants/by-area-code/grouped/${_areaId}`);
@@ -63,6 +67,7 @@ export default function FoodScreen() {
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
+  const selectedArea = areas?.find((a: any) => a._id === areaId);
   const filteredCategories = data && data.categories && data.categories.length > 0 &&
     data.categories.filter((c: Category) => c.name.toLowerCase().includes(search.toLowerCase())) || [];
 
@@ -75,9 +80,19 @@ export default function FoodScreen() {
       setPhone(_phone);
     })
     storage.getItem('areaId').then((_areaId: any) => {
-      setAreaId(_areaId);
+      if (!areaId) {
+        setShowAreaModal(true);
+      } else {
+        setAreaId(_areaId);
+      }
     })
   }, []);
+
+  const onPressArea = async (item: any) => {
+    setAreaId(item._id);
+    await storage.setItem("areaId", item._id);
+    setShowAreaModal(false);
+  };
 
   if (isLoading) {
     return <HomeLoading />;
@@ -90,28 +105,68 @@ export default function FoodScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
-        <Text style={styles.welcomeText}>
-          Delivery To - {phone}
+        <Text onPress={() => setShowAreaModal(true)} style={styles.welcomeText}>
+          {selectedArea
+            ? (
+              <View style={styles.titleRow}>
+                <Ionicons
+                  name="location-outline"
+                  size={20}
+                  color="#555"
+                  style={{ marginRight: 6 }}
+                />
+                <Text style={styles.modalTitles}>{`Delivery To - ${selectedArea.name}`}</Text>
+              </View>
+            )
+            : (
+              <View style={styles.titleRow}>
+                <Text style={styles.modalTitles}>Select Location</Text>
+                <Ionicons
+                  name="chevron-down"
+                  size={20}
+                  color="#555"
+                  style={{ marginLeft: 6 }}
+                />
+              </View>
+            )}
         </Text>
-        <View style={styles.dropdown}>
-          <Picker
-            selectedValue={areaId}
-            onValueChange={(val) => {
-              setAreaId(val);
-              storage.setItem('areaId', val)
-            }}
+        <View>
+          <Modal
+            visible={showAreaModal}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setShowAreaModal(false)}
           >
-            <Picker.Item label="Select Location" value="" />
-            {areas && areas.length > 0 && areas.map((area: any) => (
-              <Picker.Item
-                key={area.code}
-                label={`${area.name} - ${area.code}`}
-                value={area._id}
-              />
-            ))}
-          </Picker>
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Select Location</Text>
+
+                <FlatList
+                  data={areas}
+                  keyExtractor={(item) => item._id}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.areaItem}
+                      onPress={() => onPressArea(item)}
+                    >
+                      <Text style={styles.areaText}>
+                        {item.name} - {item.code}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setShowAreaModal(false)}
+                >
+                  <Text style={{ color: "#fff", fontWeight: "600" }}>Close</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-      </View>
+          </Modal>
+        </View>
+      </View >
       <ScrollView showsVerticalScrollIndicator={false}>
         <TextInput
           style={styles.searchBar}
@@ -209,6 +264,8 @@ export default function FoodScreen() {
           )}
         />
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
+
+

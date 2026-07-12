@@ -1,6 +1,63 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+    dropdown: {
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 10,
+        padding: 15,
+        backgroundColor: "#fff",
+    },
+
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "flex-end",
+    },
+
+    modalContainer: {
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        maxHeight: "70%",
+        padding: 20,
+    },
+
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 15,
+        marginRight: 20,
+    },
+
+      titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+  },
+
+  modalTitles: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
+    areaItem: {
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#eee",
+    },
+
+    areaText: {
+        fontSize: 16,
+    },
+
+    closeButton: {
+        marginTop: 15,
+        backgroundColor: "#FF5722",
+        padding: 14,
+        borderRadius: 10,
+        alignItems: "center",
+    },
     card: {
         width: "32%",
         marginBottom: 12,
@@ -102,13 +159,13 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         color: "#111",
     },
-    dropdown: {
-        marginTop: 10,
-        backgroundColor: "#fff",
-        overflow: "hidden",
-        elevation: 4,
-        marginBottom: 15,
-    },
+    // dropdown: {
+    //     marginTop: 10,
+    //     backgroundColor: "#fff",
+    //     overflow: "hidden",
+    //     elevation: 4,
+    //     marginBottom: 15,
+    // },
     wrapper: {
         backgroundColor: "#fff",
         borderBottomWidth: 1,
@@ -118,6 +175,7 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "700",
         color: "#111",
+        marginBottom: 10,
     },
     guestText: {
         color: "#00b37a",
