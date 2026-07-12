@@ -13,7 +13,7 @@ export const restaurantStyles = StyleSheet.create({
     },
 
     card: {
-        width: 108,
+        width: 128,
         backgroundColor: "#fff",
         borderRadius: 10,
         marginLeft: 10,

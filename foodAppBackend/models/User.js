@@ -15,6 +15,12 @@ const UserSchema = new mongoose.Schema({
     },
     user_address: {
         type: String,
+    },
+    is_phone_verified: {
+        type: Boolean,
+    },
+    is_address_verified: {
+        type: Boolean,
     }
 });
 

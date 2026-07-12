@@ -80,7 +80,7 @@ export default function FoodScreen() {
       setPhone(_phone);
     })
     storage.getItem('areaId').then((_areaId: any) => {
-      if (!areaId) {
+      if (!_areaId) {
         setShowAreaModal(true);
       } else {
         setAreaId(_areaId);
