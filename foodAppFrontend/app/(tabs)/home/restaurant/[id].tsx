@@ -5,15 +5,16 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { restaurantStyles as styles } from "@/assets/styles/restaurantStyles";
-import { storage } from "@/lib/storage";
 import { SkeletonCard } from "@/lib/components/Skeletion";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { handleApiError } from "@/lib/common/handleApiError";
+import { useUser } from "@/context/userContext";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { user } = useUser();
   const [addToCartLoading, setAddToCartLoading] = useState(false);
   const [addToCartItem, setAddToCartItem] = useState<string | null>(null);
 
@@ -38,7 +39,7 @@ export default function RestaurantScreen() {
 
   const addToCart = async (foodId: string) => {
     try {
-      const userId = await storage.getItem('userId');
+      const userId = user?.id;
       if (!userId) return;
       setAddToCartLoading(true);
       setAddToCartItem(foodId);

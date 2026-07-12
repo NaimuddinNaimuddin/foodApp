@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     View,
     TextInput,
@@ -11,25 +11,19 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useUpdateUserDetails } from "../hooks/useUpdateUserDetails";
-import { storage } from "../storage";
+import { useUser } from "@/context/userContext";
 
 const EditAddressField = () => {
-    const [deliveryAddress, setDeliveryAddress] = useState("");
-    const [tempAddress, setTempAddress] = useState("");
+    const { user, setUser } = useUser();
+    const [tempAddress, setTempAddress] = useState<string | undefined>('');
     const [modalVisible, setModalVisible] = useState(false);
 
     const { updateUserDetails, isLoading, error } = useUpdateUserDetails();
 
-    const openModal = () => {
-        setTempAddress(deliveryAddress);
-        setModalVisible(true);
-    };
-
     const handleSave = async () => {
-        const USER_ID = await storage.getItem("userId");
+        const USER_ID = user?.id;
         if (!USER_ID) return;
-        if (tempAddress == deliveryAddress) return;
-        if (!tempAddress.trim()) return;
+        if (tempAddress == user?.user_address) return;
 
         const success = await updateUserDetails({
             user_id: USER_ID,
@@ -37,38 +31,26 @@ const EditAddressField = () => {
         });
 
         if (success) {
-            setDeliveryAddress(tempAddress);
             setModalVisible(false);
-            await storage.setItem('user_address', tempAddress);
+            setUser({ ...user, user_address: tempAddress });
         }
+    };
+
+    const openModal = () => {
+        setTempAddress(user?.user_address);
+        setModalVisible(true);
     };
 
     const handleCancel = () => {
         setModalVisible(false);
     };
 
-    useEffect(() => {
-        const loadAddress = async () => {
-            try {
-                const storedAddress = await storage.getItem("user_address");
-                if (storedAddress !== null) {
-                    setDeliveryAddress(storedAddress);
-                }
-            } catch (err) {
-                console.error("Error loading address from AsyncStorage:", err);
-            }
-        };
-
-        loadAddress();
-    }, []);
-
     return (
         <View>
             <View style={styles.row}>
                 <TouchableOpacity style={[styles.input, { flex: 1 }]} onPress={openModal}>
                     <TextInput
-                        placeholder="Enter delivery address"
-                        value={deliveryAddress}
+                        value={user?.user_address || ''}
                         editable={false}
                         pointerEvents="none"
                         multiline

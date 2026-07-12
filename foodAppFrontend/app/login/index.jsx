@@ -11,6 +11,7 @@ import { router } from "expo-router";
 import { storage } from "@/lib/storage";
 import Toast from "react-native-toast-message";
 import { styles } from "@/assets/styles/loginStyles";
+import { useUser } from "../../context/userContext";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -18,6 +19,7 @@ const LoginScreen = () => {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const { user, setUser } = useUser();
 
     const handleLogin = async () => {
         if (!phone) {
@@ -38,11 +40,7 @@ const LoginScreen = () => {
 
             if (response.status === 200 && response.data) {
                 await storage.setItem('token', response.data?.token);
-                await storage.setItem('userId', response.data?.user?.id);
-                await storage.setItem('phone', response.data?.user?.phone);
-
-                await storage.setItem('alt_phone', response.data?.user?.alt_phone || '');
-                await storage.setItem('user_address', response.data?.user?.user_address || '');
+                setUser(response.data.user);
                 router.replace('/(tabs)/home');
             }
 

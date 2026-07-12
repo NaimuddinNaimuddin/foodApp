@@ -1,4 +1,3 @@
-import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,7 +15,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { storage } from "@/lib/storage";
 import { styles } from '@/assets/styles/homeStyles';
 import Toast from "react-native-toast-message";
 import { Category } from "@/lib/types/home";
@@ -24,15 +22,14 @@ import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import HomeLoading from "@/lib/components/HomeLoading";
 import { Ionicons } from "@expo/vector-icons";
+import { useUser, User } from "@/context/userContext";
 
 const { width } = Dimensions.get("window");
 
 export default function FoodScreen() {
-
-  const [areaId, setAreaId] = useState('');
-  const [search, setSearch] = useState("");
-  const [phone, setPhone] = useState("");
   const progress = useSharedValue(0);
+  const { user, setUser } = useUser();
+  const [search, setSearch] = useState("");
   const [showAreaModal, setShowAreaModal] = useState(false);
 
   const fetchHomeCategories = async (_areaId: string) => {
@@ -53,10 +50,10 @@ export default function FoodScreen() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["restaurants", areaId],
-    queryFn: () => fetchHomeCategories(areaId as string),
+    queryKey: ["restaurants", user?.area_id],
+    queryFn: () => fetchHomeCategories(user?.area_id as string),
     staleTime: 1000 * 60 * 10, // 10 min
-    enabled: !!areaId, // waits until state is populated (not null)
+    enabled: !!user?.area_id, // waits until state is populated (not null)
   });
 
   const {
@@ -67,7 +64,7 @@ export default function FoodScreen() {
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
-  const selectedArea = areas?.find((a: any) => a._id === areaId);
+  const selectedArea = areas?.find((a: any) => a._id === user?.area_id);
   const filteredCategories = data && data.categories && data.categories.length > 0 &&
     data.categories.filter((c: Category) => c.name.toLowerCase().includes(search.toLowerCase())) || [];
 
@@ -76,21 +73,13 @@ export default function FoodScreen() {
   };
 
   useEffect(() => {
-    storage.getItem('phone').then((_phone: any) => {
-      setPhone(_phone);
-    })
-    storage.getItem('areaId').then((_areaId: any) => {
-      if (!_areaId) {
-        setShowAreaModal(true);
-      } else {
-        setAreaId(_areaId);
-      }
-    })
+    if (!user?.area_id) {
+      setShowAreaModal(true);
+    }
   }, []);
 
-  const onPressArea = async (item: any) => {
-    setAreaId(item._id);
-    await storage.setItem("areaId", item._id);
+  const onPressArea = (item: any) => {
+    setUser({ ...user, area_id: item._id } as User);
     setShowAreaModal(false);
   };
 

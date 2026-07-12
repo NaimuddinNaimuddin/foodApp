@@ -6,15 +6,16 @@ import React from "react";
 import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
 import { cartStyles as styles } from "../../assets/styles/cartStyles";
-import { storage } from "@/lib/storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SelectSkeleton } from "@/lib/components/Skeletion";
 import { router } from "expo-router";
 import { handleApiError } from "@/lib/common/handleApiError";
+import { useUser } from "@/context/userContext";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function CartScreen() {
+    const { user } = useUser();
     const [cart, setCart] = useState([] as any);
     const [isLoading, setIsLoading] = useState(false as boolean);
     const [isOrderPlacing, setIsOrderPlacing] = useState(false as boolean);
@@ -22,7 +23,7 @@ export default function CartScreen() {
     const loadCarts = async () => {
         try {
             setIsLoading(true);
-            const userId = await storage.getItem('userId');
+            const userId = user?.id;
             if (!userId) return;
             const { data } = await axios.get(`${API_URL}/cart/${userId}`);
             setCart(data);
@@ -35,7 +36,7 @@ export default function CartScreen() {
 
     const decreaseQty = async (productId: string) => {
         try {
-            const userId = await storage.getItem('userId');
+            const userId = user?.id;
             if (!userId) return;
             const { data } = await axios.put(`${API_URL}/cart/decrease/${userId}/${productId}`);
             setCart(data);
@@ -45,7 +46,7 @@ export default function CartScreen() {
     };
     const increaseQty = async (productId: string) => {
         try {
-            const userId = await storage.getItem('userId');
+            const userId = user?.id;
             if (!userId) return;
             const { data } = await axios.put(`${API_URL}/cart/increase/${userId}/${productId}`);
             setCart(data);
@@ -56,7 +57,7 @@ export default function CartScreen() {
 
     const removeItem = async (productId: string) => {
         try {
-            const userId = await storage.getItem('userId');
+            const userId = user?.id;
             if (!userId) return;
             const { data } = await axios.delete(`${API_URL}/cart/remove/${userId}/${productId}`);
             setCart(data);
@@ -67,8 +68,9 @@ export default function CartScreen() {
 
     const placeOrder = async () => {
         try {
-            const deliveryAddress = await storage.getItem('user_address');
-            const areaId = await storage.getItem('areaId');
+            const areaId = user?.area_id;
+            const deliveryAddress = user?.user_address;
+            if (!areaId) return;
             if (!deliveryAddress) {
                 Toast.show({
                     type: 'info',

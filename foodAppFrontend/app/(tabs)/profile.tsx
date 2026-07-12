@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Linking,
   View,
-  ScrollView,
   Text,
   TouchableOpacity,
   Modal,
@@ -16,19 +15,18 @@ import { styles } from "@/assets/styles/profileStyles";
 import EditPhoneField from "@/lib/components/EditPhoneField";
 import EditAddressField from "@/lib/components/EditDeliveryAddress";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUser } from "@/context/userContext";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function HomeScreen() {
+  const { logout } = useUser();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleLogout = async () => {
     setMenuVisible(false);
     await storage.removeItem("token");
-    await storage.removeItem("userId");
-    await storage.removeItem("phone");
-    await storage.removeItem("alt_phone");
-    await storage.removeItem("user_address");
+    logout();
     router.replace("/login");
   };
 

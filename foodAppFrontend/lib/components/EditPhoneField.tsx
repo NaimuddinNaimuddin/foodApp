@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     View,
     TextInput,
@@ -11,24 +11,19 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useUpdateUserDetails } from "../hooks/useUpdateUserDetails";
-import { storage } from "../storage";
+import { useUser } from "@/context/userContext";
 
 const EditPhoneField = () => {
-    const [alternatePhone, setAlternatePhone] = useState("");
-    const [tempPhone, setTempPhone] = useState("");
+    const { user, setUser } = useUser();
+    const [tempPhone, setTempPhone] = useState<string | undefined>("");
     const [modalVisible, setModalVisible] = useState(false);
 
     const { updateUserDetails, isLoading, error } = useUpdateUserDetails();
 
-    const openModal = () => {
-        setTempPhone(alternatePhone);
-        setModalVisible(true);
-    };
-
     const handleSave = async () => {
-        const USER_ID = await storage.getItem("userId");
+        const USER_ID = user?.id;
         if (!USER_ID) return;
-        if (alternatePhone == tempPhone) return;
+        if (user?.alt_phone == tempPhone) return;
 
         const success = await updateUserDetails({
             user_id: USER_ID,
@@ -36,40 +31,28 @@ const EditPhoneField = () => {
         });
 
         if (success) {
-            setAlternatePhone(tempPhone);
             setModalVisible(false);
-            await storage.setItem('alt_phone', tempPhone);
+            setUser({ ...user, alt_phone: tempPhone });
         }
+    };
+
+    const openModal = () => {
+        setTempPhone(user?.alt_phone);
+        setModalVisible(true);
     };
 
     const handleCancel = () => {
         setModalVisible(false);
     };
 
-    useEffect(() => {
-        const loadAltPhone = async () => {
-            try {
-                const alt_phone = await storage.getItem("alt_phone");
-                if (alt_phone !== null) {
-                    setAlternatePhone(alt_phone);
-                }
-            } catch (err) {
-                console.error("Error loading address from AsyncStorage:", err);
-            }
-        };
-
-        loadAltPhone();
-    }, []);
-
     return (
         <View>
             <View style={styles.row}>
                 <TextInput
                     style={[styles.input, { flex: 1 }]}
-                    placeholder="Enter alternative phone number"
                     keyboardType="phone-pad"
                     maxLength={10}
-                    value={alternatePhone}
+                    value={user?.alt_phone}
                     editable={false}
                     pointerEvents="none"
                 />
@@ -89,7 +72,6 @@ const EditPhoneField = () => {
                         <Text style={styles.modalTitle}>Edit Alternative Phone</Text>
                         <TextInput
                             style={styles.modalInput}
-                            placeholder="Enter alternative phone number"
                             keyboardType="phone-pad"
                             maxLength={10}
                             value={tempPhone}
