@@ -34,6 +34,31 @@ router.post("/signup", rateLimiter(1000 * 60, 10), async (req, res) => {
     }
 });
 
+router.post("/forget", rateLimiter(1000 * 60, 10), async (req, res) => {
+    const { phone, password } = req.body;
+
+    if (!phone || !password) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    try {
+        const existingUser = await User.findOne({ phone });
+        if (!existingUser) {
+            return res.status(400).json({ message: "Phone number dont exists" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        existingUser.password = hashedPassword;
+
+        await existingUser.save();
+
+        res.status(201).json({ message: "Password Updated." });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error });
+    }
+});
+
 router.post("/login", rateLimiter(1000 * 60, 15), async (req, res) => {
     const { phone, password } = req.body;
 
