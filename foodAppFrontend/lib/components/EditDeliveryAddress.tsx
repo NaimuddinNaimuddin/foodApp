@@ -9,36 +9,31 @@ import {
     Pressable,
     ActivityIndicator,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useUpdateUserDetails } from "../hooks/useUpdateUserDetails";
 import { useUser } from "@/context/userContext";
 
-const EditAddressField = () => {
-    const { user, setUser } = useUser();
-    const [tempAddress, setTempAddress] = useState<string | undefined>('');
-    const [modalVisible, setModalVisible] = useState(false);
+const EditAddressField = ({ modalVisible, setModalVisible }: { modalVisible: boolean, setModalVisible: (modalVisible: boolean) => void }) => {
+    const { user, setUser, colors } = useUser();
+    const [tempAddress, setTempAddress] = useState<string | undefined>(user?.user_address || '');
+    const [tempPhone, setTempPhone] = useState<string | undefined>(user?.alt_phone || '');
 
     const { updateUserDetails, isLoading, error } = useUpdateUserDetails();
 
     const handleSave = async () => {
         const USER_ID = user?.id;
         if (!USER_ID) return;
-        if (tempAddress == user?.user_address) return;
+        if (tempAddress == user?.user_address && tempPhone == user?.alt_phone) return;
 
         const success = await updateUserDetails({
             user_id: USER_ID,
             user_address: tempAddress,
+            alt_phone: tempPhone,
         });
 
         if (success) {
             setModalVisible(false);
-            setUser({ ...user, user_address: tempAddress });
+            setUser({ ...user, user_address: tempAddress, alt_phone: tempPhone });
         }
-    };
-
-    const openModal = () => {
-        setTempAddress(user?.user_address);
-        setModalVisible(true);
     };
 
     const handleCancel = () => {
@@ -46,61 +41,51 @@ const EditAddressField = () => {
     };
 
     return (
-        <View>
-            <View style={styles.row}>
-                <TouchableOpacity style={[styles.input, { flex: 1 }]} onPress={openModal}>
+        <Modal
+            visible={modalVisible}
+            transparent
+            animationType="slide"
+            onRequestClose={handleCancel}
+        >
+            <Pressable style={styles.overlay} onPress={handleCancel}>
+                <Pressable style={styles.modalContent} onPress={() => { }}>
+                    <Text style={styles.modalTitle}>Edit Delivery Address</Text>
                     <TextInput
-                        value={user?.user_address || ''}
-                        editable={false}
-                        pointerEvents="none"
+                        style={[styles.modalInput, { outlineColor: colors.outlineColor, borderColor: colors.borderColor }]}
+                        placeholder="Enter delivery address"
+                        value={tempAddress}
+                        onChangeText={setTempAddress}
                         multiline
                         numberOfLines={4}
+                        textAlignVertical="top"
+                        autoComplete="tel"
+                        maxLength={130}
                     />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={openModal} style={styles.editIconBtn}>
-                    <MaterialIcons name="edit" size={30} color="#555" />
-                </TouchableOpacity>
-            </View>
+                    <Text style={styles.modalTitle}>Edit Delivery Phone</Text>
+                    <TextInput
+                        style={[styles.input, { outlineColor: colors.outlineColor, borderColor: colors.borderColor }]}
+                        keyboardType="phone-pad"
+                        maxLength={10}
+                        value={tempPhone}
+                        onChangeText={(text) => setTempPhone(text.replace(/[^0-9]/g, ""))}
+                    />
 
-            <Modal
-                visible={modalVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={handleCancel}
-            >
-                <Pressable style={styles.overlay} onPress={handleCancel}>
-                    <Pressable style={styles.modalContent} onPress={() => { }}>
-                        <Text style={styles.modalTitle}>Edit Delivery Address</Text>
-
-                        <TextInput
-                            style={styles.modalInput}
-                            placeholder="Enter delivery address"
-                            value={tempAddress}
-                            onChangeText={setTempAddress}
-                            multiline
-                            numberOfLines={4}
-                            textAlignVertical="top"
-                            autoFocus
-                            autoComplete="tel"
-                            maxLength={130}
-                        />
-                        <Text style={styles.error} >{error}</Text>
-                        <View style={styles.modalActions}>
-                            <TouchableOpacity onPress={handleCancel} style={styles.cancelBtn}>
-                                <Text style={styles.cancelText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity disabled={isLoading} onPress={handleSave} style={styles.saveBtn}>
-                                <Text style={styles.saveText}>
-                                    {isLoading ?
-                                        <ActivityIndicator size={"small"} color={"#EEE"} />
-                                        : "Save"}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Pressable>
+                    <Text style={styles.error} >{error}</Text>
+                    <View style={styles.modalActions}>
+                        <TouchableOpacity onPress={handleCancel} style={styles.cancelBtn}>
+                            <Text style={styles.cancelText}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity disabled={isLoading} onPress={handleSave} style={[styles.saveBtn, {}]}>
+                            <Text style={styles.saveText}>
+                                {isLoading ?
+                                    <ActivityIndicator size={"small"} color={"#EEE"} />
+                                    : "Save"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </Pressable>
-            </Modal>
-        </View>
+            </Pressable>
+        </Modal>
     );
 };
 
@@ -115,19 +100,12 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: "#ccc",
         borderRadius: 8,
         padding: 12,
         fontSize: 16,
-        backgroundColor: "#f9f9f9",
-        marginLeft: 20,
+        backgroundColor: "#FFF",
         marginBottom: 14,
         minHeight: 50,
-    },
-    editIconBtn: {
-        padding: 8,
-        marginBottom: 14,
-        marginRight: 20,
     },
     overlay: {
         flex: 1,
@@ -148,7 +126,6 @@ const styles = StyleSheet.create({
     },
     modalInput: {
         borderWidth: 1,
-        borderColor: "#ccc",
         borderRadius: 8,
         padding: 12,
         fontSize: 16,
@@ -168,7 +145,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     saveBtn: {
-        backgroundColor: "#007bff",
+        backgroundColor: "#0c831f",
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 6,

@@ -5,7 +5,7 @@ ADD to cart loading___________________
 console remove____________
 add otp login user
 payment gateway
-riders app
+riders app/ share order as pdf on whatsapp
 deploy - User app, backend Apis, admin panel frontend.
 pagination
 api err handling 
@@ -20,11 +20,14 @@ Automated tests & add ts support for node
 usecallback and usememo optimizations , code split uses.
 
 when err remove the imagebyid
-
+cancal reason 
 user change location remove cart 
 add to favorites button for user 
 validation for user ordering cart from other location
 may be user ordering for others
+cart warning delivery text  
+total update in backend
+change phone login to username login
 
 suggest other screens if user on empty screens
 Number should not be negative

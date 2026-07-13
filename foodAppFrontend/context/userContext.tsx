@@ -1,3 +1,4 @@
+import { ThemeColors, ThemeName, Themes } from "@/lib/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -10,6 +11,7 @@ export interface User {
   area_name: string | undefined;
   area_delivery_charge_in_rs: number | undefined;
   area_delivery_text: string | undefined;
+  theme: ThemeName;
 }
 
 interface UserContextType {
@@ -17,6 +19,7 @@ interface UserContextType {
   initialLoading: Boolean;
   setUser: (user: User) => void;
   logout: () => void;
+  colors: ThemeColors;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -24,6 +27,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: React.ReactNode; }) {
   const [user, setUser] = useState<User | null>(null);
   const [initialLoading, setInitialLoading] = useState(false);
+  const colors = Themes[user?.theme ?? "dark"];
 
   useEffect(() => {
     loadUser();
@@ -62,6 +66,7 @@ export function UserProvider({ children }: { children: React.ReactNode; }) {
         setUser: saveUser,
         initialLoading,
         logout,
+        colors,
       }}
     >
       {children}

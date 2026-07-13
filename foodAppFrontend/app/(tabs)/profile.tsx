@@ -9,10 +9,10 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  TextInput,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { styles } from "@/assets/styles/profileStyles";
-import EditPhoneField from "@/lib/components/EditPhoneField";
 import EditAddressField from "@/lib/components/EditDeliveryAddress";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "@/context/userContext";
@@ -21,6 +21,7 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function HomeScreen() {
   const { logout, user } = useUser();
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleLogout = async () => {
@@ -28,6 +29,10 @@ export default function HomeScreen() {
     await storage.removeItem("token");
     logout();
     router.replace("/login");
+  };
+
+  const openModal = () => {
+    setModalVisible(true);
   };
 
   return (
@@ -46,10 +51,43 @@ export default function HomeScreen() {
         </View>
 
         <Text style={styles.label}>Delivery Address</Text>
-        <EditAddressField />
+        <View>
+          <View style={styles.row}>
+            <TouchableOpacity style={[styles.input, { flex: 1 }]} onPress={openModal}>
+              <TextInput
+                value={user?.user_address || ''}
+                editable={false}
+                pointerEvents="none"
+                multiline
+                numberOfLines={4}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openModal} style={styles.editIconBtn}>
+              <MaterialIcons name="edit" size={30} color="#555" />
+            </TouchableOpacity>
+          </View>
 
-        <Text style={styles.label}>Alternative Phone</Text>
-        <EditPhoneField />
+          <Text style={styles.label}>Delivery Phone</Text>
+          <View style={styles.row}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              keyboardType="phone-pad"
+              maxLength={10}
+              value={user?.alt_phone}
+              editable={false}
+              pointerEvents="none"
+            />
+            <TouchableOpacity onPress={openModal} style={styles.editIconBtn}>
+              <MaterialIcons name="edit" size={30} color="#555" />
+            </TouchableOpacity>
+          </View>
+          {modalVisible &&
+            <EditAddressField
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+            />
+          }
+        </View>
 
         <TouchableOpacity
           style={styles.option}
@@ -65,8 +103,7 @@ export default function HomeScreen() {
           <Text style={styles.optionText}>Terms & Conditions</Text>
         </TouchableOpacity>
 
-
-        {/* Dropdown menu modal */}
+        {/* Logout modal */}
         {menuVisible &&
           <Modal
             visible={menuVisible}
@@ -103,7 +140,6 @@ const localStyles = StyleSheet.create({
     paddingVertical: 3,
     backgroundColor: "#FFF",
     marginBottom: 16,
-
   },
   menuBtn: {
     padding: 8,
@@ -114,7 +150,7 @@ const localStyles = StyleSheet.create({
   },
   dropdown: {
     position: "absolute",
-    top: 45, // relative to header (much safer now)
+    top: 45,
     right: 10,
     backgroundColor: "#fff",
     borderRadius: 8,

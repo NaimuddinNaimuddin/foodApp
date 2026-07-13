@@ -11,6 +11,7 @@ import { SelectSkeleton } from "@/lib/components/Skeletion";
 import { router } from "expo-router";
 import { handleApiError } from "@/lib/common/handleApiError";
 import { useUser } from "@/context/userContext";
+import EditAddressField from "@/lib/components/EditDeliveryAddress";
 
 const API_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -19,6 +20,7 @@ export default function CartScreen() {
     const [cart, setCart] = useState([] as any);
     const [isLoading, setIsLoading] = useState(false as boolean);
     const [isOrderPlacing, setIsOrderPlacing] = useState(false as boolean);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const loadCarts = async () => {
         try {
@@ -70,13 +72,10 @@ export default function CartScreen() {
         try {
             const areaId = user?.area_id;
             const deliveryAddress = user?.user_address;
+            const altPhone = user?.alt_phone;
             if (!areaId) return;
-            if (!deliveryAddress) {
-                Toast.show({
-                    type: 'info',
-                    text1: 'Please Add Delivery Address.'
-                });
-                router.navigate('/(tabs)/profile');
+            if (!deliveryAddress || !altPhone) {
+                setModalVisible(true);
                 return;
             }
             setIsOrderPlacing(true);
@@ -214,6 +213,8 @@ export default function CartScreen() {
                     </View>
                 </View>
             )}
+
+            {modalVisible && <EditAddressField modalVisible={modalVisible} setModalVisible={setModalVisible} />}
         </View>
     )
 }

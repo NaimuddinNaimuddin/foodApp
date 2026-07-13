@@ -6,6 +6,10 @@ export const styles = StyleSheet.create({
         position: "relative",
         backgroundColor: "#f5f5f5",
     },
+    row: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
     heading: {
         fontSize: 18,
         fontWeight: "600",
@@ -58,5 +62,10 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "700",
         fontSize: 16,
+    },
+    editIconBtn: {
+        padding: 8,
+        marginBottom: 14,
+        marginRight: 20,
     },
 });
