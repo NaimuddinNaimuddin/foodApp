@@ -20,7 +20,7 @@ import { useUser } from "@/context/userContext";
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function HomeScreen() {
-  const { logout } = useUser();
+  const { logout, user } = useUser();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleLogout = async () => {

@@ -187,14 +187,21 @@ export default function CartScreen() {
 
             {cart && cart.items && (
                 <View style={styles.checkoutBar}>
+                    {user?.area_delivery_charge_in_rs && (<View style={styles.totalRow}>
+                        <Text style={styles.totalLabel}>Delivery Charges</Text>
+                        <Text style={{ ...styles.totalAmount, color: "555555", fontWeight: 400 }}>
+                            ₹{(user?.area_delivery_charge_in_rs)}
+                        </Text>
+                    </View>)}
                     <View style={styles.totalRow}>
-                        <Text style={styles.totalLabel}>Total</Text>
+                        <Text style={styles.totalLabel}>Total </Text>
                         <Text style={styles.totalAmount}>
                             ₹{cart.items.reduce(
                                 (sum: number, item: any) => sum + (item.foodId ? item.foodId.price : 0) * item.quantity, 0
-                            )}
+                            ) + user?.area_delivery_charge_in_rs}
                         </Text>
                     </View>
+
 
                     <View style={styles.orderButton}>
                         <TouchableOpacity style={styles.button} disabled={isOrderPlacing} onPress={() => placeOrder()} >

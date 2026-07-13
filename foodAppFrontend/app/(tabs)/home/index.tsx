@@ -64,7 +64,6 @@ export default function FoodScreen() {
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
-  const selectedArea = areas?.find((a: any) => a._id === user?.area_id);
   const filteredCategories = data && data.categories && data.categories.length > 0 &&
     data.categories.filter((c: Category) => c.name.toLowerCase().includes(search.toLowerCase())) || [];
 
@@ -79,7 +78,13 @@ export default function FoodScreen() {
   }, []);
 
   const onPressArea = (item: any) => {
-    setUser({ ...user, area_id: item._id } as User);
+    setUser({
+      ...user,
+      area_id: item._id,
+      area_name: item.name,
+      area_delivery_charge_in_rs: item.delivery_charge_in_rs,
+      area_delivery_text: item.delivery_text
+    } as User);
     setShowAreaModal(false);
   };
 
@@ -95,7 +100,7 @@ export default function FoodScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
         <Text onPress={() => setShowAreaModal(true)} style={styles.welcomeText}>
-          {selectedArea
+          {user?.area_name
             ? (
               <View style={styles.titleRow}>
                 <Ionicons
@@ -104,7 +109,7 @@ export default function FoodScreen() {
                   color="#555"
                   style={{ marginRight: 6 }}
                 />
-                <Text style={styles.modalTitles}>{`Delivery To - ${selectedArea.name}`}</Text>
+                <Text style={styles.modalTitles}>{`Delivery To - ${user?.area_name}`}</Text>
               </View>
             )
             : (

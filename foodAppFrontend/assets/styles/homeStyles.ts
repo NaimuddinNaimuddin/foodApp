@@ -30,16 +30,16 @@ export const styles = StyleSheet.create({
         marginRight: 20,
     },
 
-      titleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-start",
-  },
+    titleRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-start",
+    },
 
-  modalTitles: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
+    modalTitles: {
+        fontSize: 18,
+        fontWeight: "600",
+    },
 
     areaItem: {
         paddingVertical: 15,
@@ -53,6 +53,7 @@ export const styles = StyleSheet.create({
 
     closeButton: {
         marginTop: 15,
+        marginBottom: 55,
         backgroundColor: "#FF5722",
         padding: 14,
         borderRadius: 10,

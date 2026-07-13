@@ -1,21 +1,7 @@
-import { storage } from "@/lib/storage";
 import { Ionicons } from "@expo/vector-icons";
-import { router, Tabs } from "expo-router";
-import { useEffect } from "react";
+import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = await storage.getItem("token");
-      if (!token) {
-        router.replace("/login");
-      } else {
-        router.replace("/(tabs)/home");
-      }
-    };
-    checkAuth();
-  }, []);
 
   return (
     <Tabs

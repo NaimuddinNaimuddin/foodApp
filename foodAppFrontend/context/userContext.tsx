@@ -7,6 +7,9 @@ export interface User {
   alt_phone: string | undefined;
   user_address: string | undefined;
   area_id: string | undefined;
+  area_name: string | undefined;
+  area_delivery_charge_in_rs: number | undefined;
+  area_delivery_text: string | undefined;
 }
 
 interface UserContextType {
@@ -68,12 +71,8 @@ export function UserProvider({ children }: { children: React.ReactNode; }) {
 
 export function useUser() {
   const context = useContext(UserContext);
-
   if (!context) {
-    throw new Error(
-      "useUser must be used inside UserProvider"
-    );
+    throw new Error("useUser must be used inside UserProvider");
   }
-
   return context;
 }
