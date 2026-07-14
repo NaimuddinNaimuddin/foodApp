@@ -3,6 +3,7 @@ const router = express.Router();
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Food = require("../models/Food");
+const Area = require("../models/Area");
 const { notifyNewOrder } = require("../common/sse");
 const rateLimiter = require("../common/rateLimiter");
 
@@ -13,8 +14,13 @@ router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
         return res.status(400).json({ message: "All fields are required" });
     }
 
+    const area = await Area.findById(areaId);
+
     try {
         let total = 0;
+        if (area.delivery_charge_in_rs) {
+            total = total + area.delivery_charge_in_rs
+        };
         const _items = await Promise.all(
             items.filter(async (item) => !!item.foodId).map(async (item) => {
                 const food = await Food.findById(item.foodId);

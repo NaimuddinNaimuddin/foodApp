@@ -40,7 +40,7 @@ export default function HomeScreen() {
       <View style={styles.container}>
         {/* Header row with title + three-dot menu */}
         <View style={localStyles.headerRow}>
-          <Text style={styles.heading}>My Profile</Text>
+          <Text style={styles.heading}>Welcome - {user?.phone}</Text>
 
           <TouchableOpacity
             onPress={() => setMenuVisible(true)}

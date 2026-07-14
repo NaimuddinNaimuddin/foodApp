@@ -56,11 +56,10 @@ const SignupScreen = () => {
 
             <TextInput
                 style={styles.input}
-                placeholder="Phone Number"
+                placeholder="User Name"
                 value={phone}
-                keyboardType="phone-pad"
                 onChangeText={setPhone}
-                maxLength={10}
+                maxLength={15}
             />
 
             <TextInput
@@ -69,7 +68,7 @@ const SignupScreen = () => {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
-                maxLength={10}
+                maxLength={15}
             />
 
             <TouchableOpacity disabled={loading} style={styles.button} onPress={handleSignup}>

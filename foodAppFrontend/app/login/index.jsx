@@ -61,11 +61,10 @@ const LoginScreen = () => {
 
             <TextInput
                 style={styles.input}
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
+                placeholder="User Name"
                 value={phone}
                 onChangeText={setPhone}
-                maxLength={10}
+                maxLength={15}
             />
 
             <TextInput
@@ -74,7 +73,7 @@ const LoginScreen = () => {
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
-                maxLength={10}
+                maxLength={15}
             />
 
             <TouchableOpacity disabled={loading} style={styles.button} onPress={handleLogin}>

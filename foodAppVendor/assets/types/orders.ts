@@ -6,9 +6,14 @@ export interface OrderItem {
   foodId: Food;
 }
 
+export interface UserId {
+  alt_phone: string;
+  user_address: string;
+}
+
 export interface Order {
   _id: string;
-  userId: string;
+  userId: string | UserId;
   items: OrderItem[];
   totalAmount: number;
   deliveryAddress: string;

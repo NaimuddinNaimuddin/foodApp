@@ -1,11 +1,19 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
 import { styles } from "@/assets/styles/orderStyles";
-import { Order } from "@/assets/types/orders";
+import { Order, UserId } from "@/assets/types/orders";
 import OrderTracker from "./OrderTracker";
 import { OrderStatus } from "../constant";
-
+import { getOrderShareText } from "../orderShare";
 
 export default function OrderCard({ order, changeOrderStatus, statusloading }: { order: Order, changeOrderStatus: any, statusloading: boolean }) {
+
+    const handlePreparing = async (order: Order) => {
+        await changeOrderStatus(order._id, OrderStatus.ON_THE_WAY);
+        const message = getOrderShareText(order);
+        // const url = `whatsapp://send?phone=${919548875191}&text=${encodeURIComponent(message)}`;
+        const url = `https://wa.me/${919548875191}?text=${encodeURIComponent(message)}`;
+        await Linking.openURL(url);
+    };
 
     return (
         <View style={styles.orderCard}>
@@ -22,6 +30,7 @@ export default function OrderCard({ order, changeOrderStatus, statusloading }: {
 
             </Text>
             <Text style={styles.address}>📍 {order.deliveryAddress} </Text>
+            <Text style={styles.address}>📞 {(order.userId as UserId)?.alt_phone} </Text>
             {(order.status === OrderStatus.CANCELLED)
                 ? <Text style={styles.badge}> {OrderStatus.CANCELLED} </Text>
                 : <OrderTracker status={order.status} />
@@ -60,7 +69,7 @@ export default function OrderCard({ order, changeOrderStatus, statusloading }: {
                 {(order.status === OrderStatus.PREPARING) && <TouchableOpacity
                     disabled={statusloading}
                     style={[styles.actionButton, { backgroundColor: "#FF9800" }]}
-                    onPress={() => changeOrderStatus(order._id, OrderStatus.ON_THE_WAY)}
+                    onPress={() => handlePreparing(order)}
                 >
                     <Text style={styles.buttonText}>{OrderStatus.ON_THE_WAY}</Text>
                 </TouchableOpacity>}
@@ -80,6 +89,9 @@ export default function OrderCard({ order, changeOrderStatus, statusloading }: {
                 >
                     <Text style={styles.buttonText}>{OrderStatus.CANCELLED}</Text>
                 </TouchableOpacity>}
+                {/* {<TouchableOpacity>
+                    <Text style={styles.buttonText}>{OrderStatus.CANCELLED}</Text>
+                </TouchableOpacity>} */}
             </View>
         </View>
     );

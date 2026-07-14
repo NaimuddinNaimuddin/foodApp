@@ -19,6 +19,10 @@ exports.ordersVendor = async (req, res) => {
             areaId: area_id,
         })
             .populate({
+                path: "userId",
+                select: "alt_phone user_address"
+            })
+            .populate({
                 path: "items.foodId",        // populate foodId first
                 populate: { path: "restaurant_id" } // nested populate inside food
             }).lean();

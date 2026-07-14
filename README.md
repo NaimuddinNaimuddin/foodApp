@@ -1,10 +1,10 @@
+add otp login user________username unique added
 place order cod show loading_______________________
 rate limiter________________________________________
 Orders section live update Admin____________________________
 ADD to cart loading___________________
 console remove____________
-add otp login user
-payment gateway
+payment gateway________V2
 riders app/ share order as pdf on whatsapp
 deploy - User app, backend Apis, admin panel frontend.
 pagination
