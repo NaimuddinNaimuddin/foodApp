@@ -184,6 +184,12 @@ export default function CartScreen() {
                 )}
             />
 
+            {!!user?.area_delivery_text &&
+                <Text style={{ color: '#111', display: "flex", justifyContent: 'center', padding: 15 }}>
+                    {user?.area_delivery_text}
+                </Text>
+            }
+
             {cart && cart.items && (
                 <View style={styles.checkoutBar}>
                     {user?.area_delivery_charge_in_rs && (<View style={styles.totalRow}>
@@ -200,7 +206,6 @@ export default function CartScreen() {
                             ) + user?.area_delivery_charge_in_rs}
                         </Text>
                     </View>
-
 
                     <View style={styles.orderButton}>
                         <TouchableOpacity style={styles.button} disabled={isOrderPlacing} onPress={() => placeOrder()} >
