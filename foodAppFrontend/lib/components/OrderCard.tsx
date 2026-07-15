@@ -19,7 +19,8 @@ export default function OrderCard({ order }: { order: Order }) {
                 })}
 
             </Text>
-            <Text style={styles.address}>📍 {order.deliveryAddress}</Text>
+            <Text style={styles.address}>📍 {order?.deliveryAddress}</Text>
+            <Text style={styles.address}>📞 {(order?.deliveryPhone)}</Text>
             {order.status === OrderStatus.CANCELLED ?
                 (<Text style={styles.badge}> {OrderStatus.CANCELLED} </Text>)
                 : (<OrderTracker status={order.status} />)}
@@ -43,7 +44,7 @@ export default function OrderCard({ order }: { order: Order }) {
 
             <View style={styles.divider} />
 
-            <Text style={styles.total}>Total: ₹{order.totalAmount}</Text>
+            <Text style={styles.total}>Total (Delivery Charges Added):  ₹{order.totalAmount}</Text>
         </View>
     );
 };

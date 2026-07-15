@@ -20,12 +20,18 @@ export interface OrderItem {
   foodId: Food;
 }
 
+export interface UserId {
+  user_address: string;
+  alt_phone: string;
+}
+
 export interface Order {
   _id: string;
-  userId: string;
+  userId: string | UserId;
   items: OrderItem[];
   totalAmount: number;
   deliveryAddress: string;
+  deliveryPhone: string;
   paymentMethod: "COD" | "Online";
   status: "Pending" | "Confirmed" | "Delivered" | "Cancelled";
   createdAt: string;

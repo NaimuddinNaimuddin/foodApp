@@ -8,9 +8,9 @@ const { notifyNewOrder } = require("../common/sse");
 const rateLimiter = require("../common/rateLimiter");
 
 router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
-    const { userId, items, areaId, deliveryAddress, paymentMethod = 'COD' } = req.body;
+    const { userId, items, areaId, deliveryAddress,deliveryPhone, paymentMethod = 'COD' } = req.body;
 
-    if (!areaId || !userId || !items || !items.length || !deliveryAddress) {
+    if (!areaId || !userId || !items || !items.length || !deliveryAddress || !deliveryPhone) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -42,22 +42,23 @@ router.post("/place", rateLimiter(1000 * 60, 20), async (req, res) => {
             items: _items,
             totalAmount: total,
             deliveryAddress,
+            deliveryPhone,
             paymentMethod,
         });
 
         await order.save();
         // Notify all admin dashboards
         notifyNewOrder(order);
-        await Cart.deleteOne({ userId });
-        res.status(201).json({ message: "Order placed successfully", order });
+        await Cart.deleteOne({ userId, areaId });
+        res.status(201).json({ message: "Order placed successfully" });
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
 
-router.get("/:userId", rateLimiter(1000 * 60, 30), async (req, res) => {
+router.get("/:userId/:areaId", rateLimiter(1000 * 60, 30), async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId, areaId } = req.params;
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
         const endOfToday = new Date();
@@ -65,10 +66,13 @@ router.get("/:userId", rateLimiter(1000 * 60, 30), async (req, res) => {
 
         const orders = await Order.find({
             userId,
-        }).populate({
-            path: "items.foodId",        // populate foodId first
-            populate: { path: "restaurant_id" } // nested populate inside food
-        }).lean();
+            areaId
+        })
+            .populate({
+                path: "items.foodId",        // populate foodId first
+                populate: { path: "restaurant_id" } // nested populate inside food
+            })
+            .lean();
 
         res.status(200).json(orders);
     } catch (err) {

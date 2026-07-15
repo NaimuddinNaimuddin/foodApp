@@ -40,11 +40,13 @@ export default function RestaurantScreen() {
   const addToCart = async (foodId: string) => {
     try {
       const userId = user?.id;
-      if (!userId) return;
+      const areaId = user?.area_id;
+      if (!userId || !areaId) return;
       setAddToCartLoading(true);
       setAddToCartItem(foodId);
       const res = await axios.post(`${API_BASE_URL}/cart/add`, {
         userId,
+        areaId,
         foodId
       });
       if (res.status == 200) {

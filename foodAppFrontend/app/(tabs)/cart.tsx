@@ -26,8 +26,9 @@ export default function CartScreen() {
         try {
             setIsLoading(true);
             const userId = user?.id;
-            if (!userId) return;
-            const { data } = await axios.get(`${API_URL}/cart/${userId}`);
+            const areaId = user?.area_id;
+            if (!userId || !areaId) return;
+            const { data } = await axios.get(`${API_URL}/cart/${userId}/${areaId}`);
             setCart(data);
         } catch (err: any) {
             handleApiError(err);
@@ -39,8 +40,9 @@ export default function CartScreen() {
     const decreaseQty = async (productId: string) => {
         try {
             const userId = user?.id;
-            if (!userId) return;
-            const { data } = await axios.put(`${API_URL}/cart/decrease/${userId}/${productId}`);
+            const areaId = user?.area_id;
+            if (!userId || !areaId) return;
+            const { data } = await axios.put(`${API_URL}/cart/decrease/${userId}/${areaId}/${productId}`);
             setCart(data);
         } catch (err) {
             handleApiError(err);
@@ -49,8 +51,9 @@ export default function CartScreen() {
     const increaseQty = async (productId: string) => {
         try {
             const userId = user?.id;
-            if (!userId) return;
-            const { data } = await axios.put(`${API_URL}/cart/increase/${userId}/${productId}`);
+            const areaId = user?.area_id;
+            if (!userId || !areaId) return;
+            const { data } = await axios.put(`${API_URL}/cart/increase/${userId}/${areaId}/${productId}`);
             setCart(data);
         } catch (err) {
             handleApiError(err);
@@ -60,8 +63,9 @@ export default function CartScreen() {
     const removeItem = async (productId: string) => {
         try {
             const userId = user?.id;
-            if (!userId) return;
-            const { data } = await axios.delete(`${API_URL}/cart/remove/${userId}/${productId}`);
+            const areaId = user?.area_id;
+            if (!userId || !areaId) return;
+            const { data } = await axios.delete(`${API_URL}/cart/remove/${userId}/${areaId}/${productId}`);
             setCart(data);
         } catch (err) {
             handleApiError(err);
@@ -72,15 +76,15 @@ export default function CartScreen() {
         try {
             const areaId = user?.area_id;
             const deliveryAddress = user?.user_address;
-            const altPhone = user?.alt_phone;
+            const deliveryPhone = user?.alt_phone;
             if (!areaId) return;
-            if (!deliveryAddress || !altPhone) {
+            if (!deliveryAddress || !deliveryPhone) {
                 setModalVisible(true);
                 return;
             }
             setIsOrderPlacing(true);
             const response = await axios.post(`${API_URL}/orders/place`, {
-                ...cart, deliveryAddress, areaId
+                ...cart, deliveryAddress, deliveryPhone, areaId
             });
 
             if (response && response.status == 201) {
@@ -102,7 +106,7 @@ export default function CartScreen() {
     useFocusEffect(
         React.useCallback(() => {
             loadCarts();
-        }, [])
+        }, [user?.area_id])
     );
 
     if (isLoading) {

@@ -19,6 +19,7 @@ work on products location - global
 deploy - User app, backend Apis, admin panel frontend.
 fields validations.
 refund/cancel policy  aggree checkbox
+delivery phone and address and other things must be static/fixed for Order not populated. both app
 
 when err remove the imagebyid VERIFY
 cancal reason 

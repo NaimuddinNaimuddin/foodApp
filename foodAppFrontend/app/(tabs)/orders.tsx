@@ -27,17 +27,18 @@ export default function OrdersScreen() {
       return () => {
         controller.abort();
       };
-    }, [])
+    }, [user?.area_id])
   );
 
   const fetchOrders = async (signal: any) => {
     try {
       setLoading(true);
-      const USER_ID = user?.id;
-      if (!USER_ID) return;
+      const userId = user?.id;
+      const areaId = user?.area_id;
+      if (!userId || !areaId) return;
 
       const res = await axios.get(
-        `${API_BASE_URL}/orders/${USER_ID}`, { signal }
+        `${API_BASE_URL}/orders/${userId}/${areaId}`, { signal }
       );
 
       setOrders(res.data);

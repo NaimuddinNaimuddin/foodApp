@@ -29,8 +29,8 @@ export default function OrderCard({ order, changeOrderStatus, statusloading }: {
                 })}
 
             </Text>
-            <Text style={styles.address}>📍 {order.deliveryAddress} </Text>
-            <Text style={styles.address}>📞 {(order.userId as UserId)?.alt_phone} </Text>
+            <Text style={styles.address}>📍 {order?.deliveryAddress} </Text>
+            <Text style={styles.address}>📞 {order?.deliveryPhone} </Text>
             {(order.status === OrderStatus.CANCELLED)
                 ? <Text style={styles.badge}> {OrderStatus.CANCELLED} </Text>
                 : <OrderTracker status={order.status} />
@@ -55,7 +55,7 @@ export default function OrderCard({ order, changeOrderStatus, statusloading }: {
 
             <View style={styles.divider} />
 
-            <Text style={styles.total}>Total: ₹{order.totalAmount}</Text>
+            <Text style={styles.total}>Total (Delivery Charges Added):  ₹{order.totalAmount}</Text>
 
             <View style={styles.buttonRow}>
                 {(order.status === OrderStatus.PLACED || order.status === OrderStatus.CANCELLED) && <TouchableOpacity
@@ -89,10 +89,7 @@ export default function OrderCard({ order, changeOrderStatus, statusloading }: {
                 >
                     <Text style={styles.buttonText}>{OrderStatus.CANCELLED}</Text>
                 </TouchableOpacity>}
-                {/* {<TouchableOpacity>
-                    <Text style={styles.buttonText}>{OrderStatus.CANCELLED}</Text>
-                </TouchableOpacity>} */}
-            </View>
+                         </View>
         </View>
     );
 };

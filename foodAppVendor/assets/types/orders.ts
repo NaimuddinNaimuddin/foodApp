@@ -17,6 +17,7 @@ export interface Order {
   items: OrderItem[];
   totalAmount: number;
   deliveryAddress: string;
+  deliveryPhone: string;
   paymentMethod: "COD" | "Online";
   status: OrderStatus;
   createdAt: string;
