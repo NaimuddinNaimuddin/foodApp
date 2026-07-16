@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/FoodScreen.css";
+import { toast } from "react-toastify";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Restaurants() {
@@ -27,7 +29,7 @@ export default function Restaurants() {
                     setAreas(res.data);
                 }
             })
-            .catch(() => alert("Areas fetch Error."))
+            .catch(() => toast.error("Areas fetch Error."))
             .finally(() => setAreaLoading(false));
     }, []);
 
@@ -42,6 +44,7 @@ export default function Restaurants() {
             }
             setLoading(false);
         } catch (err) {
+            toast.error('Restaurants Fetch Error.')
             setLoading(false);
         }
     };

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import '../styles/Orders.css';
 import OrdersTable from "../components/OrderTable";
+import { toast } from "react-toastify";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Orders() {
@@ -16,7 +18,7 @@ export default function Orders() {
                     setOrders(res.data);
                 }
             })
-            .catch(() => alert("Order fetch Error."))
+            .catch(() => toast.error("Order Fetch Error."))
             .finally(() => setLoading(false));
     }, []);
 

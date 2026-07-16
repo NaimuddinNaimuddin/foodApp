@@ -24,13 +24,13 @@ export default function AddFoodItem() {
   useEffect(() => {
     axios.get(`${API_BASE_URL}/admin/restaurants`)
       .then((res) => setRestaurants(res.data))
-      .catch((err) => alert('Restaurant Fetch Err.'));
+      .catch((err) => toast.error('Restaurant Fetch Err.'));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (Number(price) > Number(mrp)) return alert("Price should less than MRP.");
-    if (!selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) return alert("Required Fields Missing.");
+    if (Number(price) > Number(mrp)) return toast.error("Price should less than MRP.");
+    if (!selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) return toast.error("Required Fields Missing.");
     try {
       setLoading(true);
       const { secure_url, public_id } = await uploadImageToCloudinary(image);

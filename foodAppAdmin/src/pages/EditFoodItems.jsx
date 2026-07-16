@@ -59,9 +59,9 @@ export default function EditFoodItem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (Number(price) > Number(mrp)) return alert("Price should less than MRP.");
+        if (Number(price) > Number(mrp)) return toast.error("Price should less than MRP.");
         if (!id || !selectedRestaurant || !name || !price || !mrp || !quantityInfo || !category) {
-            return alert("Required Fields Missing.");
+            return toast.error("Required Fields Missing.");
         }
 
         try {

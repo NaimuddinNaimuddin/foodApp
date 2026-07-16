@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -27,14 +28,14 @@ export default function EditArea() {
                     setstatus(res.data.status);
                 }
             })
-            .catch((err) => alert(err.message || "Fect Area By Id Error."))
+            .catch((err) => toast.error(err.message || "Fect Area By Id Error."))
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!code) return alert("Please select Code");
-        if (!name) return alert("Please select Name");
+        if (!code) return toast.error("Please select Code");
+        if (!name) return toast.error("Please select Name");
         try {
             setLoading(true);
 
@@ -46,9 +47,9 @@ export default function EditArea() {
                 status
             });
 
-            alert("Area Edited!");
+            toast.success("Area Edited!");
         } catch (err) {
-            alert("Error Edit Area");
+            toast.error("Error Edit Area");
         } finally {
             setLoading(false);
         }

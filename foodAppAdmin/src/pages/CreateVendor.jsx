@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -33,9 +34,9 @@ export default function CreateVendor() {
         e.preventDefault();
         try {
             await axios.post(`${API_BASE_URL}/vendor`, formData);
-            alert("Vendor Created");
+            toast.success("Vendor Created");
         } catch (err) {
-            alert(err?.response?.data?.message || 'Create Vendor Error.')
+            toast.error(err?.response?.data?.message || 'Create Vendor Error.')
         }
     };
 

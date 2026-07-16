@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import '../styles/Orders.css';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Areas() {
@@ -17,7 +19,7 @@ export default function Areas() {
                     setAreas(res.data);
                 }
             })
-            .catch(() => alert("Areas Fetch Error or No Area Found"))
+            .catch(() => toast.error("Areas Fetch Error or No Area Found"))
             .finally(() => setLoading(false));
     }, []);
 

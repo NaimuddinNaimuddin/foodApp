@@ -56,7 +56,7 @@ export default function OrdersScreen() {
             if (err.code === "ERR_CANCELED") {
                 return;
             }
-            Alert.alert(err?.response?.data?.message || 'Server Err.');
+            Toast.show({ type: "error", text1: err?.response?.data?.message || 'Server Err.' });
         } finally {
             if (!signal.aborted) {
                 setLoading(false);

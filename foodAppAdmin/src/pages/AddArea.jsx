@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,8 +16,8 @@ export default function CreateArea() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!code) return alert("Please select Code");
-        if (!name) return alert("Please select Name");
+        if (!code) return toast.error("Please select Code");
+        if (!name) return toast.error("Please select Name");
         try {
             setLoading(true);
 
@@ -28,11 +29,11 @@ export default function CreateArea() {
                 status
             });
 
-            alert("Area created!");
+            toast.success("Area created!");
             setName("");
             setCode("");
         } catch (err) {
-            alert("Error creating Area");
+            toast.error("Error creating Area");
         } finally {
             setLoading(false);
         }
