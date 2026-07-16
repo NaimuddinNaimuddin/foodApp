@@ -1,0 +1,40 @@
+add otp login user____________________________username unique added
+plus and minus item in cart show loading_______________________
+rate limiter________________________________________
+Orders section live update Admin/Vendor____________________________
+payment gateway________V2
+add to favorites button for user_________V2 
+riders app/ share order as pdf on whatsapp__________________
+pagination____________________________________
+out of stock________________________________ 
+delivery charges & other charges, conditions apply privacy policy___________
+Make icons better transparent background__________________________
+Automated tests & add ts support for node_________________________
+change phone login to username login____________________
+usecallback and usememo optimizations , code split uses, lazy loading______
+
+delete orders 
+api err handling 
+work on products location - global__________________ AreaId - all resataurant ids - allfoods
+deploy - User app, backend Apis, admin panel frontend.
+fields validations.
+refund/cancel policy  aggree checkbox
+delivery phone and address and other things must be static/fixed for Order not populated. both app
+Cost: Free
+Requires: Google Play Console account ($25)
+Share a direct install link without going through full Play Store review — great for quick internal testing:
+Play Console → Setup → Internal app sharing → Upload APK → Copy link
+
+when err remove the imagebyid VERIFY
+cancal reason 
+user change location remove cart - ADD areadID to cart save users selected area in order_____________
+validation for user ordering cart from other location save area name in order for vendor view______
+may be user ordering for others________________
+suggest other screens if user on empty screens and goto cart when item selected
+Number should not be negative
+Delivery Services - express and normal
+ensure user order product from his area only
+allow orders status changes  Accept reject_______________
+Live update user order status
+multiple address option
+remove unnecessary code and files images , decrese build size    

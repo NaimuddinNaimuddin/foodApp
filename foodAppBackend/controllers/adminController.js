@@ -30,16 +30,16 @@ const getAreaById = async (req, res) => {
 }
 
 const addArea = async (req, res) => {
-    const { code, name, delivery_charge_in_rs, delivery_text, status = true } = req.body;
+    const { code, name, delivery_charge_in_rs, delivery_text = '', status = true } = req.body;
 
-    if (!code || !name) {
+    if (!code || !name || !delivery_charge_in_rs) {
         return res.status(400).json({ message: "All Fields Are Required" });
     }
 
     try {
-        const existingCode = await Area.findOne({ code });
-        if (existingCode) {
-            return res.status(400).json({ message: "Code Already Exists." });
+        const existing = await Area.findOne({ name });
+        if (existing) {
+            return res.status(400).json({ message: "Name Already Exists." });
         }
 
         const newArea = new Area({
@@ -77,10 +77,10 @@ const editArea = async (req, res) => {
             return res.status(404).json({ message: "Area not found" });
         }
 
-        // check if the new code is already taken by a DIFFERENT area
-        const duplicateCode = await Area.findOne({ code, _id: { $ne: id } });
-        if (duplicateCode) {
-            return res.status(400).json({ message: "Code already exists." });
+        // check if the new Name is already taken by a DIFFERENT area
+        const duplicate = await Area.findOne({ name, _id: { $ne: id } });
+        if (duplicate) {
+            return res.status(400).json({ message: "Area Name already exists." });
         }
 
         await Area.findByIdAndUpdate(
@@ -99,7 +99,7 @@ const editArea = async (req, res) => {
 
         res.status(200).json({ message: "Area Updated Successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({ message: "Server Error", error });
     }
 };
 
@@ -108,14 +108,14 @@ const getFoodItemsList = async (req, res) => {
         const foods = await Food.find().lean();
         res.status(200).json(foods);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "Server Error", err });
     }
 };
 
 const addFoodItems = async (req, res) => {
     try {
         const { restaurant_id, name, price, mrp, quantity_info, category } = req.body;
-        if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ error: "Bad Request." });
+        if (!restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ message: "Bad Request." });
 
         await Food.create(req.body);
 
@@ -156,7 +156,7 @@ const editFoodItems = async (req, res) => {
         res.status(200).json({ message: 'Edit Success.' });
 
     } catch (err) {
-        res.status(500).json({ error: "Server error", err });
+        res.status(500).json({ message: "Server error", err });
     }
 };
 
@@ -188,7 +188,7 @@ const addRestaurants = async (req, res) => {
         });
 
         await restaurant.save();
-        res.status(201).json(restaurant);
+        res.status(201).json({ message: 'Create Success' });
     } catch (err) {
         // Delete uploaded image if DB save fails
         if (image_id) {
@@ -205,7 +205,7 @@ const addRestaurants = async (req, res) => {
 const addProductToCategory = async (req, res) => {
     try {
         const { name, price, image_url, restaurantId, category, area_code } = req.body;
-        if (!restaurantId) return res.status(400).json({ error: "Restaurant ID required" });
+        if (!restaurantId) return res.status(400).json({ message: "Restaurant ID required" });
 
         const foodItem = await Food.create({
             name,
@@ -216,9 +216,9 @@ const addProductToCategory = async (req, res) => {
             restaurant: restaurantId,
         });
 
-        res.status(201).json(foodItem);
+        res.status(201).json({ message: 'Create Success' });
     } catch (err) {
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -237,12 +237,12 @@ const editCategoryById = async (req, res) => {
 
     try {
         if (!id || !name) {
-            return res.status(400).json({ error: "Required fields missing" });
+            return res.status(400).json({ message: "Required fields missing" });
         }
 
         const restaurant = await Restaurant.findById(id);
         if (!restaurant) {
-            return res.status(404).json({ error: "Restaurant not found" });
+            return res.status(404).json({ message: "Restaurant not found" });
         }
 
         const oldImageId = restaurant.image_id;
@@ -288,7 +288,7 @@ const editCategoryById = async (req, res) => {
                 console.error("Failed to delete image:", deleteErr);
             }
         }
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -297,7 +297,7 @@ const getRestaurantById = async (req, res) => {
         const items = await Restaurant.findById(req.params.id);
         res.status(200).json(items);
     } catch (err) {
-        res.status(500).json({ error: 'Server Err', err })
+        res.status(500).json({ message: 'Server Err', err })
     }
 };
 
@@ -307,7 +307,7 @@ const getFoodItemsById = async (req, res) => {
         const item = await Food.findById(req.params.id);
         res.status(200).json(item);
     } catch (err) {
-        res.status(500).json({ error: 'Server Err', err })
+        res.status(500).json({ message: 'Server Err', err })
     }
 };
 

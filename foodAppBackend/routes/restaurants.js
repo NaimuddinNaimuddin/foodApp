@@ -7,8 +7,12 @@ const mongoose = require("mongoose");
 
 // Get all restaurants
 router.get("/", rateLimiter(1000 * 60, 30), async (req, res) => {
-    const restaurants = await Restaurant.find({ status: 'ACTIVE' }).lean();
-    res.status(200).json(restaurants);
+    try {
+        const restaurants = await Restaurant.find({ status: true }).lean();
+        res.status(200).json(restaurants);
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server error", error });
+    }
 });
 
 router.get("/by-area-code/grouped/:area_id", rateLimiter(1000 * 60, 30), async (req, res) => {

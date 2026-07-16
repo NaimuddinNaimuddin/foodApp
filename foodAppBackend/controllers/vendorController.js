@@ -8,7 +8,7 @@ const Order = require("../models/Order");
 exports.ordersVendor = async (req, res) => {
     try {
         const { area_id } = req.params;
-        if (!area_id) return res.send(400).json({ message: 'Area Id Missing.' });
+        if (!area_id) return res.status(400).json({ message: 'Area Id Missing.' });
 
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
@@ -31,21 +31,17 @@ exports.ordersVendor = async (req, res) => {
 
 exports.loginVendor = async (req, res) => {
     try {
-
         const { phone, password } = req.body;
 
         const vendor = await Vendor.findOne({ phone });
-
         if (!vendor) {
             return res.status(400).json({ message: "Invalid credentials." });
         }
-
         if (!vendor.status) {
             return res.status(403).json({ message: "Vendor account is disabled." });
         }
 
         const matched = await bcrypt.compare(password, vendor.password);
-
         if (!matched) {
             return res.status(400).json({ message: "Password Invalid." });
         }
@@ -78,23 +74,19 @@ exports.loginVendor = async (req, res) => {
 exports.createVendor = async (req, res) => {
     try {
         const { name, phone, password, area_id, status } = req.body;
-
         if (!name || !phone || !password || !area_id) {
             return res.status(400).json({ message: "All required fields are mandatory." });
         }
-
         if (!mongoose.Types.ObjectId.isValid(area_id)) {
             return res.status(400).json({ message: "Invalid area id." });
         }
 
         const exists = await Vendor.findOne({ phone });
-
         if (exists) {
             return res.status(400).json({ message: "Phone already exists." });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const vendor = await Vendor.create({
             name,
             phone,
@@ -105,9 +97,7 @@ exports.createVendor = async (req, res) => {
 
         res.status(201).json({
             message: "Vendor created successfully.",
-            vendor,
         });
-
     } catch (err) {
         res.status(500).json({ message: "Server Error.", err });
     }
@@ -130,7 +120,6 @@ exports.getVendors = async (req, res) => {
 // Get Vendor By Id
 exports.getVendor = async (req, res) => {
     try {
-
         const vendor = await Vendor.findById(req.params.id)
             .populate("area_id", "name code");
 
@@ -152,7 +141,6 @@ exports.updateVendor = async (req, res) => {
         const { name, phone, password, area_id, status } = req.body;
 
         const vendor = await Vendor.findById(req.params.id);
-
         if (!vendor) {
             return res.status(404).json({ message: "Vendor not found." });
         }
@@ -163,7 +151,6 @@ exports.updateVendor = async (req, res) => {
             if (exists) {
                 return res.status(400).json({ message: "Phone already exists." });
             }
-
             vendor.phone = phone;
         }
 
@@ -179,7 +166,6 @@ exports.updateVendor = async (req, res) => {
 
         res.json({
             message: "Vendor updated successfully.",
-            vendor,
         });
 
     } catch (err) {
@@ -190,9 +176,7 @@ exports.updateVendor = async (req, res) => {
 // Delete Vendor
 exports.deleteVendor = async (req, res) => {
     try {
-
         const vendor = await Vendor.findById(req.params.id);
-
         if (!vendor) {
             return res.status(404).json({ message: "Vendor not found." });
         }

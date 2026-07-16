@@ -17,6 +17,7 @@ const schema = new mongoose.Schema({
     },
     delivery_text: {
         type: String,
+        default: '',
     },
     status: {
         type: Boolean,
