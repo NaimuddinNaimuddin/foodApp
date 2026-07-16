@@ -2,11 +2,10 @@ import { QueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 
 const handleError = (error: { message: any; }) => {
-  console.log("API Error:", error);
 
   Toast.show({
     type: "error",
-    text1: "Something went wrong",
+    text1: "Something Went Wrong.",
     text2: error?.message || "Please try again",
   });
 };

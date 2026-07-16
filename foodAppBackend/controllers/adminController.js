@@ -270,22 +270,19 @@ const editCategoryById = async (req, res) => {
         // DELETE OLD IMAGE ONLY AFTER SUCCESS
         if (imageChanged && oldImageId) {
             try {
-                const deleteResult = await cloudinary.uploader.destroy(oldImageId);
-                console.log("old image deleted after save:", deleteResult);
+                await cloudinary.uploader.destroy(oldImageId);
             } catch (err) {
-                console.log("Cloudinary delete failed:", err.message);
+                console.log("Cloudinary Old Image Delete Failed:", err.message);
             }
         }
-        res.status(200).json({ message: "Restaurant updated successfully" });
+        res.status(200).json({ message: "Restaurant Updated." });
     } catch (err) {
         // Delete uploaded image if DB save fails
         if (image_id) {
             try {
-                const deleteResult = await cloudinary.uploader.destroy(image_id);
-                console.log("new image delete if edit saved err", deleteResult);
-
+                await cloudinary.uploader.destroy(image_id);
             } catch (deleteErr) {
-                console.error("Failed to delete image:", deleteErr);
+                console.log("Failed To Delete Image If DB Save Fail", deleteErr);
             }
         }
         res.status(500).json({ message: "Server error" });

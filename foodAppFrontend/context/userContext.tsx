@@ -42,7 +42,7 @@ export function UserProvider({ children }: { children: React.ReactNode; }) {
         setUser(JSON.parse(data));
       }
     } catch (error) {
-      console.log("Failed to load user", error);
+      console.log("Failed To Load User From Context.", error);
     } finally {
       setInitialLoading(false);
     }

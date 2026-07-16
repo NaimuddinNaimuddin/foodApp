@@ -59,13 +59,13 @@ async function startServer() {
       socketTimeoutMS: 45000,
     });
 
-    console.log("✅ MongoDB connected");
+    console.log("✅ MongoDB Connected.");
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🚀 Server Running on Port: ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ MongoDB connection failed:", error.message);
+    console.error("❌ MongoDB Connection/Server Start Failed:", error.message);
     process.exit(1);
   }
 }
