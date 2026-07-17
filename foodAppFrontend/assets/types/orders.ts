@@ -36,6 +36,7 @@ export interface Order {
   status: "Pending" | "Confirmed" | "Delivered" | "Cancelled";
   createdAt: string;
   updatedAt: string;
+  status_reason: string;
 }
 
 export interface Food {

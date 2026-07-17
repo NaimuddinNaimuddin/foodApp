@@ -24,7 +24,7 @@ export default function OrderCard({ order }: { order: Order }) {
             {order.status === OrderStatus.CANCELLED ?
                 (<Text style={styles.badge}> {OrderStatus.CANCELLED} </Text>)
                 : (<OrderTracker status={order.status} />)}
-
+            <Text style={styles.address}> {(order?.status_reason)}</Text>
             <View style={styles.divider} />
 
             {order.items.map((item: any) => (

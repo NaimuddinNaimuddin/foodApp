@@ -18,10 +18,11 @@ export interface Order {
   totalAmount: number;
   deliveryAddress: string;
   deliveryPhone: string;
-  paymentMethod: "COD" | "Online";
+  paymentMethod: string;
   status: OrderStatus;
   createdAt: string;
   updatedAt: string;
+  status_reason: string;
 }
 
 export interface Food {

@@ -30,7 +30,7 @@ export default function OrdersScreen() {
         return () => {
             controller.abort();
         };
-    }, [pathname]);
+    }, [pathname, user?.area_id]);
 
     useOrderSSE({
         onNewOrder: useCallback((order) => {
@@ -46,10 +46,8 @@ export default function OrdersScreen() {
             setLoading(true);
             const areaId = user?.area_id;
             if (!areaId) return;
-            const res = await axios.get(
-                `${API_BASE_URL}/vendor/orders/${areaId}`, { signal }
-            );
 
+            const res = await axios.get(`${API_BASE_URL}/vendor/orders/${areaId}`, { signal });
             setOrders(res.data);
         } catch (err: any) {
             if (err.code === "ERR_CANCELED") {
@@ -63,12 +61,12 @@ export default function OrdersScreen() {
         }
     };
 
-    const changeOrderStatus = async (orderId: string, status: string) => {
+    const changeOrderStatus = async (orderId: string, status: string, status_reason: string = '') => {
         try {
             setstatusloading(true);
             const response = await axios.patch(
                 `${API_BASE_URL}/vendor/order-status`,
-                { orderId, status }
+                { orderId, status, status_reason }
             );
 
             if (response.status == 200 && response.data.message) {

@@ -16,10 +16,8 @@ const orderSchema = new mongoose.Schema({
     deliveryAddress: { type: String, required: true },
     deliveryPhone: { type: String, required: true },
     paymentMethod: { type: String, enum: ["COD", "Online"], default: "COD" },
-    status: {
-        type: String,
-        default: "Placed",
-    },
+    status_reason: { type: String, default: '' },
+    status: { type: String, default: "Placed" },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Order", orderSchema);

@@ -6,6 +6,13 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginTop: 10,
     },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        padding: 12,
+        marginTop: 15,
+    },
     actionButton: {
         flex: 1,
         paddingVertical: 10,

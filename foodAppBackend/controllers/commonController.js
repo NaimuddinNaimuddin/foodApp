@@ -6,7 +6,7 @@ const Order = require("../models/Order");
 
 const updateOrderStatus = async (req, res) => {
     try {
-        const { orderId, status } = req.body;
+        const { orderId, status, status_reason = '' } = req.body;
 
         if (!orderId || !status) {
             return res.status(400).json({
@@ -25,14 +25,17 @@ const updateOrderStatus = async (req, res) => {
         }
 
         order.status = status;
+        if (status_reason) {
+            order.status_reason = status_reason;
+        }
         await order.save();
 
         return res.status(200).json({
-            message: "Order status updated successfully.",
+            message: "Order Status Updated.",
         });
     } catch (error) {
         return res.status(500).json({
-            message: "Internal server error.", error
+            message: "Internal Server Error.", error
         });
     }
 };
