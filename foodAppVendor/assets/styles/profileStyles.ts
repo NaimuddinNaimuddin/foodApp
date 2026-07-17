@@ -47,6 +47,10 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "500",
     },
+    detailText: {
+        fontSize: 16,
+        padding: 8,
+    },
     logoutBtn: {
         backgroundColor: "#E53935",
         margin: 20,

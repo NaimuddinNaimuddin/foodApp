@@ -10,7 +10,7 @@ const {
     loginVendor,
     ordersVendor,
 } = require("../controllers/vendorController");
-const { updateOrderStatus } = require("../controllers/commonController");
+const { updateOrderStatus, updateFoodStockStatus } = require("../controllers/commonController");
 
 router.get("/:id", getVendor);
 router.get("/", getVendors);
@@ -21,5 +21,6 @@ router.delete("/:id", deleteVendor);
 router.post("/login", loginVendor);
 router.get("/orders/:area_id", ordersVendor);
 router.patch("/order-status", updateOrderStatus);
+router.patch("/food/instock", updateFoodStockStatus);
 
 module.exports = router;

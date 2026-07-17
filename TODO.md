@@ -13,6 +13,9 @@ usecallback and usememo optimizations , code split uses, lazy loading______
 api err handling_________ 
 user change location - save users selected area name in order cart_____________
 
+remove alerts/console______________
+allow orders status changes  Accept reject_______________
+may be user ordering for others________________home/office address support
 deploy - User app, backend Apis, admin panel frontend.
 fields validations.
 refund/cancel policy  aggree checkbox
@@ -21,13 +24,7 @@ Cost: Free  Requires: Google Play Console account ($25)
 Share a direct install link without going through full Play Store review — great for quick internal testing:
 Play Console → Setup → Internal app sharing → Upload APK → Copy link
 
-allow orders status changes  Accept reject_______________
-may be user ordering for others________________home/office address support
-cancal reason 
-remove alerts/console
-
-Delivery Services - express and normal
+cancal reason
 ensure user order product from his area only
 Live update user order status
-multiple address option
 remove unnecessary code and files images , decrese build size    

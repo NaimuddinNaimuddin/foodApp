@@ -1,5 +1,5 @@
 import { storage } from "@/lib/storage";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     Linking,
     View,
@@ -13,32 +13,20 @@ import { Ionicons } from "@expo/vector-icons";
 import { styles } from "@/assets/styles/profileStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { useUser } from "@/context/userContext";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default function HomeScreen() {
+    const { user, logout } = useUser();
     const [menuVisible, setMenuVisible] = useState(false);
-    const [phone, setPhone] = useState<string | null>('');
 
     const handleLogout = async () => {
         setMenuVisible(false);
         await storage.removeItem("token");
-        await storage.removeItem("vendor_id");
-        await storage.removeItem("area_id");
-        await storage.removeItem("phone");
-
+        logout();
         router.replace("/");
     };
-
-    useEffect(() => {
-        const getUserDetails = async () => {
-            const phone = await storage.getItem("phone");
-            if (!!phone) {
-                setPhone(phone)
-            };
-        };
-        getUserDetails();
-    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -54,7 +42,14 @@ export default function HomeScreen() {
                         <Ionicons name="ellipsis-vertical" size={22} color="#333" />
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.heading}> Phone: {phone}</Text>
+                <View style={{ padding: 15 }}>
+                    <Text style={styles.detailText}> VendorId: {user?.id}</Text>
+                    <Text style={styles.detailText}> Phone: {user?.phone}</Text>
+                    <Text style={styles.detailText}> Vendor Name: {user?.name}</Text>
+                    <Text style={styles.detailText}> Area Name: {user?.area_name}</Text>
+                    <Text style={styles.detailText}> Delivery Charges: {user?.area_delivery_charge_in_rs}</Text>
+                    <Text style={styles.detailText}> Delivery Note: {user?.area_delivery_text}</Text>
+                </View>
                 <TouchableOpacity
                     style={styles.option}
                     onPress={() => Linking.openURL(`${API_BASE_URL}/privacy-policy`)}

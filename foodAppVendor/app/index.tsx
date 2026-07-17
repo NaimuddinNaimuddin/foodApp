@@ -11,10 +11,12 @@ import { router } from "expo-router";
 import { storage } from "@/lib/storage";
 import Toast from "react-native-toast-message";
 import { styles } from "@/assets/styles/loginStyles";
+import { useUser } from "@/context/userContext";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 const LoginScreen = () => {
+    const { setUser } = useUser();
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -38,10 +40,7 @@ const LoginScreen = () => {
 
             if (response.status === 200 && response.data) {
                 await storage.setItem('token', response.data?.token);
-                await storage.setItem('vendor_id', response.data?.vendor?.id);
-                await storage.setItem('phone', response.data?.vendor?.phone);
-                await storage.setItem('area_id', response.data?.vendor?.area_id);
-
+                setUser(response.data?.vendor);
                 router.replace('/(tabs)/orders');
             }
 

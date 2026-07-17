@@ -87,9 +87,33 @@ const getAllRestaurants = async (req, res) => {
     }
 }
 
+const updateFoodStockStatus = async (req, res) => {
+    try {
+        const { foodId, inStockStatus } = req.body;
+        if (!foodId) {
+            return res.status(400).json({ message: "Bad Request." });
+        }
+        const foodItem = await Food.findById(foodId);
+        if (!foodItem) {
+            return res.status(404).json({ message: "Food Not Found." });
+        }
+
+        foodItem.in_stock = inStockStatus;
+        await foodItem.save();
+
+        return res.status(200).json({
+            message: "Food Item status updated.",
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 module.exports = {
     getArea,
     getAllRestaurants,
     getFoodItemsGroupedByCategory,
-    updateOrderStatus
+    updateOrderStatus,
+    updateFoodStockStatus
 };

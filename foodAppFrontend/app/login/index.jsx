@@ -19,7 +19,7 @@ const LoginScreen = () => {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const { user, setUser } = useUser();
+    const { setUser } = useUser();
 
     const handleLogin = async () => {
         if (!phone) {

@@ -25,6 +25,7 @@ add otp login user____________________________username unique added
 when err remove the imagebyid VERIFY
 home/office adrress support
 suggest other screens if user on empty screens and goto cart when item selected
+Delivery Services - express and normal
 
 ADMIN
 delete orders ADMIN

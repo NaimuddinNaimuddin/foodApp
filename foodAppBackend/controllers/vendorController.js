@@ -33,7 +33,7 @@ exports.loginVendor = async (req, res) => {
     try {
         const { phone, password } = req.body;
 
-        const vendor = await Vendor.findOne({ phone });
+        const vendor = await Vendor.findOne({ phone }).populate("area_id");
         if (!vendor) {
             return res.status(400).json({ message: "Invalid credentials." });
         }
@@ -61,7 +61,10 @@ exports.loginVendor = async (req, res) => {
                 id: vendor._id,
                 name: vendor.name,
                 phone: vendor.phone,
-                area_id: vendor.area_id,
+                area_id: vendor.area_id?._id,
+                area_name: vendor.area_id?.name,
+                area_delivery_charge_in_rs: vendor.area_id?.delivery_charge_in_rs,
+                area_delivery_text: vendor.area_id?.delivery_text,
             },
         });
 
