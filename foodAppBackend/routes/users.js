@@ -20,14 +20,12 @@ router.post("/signup", rateLimiter(1000 * 60, 10), async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const newUser = new User({
             phone,
             password: hashedPassword,
         });
 
         await newUser.save();
-
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server Error", error: error });
@@ -48,11 +46,9 @@ router.post("/forget", rateLimiter(1000 * 60, 10), async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
         existingUser.password = hashedPassword;
 
         await existingUser.save();
-
         res.status(201).json({ message: "Password Updated." });
     } catch (error) {
         res.status(500).json({ message: "Server Error", error: error });
