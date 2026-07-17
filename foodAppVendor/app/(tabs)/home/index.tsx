@@ -80,8 +80,8 @@ export default function FoodScreen() {
                             onProgressChange={progress}
                             autoPlay
                             snapEnabled
-                            autoPlayInterval={3000}
-                            scrollAnimationDuration={800}
+                            autoPlayInterval={4000}
+                            scrollAnimationDuration={1000}
                             renderItem={({ item }: { item: any }) => (
                                 <Pressable
                                     onPress={() =>
