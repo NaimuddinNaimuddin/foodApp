@@ -55,7 +55,7 @@ exports.loginVendor = async (req, res) => {
             { expiresIn: "30d" }
         );
 
-        res.json({
+        res.status(200).json({
             token,
             vendor: {
                 id: vendor._id,
@@ -130,7 +130,7 @@ exports.getVendor = async (req, res) => {
             return res.status(404).json({ message: "Vendor not found." });
         }
 
-        res.json(vendor);
+        res.status(200).json(vendor);
 
     } catch (err) {
         res.status(500).json({ message: "Server Error." });
@@ -167,7 +167,7 @@ exports.updateVendor = async (req, res) => {
 
         await vendor.save();
 
-        res.json({
+        res.status(200).json({
             message: "Vendor updated successfully.",
         });
 
@@ -186,7 +186,7 @@ exports.deleteVendor = async (req, res) => {
 
         await vendor.deleteOne();
 
-        res.json({
+        res.status(200).json({
             message: "Vendor deleted successfully."
         });
 

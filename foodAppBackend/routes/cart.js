@@ -20,7 +20,7 @@ router.post("/add", rateLimiter(1000 * 60, 30), async (req, res) => {
     }
 
     await cart.save();
-    res.json({ message: "Added to cart", cart });
+    res.status(200).json({ message: "Added to cart", cart });
 });
 
 // remove from cart
@@ -28,15 +28,15 @@ router.delete("/remove/:userId/:areaId/:productId", rateLimiter(1000 * 60, 30), 
     const { userId, areaId, productId } = req.params;
     try {
         const cart = await Cart.findOne({ userId, areaId })
-        if (!cart) return res.status(404).send("Cart Not Found");
+        if (!cart) return res.status(404).json({ message: "Cart Not Found" });
         cart.items = cart.items.filter(i => i.foodId.toString() !== productId);
 
         await cart.save();
         const cartReturn = await Cart.findOne({ userId, areaId }).populate("items.foodId");
 
-        res.json(cartReturn);
+        res.status(200).json(cartReturn);
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(500).json({ message: err.message });
     }
 });
 
@@ -46,10 +46,10 @@ router.put("/decrease/:userId/:areaId/:productId", rateLimiter(1000 * 60, 30), a
 
     try {
         const cart = await Cart.findOne({ userId, areaId });
-        if (!cart) return res.status(404).send("Cart not found");
+        if (!cart) return res.status(404).json({ message: "Cart not found" });
 
         const item = cart.items.find(i => i.foodId.toString() === productId);
-        if (!item) return res.status(404).send("Item not found");
+        if (!item) return res.status(404).json({ message: "Item not found" });
 
         if (item.quantity > 1) {
             item.quantity -= 1;
@@ -61,15 +61,14 @@ router.put("/decrease/:userId/:areaId/:productId", rateLimiter(1000 * 60, 30), a
         await cart.save();
 
         const cartReturn = await Cart.findOne({ userId, areaId }).populate("items.foodId");
-        res.json(cartReturn);
+        res.status(200).json(cartReturn);
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(500).json({ message: err.message });
     }
 });
 
 router.put("/increase/:userId/:areaId/:productId", rateLimiter(1000 * 60, 30), async (req, res) => {
     const { userId, areaId, productId } = req.params;
-
     try {
         await Cart.updateOne(
             { userId, areaId, "items.foodId": productId },
@@ -77,10 +76,9 @@ router.put("/increase/:userId/:areaId/:productId", rateLimiter(1000 * 60, 30), a
         );
 
         const cart = await Cart.findOne({ userId, areaId }).populate("items.foodId");
-        res.json(cart);
-
+        res.status(200).json(cart);
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(500).json({ message: err.message });
     }
 });
 

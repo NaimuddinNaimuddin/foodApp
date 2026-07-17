@@ -129,10 +129,10 @@ const editFoodItems = async (req, res) => {
     try {
         const { id } = req.params;
         const { restaurant_id, name, price, mrp, quantity_info, category, stock_order, sort_order, status, in_stock, image_id, image_url } = req.body;
-        if (!id || !restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ error: "Bad Request." });
+        if (!id || !restaurant_id || !name || !price || !mrp || !quantity_info || !category) return res.status(400).json({ message: "Bad Request." });
 
         const food = await Food.findById(id);
-        if (!food) return res.status(404).json({ error: "Food item not found" });
+        if (!food) return res.status(404).json({ message: "Food item not found" });
 
         // Delete old image if replaced
         if (image_id && food.image_id && image_id !== food.image_id) {

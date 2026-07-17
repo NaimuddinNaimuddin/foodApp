@@ -26,10 +26,10 @@ export default function LocationPicker({ onLocationSelect }) {
   const searchLocation = async () => {
     if (!query) return;
 
-    const res = await fetch(
+    const resp = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
     );
-    const data = await res.json();
+    const data = await resp.json();
 
     if (data.length > 0) {
       const lat = parseFloat(data[0].lat);

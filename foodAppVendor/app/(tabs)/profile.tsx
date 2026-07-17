@@ -64,7 +64,6 @@ export default function HomeScreen() {
                     <Text style={styles.optionText}>Terms & Conditions</Text>
                 </TouchableOpacity>
 
-
                 {/* Dropdown menu modal */}
                 {menuVisible &&
                     <Modal
