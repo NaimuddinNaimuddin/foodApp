@@ -16,15 +16,14 @@ user change location - save users selected area name in order cart_____________
 remove alerts/console______________
 allow orders status changes  Accept reject_______________
 may be user ordering for others________________home/office address support
-deploy - User app, backend Apis, admin panel frontend.
+cancal reason_________
+ensure user order product from his area only__________
+Live update user order status________
+refund/cancel policy__________  
 fields validations.
-refund/cancel policy  aggree checkbox
-delivery phone and address and other things must be static/fixed for Order not populated. both app
-Cost: Free  Requires: Google Play Console account ($25)
+phone, address and other things must be static/fixed for Order not populated. both app____
+aggree checkbox____________
+deploy - User app, backend Apis, admin panel frontend.
 Share a direct install link without going through full Play Store review — great for quick internal testing:
 Play Console → Setup → Internal app sharing → Upload APK → Copy link
 
-cancal reason
-ensure user order product from his area only
-Live update user order status
-remove unnecessary code and files images , decrese build size    

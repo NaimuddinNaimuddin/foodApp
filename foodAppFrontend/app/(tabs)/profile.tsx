@@ -103,6 +103,13 @@ export default function HomeScreen() {
           <Text style={styles.optionText}>Terms & Conditions</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => Linking.openURL(`${API_BASE_URL}/refund-policy`)}
+        >
+          <Text style={styles.optionText}>Refund & Return Policy </Text>
+        </TouchableOpacity>
+
         {/* Logout modal */}
         {menuVisible &&
           <Modal

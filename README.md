@@ -26,6 +26,8 @@ when err remove the imagebyid VERIFY
 home/office adrress support
 suggest other screens if user on empty screens and goto cart when item selected
 Delivery Services - express and normal
+remove unnecessary code and files images , decrese build size    
+offers section / sale
 
 ADMIN
 delete orders ADMIN

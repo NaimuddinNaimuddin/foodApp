@@ -11,7 +11,7 @@ export const signupStyles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 20,
         textAlign: "center",
-        marginTop: 70,
+        marginTop: 50,
     },
     input: {
         borderWidth: 1,
@@ -29,5 +29,16 @@ export const signupStyles = StyleSheet.create({
         color: "#fff",
         textAlign: "center",
         fontWeight: "bold",
+    },
+    text: {
+        flex: 1,
+        marginLeft: 5,
+        color: "#444",
+        lineHeight: 22,
+        fontSize: 14,
+    },
+    link: {
+        color: "#0A84FF",
+        fontWeight: "600",
     },
 });
