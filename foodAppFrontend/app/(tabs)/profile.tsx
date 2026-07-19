@@ -16,6 +16,9 @@ import { styles } from "@/assets/styles/profileStyles";
 import EditAddressField from "@/lib/components/EditDeliveryAddress";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "@/context/userContext";
+import { BannerAd, TestIds } from "react-native-google-mobile-ads";
+import Toast from "react-native-toast-message";
+// const bannerId = 'ca-app-pub-1690660916195008/4304441585';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -49,6 +52,17 @@ export default function HomeScreen() {
             <Ionicons name="ellipsis-vertical" size={22} color="#333" />
           </TouchableOpacity>
         </View>
+
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size="ANCHORED_ADAPTIVE_BANNER"
+          onAdLoaded={() => {
+            Toast.show({ type: "success", text1: "Banner loaded" });
+          }}
+          onAdFailedToLoad={() => {
+            Toast.show({ type: "error", text1: "Banner load Error" });
+          }}
+        />
 
         <Text style={styles.label}>Delivery Address</Text>
         <View>
