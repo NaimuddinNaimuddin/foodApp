@@ -10,6 +10,7 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
+  Alert,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { styles } from "@/assets/styles/profileStyles";
@@ -26,6 +27,7 @@ export default function HomeScreen() {
   const { logout, user } = useUser();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [adError, setAdError] = useState("");
 
   const handleLogout = async () => {
     setMenuVisible(false);
@@ -59,11 +61,14 @@ export default function HomeScreen() {
           onAdLoaded={() => {
             Toast.show({ type: "success", text1: "Banner loaded" });
           }}
-          onAdFailedToLoad={() => {
-            Toast.show({ type: "error", text1: "Banner load Error" });
+          onAdFailedToLoad={(error) => {
+            setAdError(JSON.stringify(error, null, 2));
+            Alert.alert(JSON.stringify(error, null, 2));
           }}
         />
-
+        <Text>
+          {adError}
+        </Text>
         <Text style={styles.label}>Delivery Address</Text>
         <View>
           <View style={styles.row}>
