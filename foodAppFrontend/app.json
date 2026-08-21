@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Hello Kart",
-    "slug": "hellokart",
+    "slug": "foodApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -49,10 +49,10 @@
       "eas": {
         "projectId": "2525c2ac-331c-4940-a309-a79b7ed8d50d"
       }
-    }
+    },
+    "owner": "naimuddin5405"
   },
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-1690660916195008~6874764606"
-    // "ios_app_id": "ca-app-pub-1690660916195008~6874764606"
   }
 }
