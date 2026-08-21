@@ -10,15 +10,13 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
-  Alert,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { styles } from "@/assets/styles/profileStyles";
 import EditAddressField from "@/lib/components/EditDeliveryAddress";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "@/context/userContext";
-import { BannerAd, TestIds } from "react-native-google-mobile-ads";
-import Toast from "react-native-toast-message";
+// import { BannerAd, TestIds } from "react-native-google-mobile-ads";
 // const bannerId = 'ca-app-pub-1690660916195008/4304441585';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -27,7 +25,6 @@ export default function HomeScreen() {
   const { logout, user } = useUser();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [adError, setAdError] = useState("");
 
   const handleLogout = async () => {
     setMenuVisible(false);
@@ -54,21 +51,10 @@ export default function HomeScreen() {
             <Ionicons name="ellipsis-vertical" size={22} color="#333" />
           </TouchableOpacity>
         </View>
-
-        <BannerAd
+        {/* <BannerAd
           unitId={TestIds.BANNER}
           size="ANCHORED_ADAPTIVE_BANNER"
-          onAdLoaded={() => {
-            Toast.show({ type: "success", text1: "Banner loaded" });
-          }}
-          onAdFailedToLoad={(error) => {
-            setAdError(JSON.stringify(error, null, 2));
-            Alert.alert(JSON.stringify(error, null, 2));
-          }}
-        />
-        <Text>
-          {adError}
-        </Text>
+        /> */}
         <Text style={styles.label}>Delivery Address</Text>
         <View>
           <View style={styles.row}>

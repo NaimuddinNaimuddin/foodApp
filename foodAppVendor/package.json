@@ -1,5 +1,5 @@
 {
-  "name": "food-app-vendor",
+  "name": "hello-kart-vendor",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {

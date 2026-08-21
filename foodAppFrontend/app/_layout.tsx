@@ -5,8 +5,7 @@ import { queryClient } from "../lib/queryClient";
 import { UserProvider } from "@/context/userContext";
 import { storage } from "@/lib/storage";
 import { useEffect } from "react";
-import mobileAds from "react-native-google-mobile-ads";
-import { Alert } from "react-native";
+// import mobileAds from "react-native-google-mobile-ads";
 
 export default function RootLayout() {
 
@@ -22,13 +21,13 @@ export default function RootLayout() {
     checkAuth();
   }, []);
 
-  useEffect(() => {
-    mobileAds()
-      .initialize()
-      .then(() => {
-        Alert.alert("AdMob initialized");
-      });
-  }, []);
+  // useEffect(() => {
+  //   mobileAds()
+  //     .initialize()
+  //     .then(() => {
+  //       console.log("AdMob initialized");
+  //     });
+  // }, []);
 
   return (
     <UserProvider>
