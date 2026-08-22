@@ -90,7 +90,7 @@ export default function RestaurantScreen() {
     <FlatList
       data={foodItems}
       keyExtractor={(item) => item.category}
-      contentContainerStyle={{ paddingBottom: 10, marginTop: 10 }}
+      contentContainerStyle={{ paddingBottom: 10, paddingTop: 10, backgroundColor: "#fff" }}
       renderItem={({ item }) => (
         <View style={styles.categorySection}>
           <Text style={styles.categoryTitle}>{item.category}</Text>

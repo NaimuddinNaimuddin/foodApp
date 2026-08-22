@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
     View,
     Text,
+    Image,
     TextInput,
     TouchableOpacity,
     Pressable,
@@ -60,22 +61,25 @@ const SignupScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Signup</Text>
+            <Image
+                source={require('@/assets/images/splash-icon.png')}
+                style={styles.logo}
+            />
+            {/* <Text style={styles.title}>Register Here</Text> */}
 
+            <Text style={styles.label}>Phone Number</Text>
             <TextInput
                 style={styles.input}
-                placeholder="User Name"
                 value={phone}
                 onChangeText={setPhone}
                 maxLength={15}
             />
 
+            <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry
                 maxLength={15}
             />
             <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 12, marginBottom: 12 }}>

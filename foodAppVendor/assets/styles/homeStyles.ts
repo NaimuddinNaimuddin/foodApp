@@ -94,6 +94,7 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         fontSize: 16,
         marginBottom: 12,
+        marginTop:10,
         borderWidth: 1,
         borderColor: "#e5e5e5",
     },

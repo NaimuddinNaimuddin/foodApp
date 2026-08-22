@@ -50,7 +50,7 @@ export default function Restaurants() {
     };
 
     const filtered = restaurants.filter((r) => {
-        return (area_code === r.area_id) && (r.name.toLowerCase().includes(search.toLowerCase()));
+        return (area_code === r.area_id || !r.area_id) && (r.name.toLowerCase().includes(search.toLowerCase()));
     });
 
     return (

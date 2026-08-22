@@ -5,6 +5,7 @@ export const signupStyles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-start",
         padding: 20,
+        backgroundColor: "#fff",
     },
     title: {
         fontSize: 26,
@@ -40,5 +41,16 @@ export const signupStyles = StyleSheet.create({
     link: {
         color: "#0A84FF",
         fontWeight: "600",
+    },
+    logo: {
+        width: 120,
+        height: 120,
+        alignSelf: 'center',
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#244B36',
+        marginBottom: 8,
     },
 });

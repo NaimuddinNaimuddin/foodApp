@@ -54,20 +54,19 @@ const Forget = () => {
         <View style={styles.container}>
             <Text style={styles.title}> Forget Password </Text>
 
+            <Text style={styles.label}>Phone Number</Text>
             <TextInput
                 style={styles.input}
-                placeholder="User Name"
                 value={phone}
                 onChangeText={setPhone}
                 maxLength={15}
             />
 
+            <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry
                 maxLength={15}
             />
 

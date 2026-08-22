@@ -12,15 +12,15 @@ export const styles = StyleSheet.create({
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
-        justifyContent: "flex-end",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     modalContainer: {
         backgroundColor: "#fff",
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        maxHeight: "70%",
         padding: 20,
+        borderRadius: 10,
+        width: '85%',
     },
 
     modalTitle: {
@@ -93,7 +93,8 @@ export const styles = StyleSheet.create({
         paddingVertical: 12,
         borderRadius: 10,
         fontSize: 16,
-        marginBottom: 12,
+        marginBottom: 10,
+        marginTop: 10,
         borderWidth: 1,
         borderColor: "#e5e5e5",
     },

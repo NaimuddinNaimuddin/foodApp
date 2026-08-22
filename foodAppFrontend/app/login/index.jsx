@@ -5,6 +5,7 @@ import {
     TextInput,
     TouchableOpacity,
     ActivityIndicator,
+    Image,
 } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
@@ -57,20 +58,23 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Sign In</Text>
+            <Image
+                source={require('@/assets/images/splash-icon.png')}
+                style={styles.logo}
+            />
+            {/* <Text style={styles.title}>Login Here</Text> */}
 
+            <Text style={styles.label}>Phone Number</Text>
             <TextInput
                 style={styles.input}
-                placeholder="User Name"
                 value={phone}
                 onChangeText={setPhone}
                 maxLength={15}
             />
 
+            <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Password"
-                secureTextEntry
                 value={password}
                 onChangeText={setPassword}
                 maxLength={15}

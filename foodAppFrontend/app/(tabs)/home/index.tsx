@@ -133,7 +133,7 @@ export default function FoodScreen() {
           >
             <View style={styles.modalOverlay}>
               <View style={styles.modalContainer}>
-                <Text style={styles.modalTitle}>Select Location</Text>
+                <Text style={styles.modalTitle}>Select Your Location</Text>
 
                 <FlatList
                   data={areas}
@@ -150,12 +150,12 @@ export default function FoodScreen() {
                   )}
                 />
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setShowAreaModal(false)}
                 >
                   <Text style={{ color: "#fff", fontWeight: "600" }}>Close</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </Modal>
@@ -164,9 +164,10 @@ export default function FoodScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search Grocery Items..."
+          placeholder="Search Hello Kart Here"
           value={search}
           onChangeText={setSearch}
+          placeholderTextColor="#000"
         />
         {data && data.banners && data.banners.length > 0 &&
           <View style={{ marginBottom: 10, marginTop: 10 }}>
