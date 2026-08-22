@@ -95,4 +95,42 @@ export const restaurantStyles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 600,
     },
+
+    productImage: {
+        width: 90,
+        height: 90,
+        resizeMode: 'contain',
+    },
+
+    imageModal: {
+        flex: 1,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    fullImage: {
+        width: '95%',
+        height: '80%',
+    },
+
+    closeButton: {
+        position: 'absolute',
+        top: 50,
+        right: 20,
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        backgroundColor: "#555",
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10,
+    },
+
+    closeText: {
+        color: '#FFFFFF',
+        fontSize: 30,
+        fontWeight: '300',
+        lineHeight: 34,
+    },
 });

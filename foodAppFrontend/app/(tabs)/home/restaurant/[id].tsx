@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
+import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator, ScrollView, Modal } from "react-native";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
@@ -16,6 +16,7 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useUser();
+  const [selectedImage, setSelectedImage] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
   const [showCartButton, setshowCartButton] = useState(false);
   const [addToCartItem, setAddToCartItem] = useState<string | null>(null);
@@ -107,10 +108,14 @@ export default function RestaurantScreen() {
               contentContainerStyle={{ paddingVertical: 10 }}
               renderItem={({ item: food }) => (
                 <View style={styles.card}>
-                  <Image
-                    source={{ uri: food.image_url }}
-                    style={styles.image}
-                  />
+                  <TouchableOpacity
+                    onPress={() => setSelectedImage(food.image_url)}
+                  >
+                    <Image
+                      source={{ uri: food.image_url }}
+                      style={styles.image}
+                    />
+                  </TouchableOpacity>
 
                   <View style={styles.info}>
                     <Text style={styles.foodName} numberOfLines={1}>
@@ -169,6 +174,32 @@ export default function RestaurantScreen() {
           />
         </Text>
       </TouchableOpacity>}
+      <Modal
+        visible={selectedImage !== null}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setSelectedImage(null)}
+      >
+        <View style={styles.imageModal}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setSelectedImage(null)}
+          >
+            <Ionicons
+              name="close"
+              size={28}
+              color="#FFFFFF"
+            />
+          </TouchableOpacity>
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={styles.fullImage}
+              resizeMode="contain"
+            />
+          )}
+        </View>
+      </Modal>
     </View>
   );
 }
