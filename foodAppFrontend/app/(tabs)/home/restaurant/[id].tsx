@@ -1,6 +1,6 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { FlatList, Text, View, Image, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
@@ -9,6 +9,7 @@ import { SkeletonCard } from "@/lib/components/Skeletion";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { handleApiError } from "@/lib/common/handleApiError";
 import { useUser } from "@/context/userContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
@@ -16,6 +17,7 @@ export default function RestaurantScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useUser();
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const [showCartButton, setshowCartButton] = useState(false);
   const [addToCartItem, setAddToCartItem] = useState<string | null>(null);
 
   const fetchFoodItems = async (id: string) => {
@@ -54,6 +56,7 @@ export default function RestaurantScreen() {
           type: "success",
           text1: "Added to Cart 🛒",
         });
+        setshowCartButton(true);
       }
     } catch (err: any) {
       handleApiError(err);
@@ -87,71 +90,85 @@ export default function RestaurantScreen() {
   }
 
   return (
-    <FlatList
-      data={foodItems}
-      keyExtractor={(item) => item.category}
-      contentContainerStyle={{ paddingBottom: 10, paddingTop: 10, backgroundColor: "#fff" }}
-      renderItem={({ item }) => (
-        <View style={styles.categorySection}>
-          <Text style={styles.categoryTitle}>{item.category}</Text>
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={foodItems}
+        keyExtractor={(item) => item.category}
+        contentContainerStyle={{ paddingBottom: 10, paddingTop: 10, backgroundColor: "#fff" }}
+        renderItem={({ item }) => (
+          <View style={styles.categorySection}>
+            <Text style={styles.categoryTitle}>{item.category}</Text>
 
-          <FlatList
-            data={item.items}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(food) => food._id}
-            contentContainerStyle={{ paddingVertical: 10 }}
-            renderItem={({ item: food }) => (
-              <View style={styles.card}>
-                <Image
-                  source={{ uri: food.image_url }}
-                  style={styles.image}
-                />
+            <FlatList
+              data={item.items}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(food) => food._id}
+              contentContainerStyle={{ paddingVertical: 10 }}
+              renderItem={({ item: food }) => (
+                <View style={styles.card}>
+                  <Image
+                    source={{ uri: food.image_url }}
+                    style={styles.image}
+                  />
 
-                <View style={styles.info}>
-                  <Text style={styles.foodName} numberOfLines={1}>
-                    {food.name}
-                  </Text>
-
-                  <Text style={styles.qty}>
-                    {food.quantity_info}
-                  </Text>
-
-                  {!!food.short_desc && (
-                    <Text style={styles.desc} numberOfLines={2}>
-                      {food.short_desc}
+                  <View style={styles.info}>
+                    <Text style={styles.foodName} numberOfLines={1}>
+                      {food.name}
                     </Text>
-                  )}
 
-                  <View style={styles.priceRow}>
-                    <Text style={styles.price}>₹{food.price}</Text>
-                    <Text style={styles.mrp}>₹{food.mrp}</Text>
-                  </View>
+                    <Text style={styles.qty}>
+                      {food.quantity_info}
+                    </Text>
 
-                  {food && !food.in_stock &&
-                    <TouchableOpacity style={styles.addBtn}>
-                      <Text style={styles.addText}> Out of Stock </Text>
+                    {!!food.short_desc && (
+                      <Text style={styles.desc} numberOfLines={2}>
+                        {food.short_desc}
+                      </Text>
+                    )}
+
+                    <View style={styles.priceRow}>
+                      <Text style={styles.price}>₹{food.price}</Text>
+                      <Text style={styles.mrp}>₹{food.mrp}</Text>
+                    </View>
+
+                    {food && !food.in_stock &&
+                      <TouchableOpacity style={styles.addBtn}>
+                        <Text style={styles.addText}> Out of Stock </Text>
+                      </TouchableOpacity>}
+
+                    {food && food.in_stock && <TouchableOpacity
+                      style={styles.addBtn}
+                      disabled={addToCartLoading && food._id === addToCartItem}
+                      onPress={() => addToCart(food._id)}
+                    >
+                      <Text style={styles.addText}>
+                        {
+                          (addToCartLoading && food._id === addToCartItem) ?
+                            <ActivityIndicator size={"small"} color={"#fff"} />
+                            : "ADD"
+                        }
+                      </Text>
                     </TouchableOpacity>}
-
-                  {food && food.in_stock && <TouchableOpacity
-                    style={styles.addBtn}
-                    disabled={addToCartLoading && food._id === addToCartItem}
-                    onPress={() => addToCart(food._id)}
-                  >
-                    <Text style={styles.addText}>
-                      {
-                        (addToCartLoading && food._id === addToCartItem) ?
-                          <ActivityIndicator size={"small"} color={"#fff"} />
-                          : "ADD"
-                      }
-                    </Text>
-                  </TouchableOpacity>}
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
+            />
+          </View>
+        )}
+      />
+
+      {showCartButton && <TouchableOpacity onPress={() => router.navigate("/cart")} style={styles.checkoutButton}>
+        <Text style={styles.checkoutText}>
+          <Ionicons
+            name="cart"
+            size={18}
+          /> View Cart <Ionicons
+            name="chevron-forward"
+            size={18}
           />
-        </View>
-      )}
-    />
+        </Text>
+      </TouchableOpacity>}
+    </View>
   );
 }

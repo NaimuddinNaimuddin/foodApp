@@ -98,21 +98,43 @@ export default function HomeScreen() {
           style={styles.option}
           onPress={() => Linking.openURL(`${API_BASE_URL}/privacy-policy`)}
         >
-          <Text style={styles.optionText}>Privacy Policy</Text>
+          <Text style={styles.optionText}>Privacy Policy   <Ionicons
+            name="chevron-forward"
+            size={18}
+          /> </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.option}
           onPress={() => Linking.openURL(`${API_BASE_URL}/terms`)}
         >
-          <Text style={styles.optionText}>Terms & Conditions</Text>
+          <Text style={styles.optionText}>Terms & Conditions   <Ionicons
+            name="chevron-forward"
+            size={18}
+          /> </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.option}
           onPress={() => Linking.openURL(`${API_BASE_URL}/refund-policy`)}
         >
-          <Text style={styles.optionText}>Refund & Return Policy </Text>
+          <Text style={styles.optionText}>Refund & Return Policy   <Ionicons
+            name="chevron-forward"
+            size={18}
+          /> </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => Linking.openURL(`${API_BASE_URL}/help`)}
+        >
+          <Text style={styles.optionText}>
+            Help & Support   <Ionicons
+              name="help-circle-outline"
+              size={22}
+              color="#20A85A"
+            />
+          </Text>
         </TouchableOpacity>
 
         {/* Logout modal */}

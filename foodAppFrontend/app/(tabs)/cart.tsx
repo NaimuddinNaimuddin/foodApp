@@ -189,13 +189,21 @@ export default function CartScreen() {
             />
 
             {!!user?.area_delivery_text &&
-                <Text style={{ color: '#111', display: "flex", justifyContent: 'center', padding: 15 }}>
+                <Text style={{ color: '#111', display: "flex", justifyContent: 'center', padding: 12 }}>
                     {user?.area_delivery_text}
                 </Text>
             }
 
             {cart && cart.items && (
                 <View style={styles.checkoutBar}>
+                    <View style={styles.totalRow}>
+                        <Text style={styles.totalLabel}>Items Total </Text>
+                        <Text style={{ ...styles.totalAmount, color: "555555", fontWeight: 400 }}>
+                            ₹{cart.items.reduce(
+                                (sum: number, item: any) => sum + (item.foodId ? item.foodId.price : 0) * item.quantity, 0
+                            )}
+                        </Text>
+                    </View>
                     {user?.area_delivery_charge_in_rs && (<View style={styles.totalRow}>
                         <Text style={styles.totalLabel}>Delivery Charges</Text>
                         <Text style={{ ...styles.totalAmount, color: "555555", fontWeight: 400 }}>
@@ -203,7 +211,7 @@ export default function CartScreen() {
                         </Text>
                     </View>)}
                     <View style={styles.totalRow}>
-                        <Text style={styles.totalLabel}>Total </Text>
+                        <Text style={styles.totalLabel}> Cart Total </Text>
                         <Text style={styles.totalAmount}>
                             ₹{cart.items.reduce(
                                 (sum: number, item: any) => sum + (item.foodId ? item.foodId.price : 0) * item.quantity, 0

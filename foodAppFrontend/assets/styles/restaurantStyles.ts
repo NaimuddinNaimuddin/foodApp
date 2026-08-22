@@ -80,4 +80,19 @@ export const restaurantStyles = StyleSheet.create({
         fontWeight: "600",
         fontSize: 12,
     },
+    checkoutButton: {
+        height: 36,
+        backgroundColor: '#0a8f3d',
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 20,
+        marginBottom: 10,
+    },
+
+    checkoutText: {
+        color: '#FFFFFF',
+        fontSize: 17,
+        fontWeight: 600,
+    },
 });

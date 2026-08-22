@@ -164,7 +164,7 @@ export default function FoodScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search Hello Kart Here"
+          placeholder="Search Here"
           value={search}
           onChangeText={setSearch}
           placeholderTextColor="#000"

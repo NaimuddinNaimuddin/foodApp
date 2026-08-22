@@ -89,14 +89,14 @@ const LoginScreen = () => {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.navigate("/login/forget")}>
-                <Text style={{ marginTop: 15, color: "#00ff00", textAlign: "center" }}>
-                    Forget Password? Click to reset.
+                <Text style={{ fontSize: 16, marginTop: 15, color: "#00dd00", textDecorationLine: "underline", textAlign: "center" }}>
+                    Forget Password? Reset Password Here.
                 </Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.navigate("/")}>
-                <Text style={{ marginTop: 15, color: "#ee0000", textAlign: "center" }}>
-                    Dont have an account? Signup.
+                <Text style={{ fontSize: 16, marginTop: 15, color: "#ee0000", textDecorationLine: "underline", textAlign: "center" }}>
+                    Click Here To Register / Signup.
                 </Text>
             </TouchableOpacity>
         </View>

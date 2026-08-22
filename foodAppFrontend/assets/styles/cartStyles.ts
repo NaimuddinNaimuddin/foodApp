@@ -108,8 +108,8 @@ export const cartStyles = StyleSheet.create({
     },
 
     totalAmount: {
-        fontSize: 20,
-        fontWeight: "700",
+        fontSize: 16,
+        fontWeight: "600",
         color: "#2E7D32",
     },
 
